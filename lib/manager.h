@@ -31,9 +31,7 @@ class Manager {
   void add_variable(VariableData var) { variables.append(var); }
 
   // delete last added variable
-  void delete_variable() {
-    variables.pop_back();
-  }
+  void delete_variable() { variables.pop_back(); }
 
   // clear calculated list
   void clear_calculated() {
