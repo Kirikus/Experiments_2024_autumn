@@ -16,9 +16,7 @@ void MainWindow::choose_file_open() {
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
-
-  QPushButton *open_file_button = new QPushButton("Open file", this);
-  QObject::connect(open_file_button, SIGNAL(clicked()),
+  QObject::connect(ui->actionOpen, SIGNAL(triggered()),
                    SLOT(choose_file_open()));
 }
 
