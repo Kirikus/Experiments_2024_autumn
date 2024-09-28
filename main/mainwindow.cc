@@ -7,6 +7,7 @@
 #include <QString>
 #include <QTextStream>
 
+#include "../lib/measurements.h"
 #include "./ui_mainwindow.h"
 
 void MainWindow::choose_file_open() {
@@ -16,6 +17,11 @@ void MainWindow::choose_file_open() {
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+  MeasurementModel *model = new MeasurementModel;
+  Manager *manager = Manager().get_manager();
+  model->setManager(*manager);
+  ui->tableView->setModel(model);
+
   QObject::connect(ui->actionOpen, SIGNAL(triggered()),
                    SLOT(choose_file_open()));
 }
