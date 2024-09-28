@@ -1,18 +1,17 @@
 #ifndef __MANAGER_H__
 #define __MANAGER_H__
 
-#include <QFile>
 #include <QList>
-#include <QObject>
-#include <QTextStream>
 
 class VariableData {
+ public:
+  QList<double> measurements{};
+
  private:
-  QList<double> measurements;
-  QString full_name;
-  QString short_name;
+  QString full_name{};
+  QString short_name{};
   // instrument
-  QList<double> errors;
+  QList<double> errors{};
 
  public:
   VariableData(QList<double> measurements, QList<double> errors,
@@ -25,8 +24,10 @@ class VariableData {
 
 class Manager {
  public:
-  QList<VariableData> variables;
-  QList<VariableData> calculated;
+  QList<VariableData> variables{};
+  QList<VariableData> calculated{};
+
+  Manager* get_manager();
 
   void add_variable(VariableData var) { variables.append(var); }
 
@@ -34,15 +35,20 @@ class Manager {
   void delete_variable() { variables.pop_back(); }
 
   // clear calculated list
-  void clear_calculated() {
-    calculated = QList<VariableData>();
-    return;
-  }
+  void clear_calculated() { calculated = QList<VariableData>(); }
 
   void add_calculated(VariableData var) { calculated.append(var); }
 
-  void add_measurement_row() {}
-  void remove_measurement_row() {}
+  void add_measurement_row() {
+    for (int i = 0; i < variables.size(); ++i) {
+      variables[i].measurements.push_back(.0);
+    }
+  }
+  void remove_measurement_row() {
+    for (int i = 0; i < variables.size(); ++i) {
+      variables[i].measurements.pop_back();
+    }
+  }
 
  private:
 };
