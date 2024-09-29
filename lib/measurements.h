@@ -27,10 +27,22 @@ class MeasurementModel : public QAbstractTableModel {
   }
   virtual bool setData(const QModelIndex& index, const QVariant& value,
                        int role = Qt::EditRole) {
-    p_manager.variables[index.row()].measurements[index.column()] =
-        value.toDouble();
-    return true;
+    if (role == Qt::EditRole) {
+      p_manager.variables[index.row()].measurements[index.column()] =
+          value.toDouble();
+      // QTableView doesn't allow to type another symbols, so we don't check
+      // type of data
+
+      emit dataChanged(index, index, QList({role}));
+      return true;
+    }
+    return false;
   }
+
+  Qt::ItemFlags flags(const QModelIndex& index) const {
+    return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+  }
+
   virtual void setManager(Manager& manager) { p_manager = manager; }
 };
 
