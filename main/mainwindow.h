@@ -3,6 +3,14 @@
 
 #include <QFile>
 #include <QMainWindow>
+#include <QFile>
+#include <QTextStream>
+#include <QPushButton>
+#include <QObject>
+#include <QFileDialog>
+#include <iostream>
+#include <QString>
+#include <QDataStream>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

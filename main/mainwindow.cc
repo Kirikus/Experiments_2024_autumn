@@ -16,6 +16,7 @@ void MainWindow::choose_file_open() {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
+
   ui->setupUi(this);
   MeasurementModel *model = new MeasurementModel;
   Manager *manager = Manager().get_manager();
