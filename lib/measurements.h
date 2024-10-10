@@ -2,6 +2,7 @@
 #define __MEASUREMENTMODEL_H__
 
 #include <QAbstractTableModel>
+#include <QString>
 #include <QTableView>
 
 #include "manager.h"
@@ -23,15 +24,27 @@ class MeasurementModel : public QAbstractTableModel {
   }
   virtual QVariant data(const QModelIndex& index,
                         int role = Qt::DisplayRole) const {
-    return p_manager.variables[index.row()].measurements[index.column()];
+    int row = index.row();
+    int col = index.column();
+    double measurement =
+        p_manager.variables[index.row()].measurements[index.column()];
+    double error =
+        p_manager.variables[index.row()].errors[index.column()]->getError(
+            measurement);
+    QString output = QString::number(measurement);
+    if (error != 0) {
+      output += "±" + QString::number(error);
+    }
+    return output;
   }
   virtual bool setData(const QModelIndex& index, const QVariant& value,
                        int role = Qt::EditRole) {
     if (role == Qt::EditRole) {
+      if (!value.toBool() or !value.canConvert<double>()) {
+        return false;
+      }
       p_manager.variables[index.row()].measurements[index.column()] =
           value.toDouble();
-      // QTableView doesn't allow to type another symbols, so we don't check
-      // type of data
 
       emit dataChanged(index, index, QList({role}));
       return true;
@@ -46,12 +59,6 @@ class MeasurementModel : public QAbstractTableModel {
   virtual void setManager(Manager& manager) { p_manager = manager; }
 };
 
-class MeasurementView : public QTableView {
-  MeasurementModel* p_model;
-  virtual void setModel(MeasurementModel* model) { p_model = model; }
-
- public:
-  MeasurementView(MeasurementModel* model) { setModel(model); }
-};
+class MeasurementView : public QTableView {};
 
 #endif
