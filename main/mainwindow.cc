@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
   model->setManager(*manager);
   ui->tableView->setModel(model);
 
-  QObject::connect(ui->actionOpen, SIGNAL(triggered()),
-                   SLOT(choose_file_open()));
+  connect(ui->actionOpen, &QAction::triggered, this,
+          &MainWindow::choose_file_open);
 }
 
 MainWindow::~MainWindow() { delete ui; }
