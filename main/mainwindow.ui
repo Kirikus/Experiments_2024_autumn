@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>792</width>
-    <height>634</height>
+    <width>800</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="CentralWidget">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -41,23 +41,108 @@
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <widget class="QTableView" name="tableView">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>100</y>
-      <width>441</width>
-      <height>401</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <widget class="QTabWidget" name="Graphics">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="MainGraph">
+       <attribute name="title">
+        <string>Main_graph</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QWidget" name="MainWidgetGraph" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="Graph2">
+       <attribute name="title">
+        <string>Graph 2</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="1" column="0">
+         <widget class="QWidget" name="WidgetGraph2" native="true"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QSplitter" name="Splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QTabWidget" name="TabWidget">
+       <property name="currentIndex">
+        <number>3</number>
+       </property>
+       <widget class="QWidget" name="TableDataWidget">
+        <attribute name="title">
+         <string>Data</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0" colspan="2">
+          <widget class="QTableView" name="TableData"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="ButtonGraph">
+           <property name="text">
+            <string>New graph</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="ButtonFormula">
+           <property name="text">
+            <string>New formula</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="TableErrorsWidget">
+        <attribute name="title">
+         <string>Errors</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <widget class="QTableView" name="TableErrors"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="TableTitlesWidget">
+        <attribute name="title">
+         <string>Titles</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <widget class="QTableView" name="TableTitles"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="TableParametrsWidget">
+        <attribute name="title">
+         <string>Parameters</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QTableView" name="TableParametrs"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>792</width>
+     <width>800</width>
      <height>22</height>
     </rect>
    </property>
@@ -69,28 +154,34 @@
      <bool>true</bool>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionOpen"/>
     <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="action_Graph"/>
+    <addaction name="actionNew_formula"/>
    </widget>
-   <widget class="QMenu" name="menuSettings">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Settings</string>
+     <string>Help</string>
     </property>
+    <addaction name="action_About_project"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuSettings"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -100,13 +191,51 @@
    <property name="text">
     <string>New</string>
    </property>
+   <property name="toolTip">
+    <string>Make new file</string>
+   </property>
   </action>
   <action name="actionSave">
    <property name="text">
     <string>Save</string>
    </property>
+   <property name="toolTip">
+    <string>Save this file</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_tab_page">
+   <property name="text">
+    <string>Add tab page</string>
+   </property>
+   <property name="toolTip">
+    <string>New tab page</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="action_Graph">
+   <property name="text">
+    <string>New graph</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="action_About_project">
+   <property name="text">
+    <string>About our project</string>
+   </property>
+   <property name="toolTip">
+    <string>Read about our project</string>
+   </property>
+  </action>
+  <action name="actionNew_formula">
+   <property name="text">
+    <string>New formula</string>
    </property>
   </action>
  </widget>
