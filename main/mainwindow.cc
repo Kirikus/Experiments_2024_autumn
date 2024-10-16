@@ -42,4 +42,5 @@ MainWindow::MainWindow(QWidget *parent)
           &AbstractPlot::update_data_slot);
 }
 
+
 MainWindow::~MainWindow() { delete ui; }
