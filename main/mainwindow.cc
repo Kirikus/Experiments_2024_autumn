@@ -19,21 +19,24 @@ MainWindow::MainWindow(QWidget *parent)
 
   ui->setupUi(this);
   MeasurementModel *model = new MeasurementModel;
-  MeasurementModel *model_err = new MeasurementModel;
+  ErrorModel *model_err = new ErrorModel;
   Manager *manager = Manager().get_manager();
 
   ErrorData *err = new ErrorAbsolute(0.);
-  ErrorData *err2 = new ErrorAbsolute(0.12);
-  
-  manager->add_variable(
-      VariableData({1, 2, 3}, {err2, err, err}, "Test", "tst"));
-  manager->add_variable(
-      VariableData({4, 5, 6}, {err, err2, err2}, "Test2", "tst2"));
+  ErrorData *err2 = new ErrorRelative(0.12);
+
+  manager->add_variable(VariableData({1, 2, 3}, err, "Test", "tst"));
+  manager->add_variable(VariableData({4, 5, 6}, err2, "Test2", "tst2"));
   model->setManager(*manager);
+  model_err->setManager(*manager);
   ui->TableData->setModel(model);
+  ui->TableErrors->setModel(model_err);
+
 
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
+  connect(model_err, &QAbstractItemModel::dataChanged, model,
+          &MeasurementModel::recalculate_data);
 }
 
 
