@@ -54,7 +54,7 @@ class Manager {
   QList<VariableData> variables{};
   QList<VariableData> calculated{};
 
-  static Manager* get_manager();
+  static Manager& get_manager();
 
   void add_variable(VariableData var) { variables.append(var); }
 
