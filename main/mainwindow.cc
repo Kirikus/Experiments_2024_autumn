@@ -7,7 +7,8 @@
 #include <QString>
 #include <QTextStream>
 
-#include "../lib/measurements.h"
+#include "../lib/error_model.h"
+#include "../lib/measurement_model.h"
 #include "./ui_mainwindow.h"
 
 void MainWindow::choose_file_open() {
