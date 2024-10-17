@@ -39,30 +39,18 @@ class Manager {
 
   static Manager& get_manager();
 
-  void add_variable(VariableData var) { variables.append(var); }
+  void add_variable(VariableData var);
 
   // delete last added variable
-  void delete_variable() { variables.pop_back(); }
+  void delete_variable();
 
   // clear calculated list
-  void clear_calculated() { calculated = QList<VariableData>(); }
+  void clear_calculated();
 
-  void add_calculated(VariableData var) { calculated.append(var); }
+  void add_calculated(VariableData var);
 
-  void add_measurement_row() {
-    for (int i = 0; i < variables.size(); ++i) {
-      variables[i].measurements.push_back(.0);
-      variables[i].errors_local.push_back(nullptr);
-    }
-  }
-  void remove_measurement_row() {
-    for (int i = 0; i < variables.size(); ++i) {
-      variables[i].measurements.pop_back();
-      variables[i].errors_local.pop_back();
-    }
-  }
-
- private:
+  void add_measurement_row();
+  void remove_measurement_row();
 };
 
 #endif  // __MANAGER_H__
