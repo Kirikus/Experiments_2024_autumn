@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
   manager->add_variable(
       VariableData({4, 5, 6}, {err, err2, err2}, "Test2", "tst2"));
   model->setManager(*manager);
-  ui->tableView->setModel(model);
+  ui->TableData->setModel(model);
 
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
