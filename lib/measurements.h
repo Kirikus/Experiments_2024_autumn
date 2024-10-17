@@ -8,17 +8,6 @@
 #include "manager.h"
 
 class MeasurementModel : public QAbstractTableModel {
- protected:
-  Manager p_manager;
-
- public slots:
-
-  void recalculate_data(const QModelIndex& index) {
-    std::cout << index.row() << " - " << index.column() << std::endl;
-    std::cout << p_manager.variables[index.row()].errors_local[index.column()]
-              << std::endl;
-  }
-
  public:
   virtual QVariant headerData(int section, Qt::Orientation orientation,
                               int role = Qt::DisplayRole) const {
@@ -26,17 +15,19 @@ class MeasurementModel : public QAbstractTableModel {
       return QVariant();
     }
     if (orientation == Qt::Vertical) {
-      return p_manager.variables[section].short_name;
+      return Manager::get_manager().variables[section].short_name;
     } else if (orientation == Qt::Horizontal) {
       return QString::number(section + 1);
     }
   }
+
   virtual int rowCount(const QModelIndex& parent = QModelIndex()) const {
-    return p_manager.variables.size();
+    return Manager::get_manager().variables.size();
   }
+
   virtual int columnCount(const QModelIndex& parent = QModelIndex()) const {
     long long int columns = 0;
-    for (auto& i : p_manager.variables) {
+    for (auto& i : Manager::get_manager().variables) {
       columns = std::max(columns, i.measurements.size());
     }
     return columns;
@@ -46,15 +37,20 @@ class MeasurementModel : public QAbstractTableModel {
                         int role = Qt::DisplayRole) const {
     int row = index.row();
     int col = index.column();
-    double measurement =
-        p_manager.variables[index.row()].measurements[index.column()];
+    double measurement = Manager::get_manager()
+                             .variables[index.row()]
+                             .measurements[index.column()];
 
     double error = 0;
-    if (!p_manager.variables[index.row()].errors_local[index.column()])
+    if (!Manager::get_manager()
+             .variables[index.row()]
+             .errors_local[index.column()])
       error = fabs(
-          p_manager.variables[index.row()].error_global->getError(measurement));
+          Manager::get_manager().variables[index.row()].error_global->getError(
+              measurement));
     else {
-      error = fabs(p_manager.variables[index.row()]
+      error = fabs(Manager::get_manager()
+                       .variables[index.row()]
                        .errors_local[index.column()]
                        ->getError(measurement));
     }
@@ -82,8 +78,9 @@ class MeasurementModel : public QAbstractTableModel {
       if (!new_value.toBool() || !new_value.canConvert<double>()) {
         return false;
       }
-      p_manager.variables[index.row()].measurements[index.column()] =
-          new_value.toDouble();
+      Manager::get_manager()
+          .variables[index.row()]
+          .measurements[index.column()] = new_value.toDouble();
 
       emit dataChanged(index, index, QList({role}));
       return true;
@@ -94,8 +91,6 @@ class MeasurementModel : public QAbstractTableModel {
   Qt::ItemFlags flags(const QModelIndex& index) const {
     return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
   }
-
-  virtual void setManager(Manager& manager) { p_manager = manager; }
 };
 
 class ErrorModel : public MeasurementModel {
@@ -107,10 +102,14 @@ class ErrorModel : public MeasurementModel {
     int col = index.column();
 
     ErrorData* error;
-    if (!p_manager.variables[index.row()].errors_local[index.column()])
-      error = p_manager.variables[index.row()].error_global;
+    if (!Manager::get_manager()
+             .variables[index.row()]
+             .errors_local[index.column()])
+      error = Manager::get_manager().variables[index.row()].error_global;
     else {
-      error = p_manager.variables[index.row()].errors_local[index.column()];
+      error = Manager::get_manager()
+                  .variables[index.row()]
+                  .errors_local[index.column()];
     }
 
     if (error->getError(1) !=
@@ -132,12 +131,10 @@ class ErrorModel : public MeasurementModel {
         input.chop(1);
         input.toDouble(success);
         if (input.isEmpty() || !*success) {
-          std::cout << input.toStdString() << 1 << std::endl;
           return false;
         }
         data = input.toDouble();
         if (data < 0) {
-          std::cout << 4 << std::endl;
           return false;
         }
 
@@ -145,12 +142,10 @@ class ErrorModel : public MeasurementModel {
       } else {
         input.toDouble(success);
         if (input.isEmpty() || !*success) {
-          std::cout << 2 << std::endl;
           return false;
         }
         data = input.toDouble();
         if (data < 0) {
-          std::cout << 3 << std::endl;
           return false;
         }
 
@@ -158,29 +153,26 @@ class ErrorModel : public MeasurementModel {
       }
 
       ErrorData* error;
-      if (!p_manager.variables[index.row()].errors_local[index.column()]) {
-        error = p_manager.variables[index.row()].error_global;
+      if (!Manager::get_manager()
+               .variables[index.row()]
+               .errors_local[index.column()]) {
+        error = Manager::get_manager().variables[index.row()].error_global;
       } else {
-        error = p_manager.variables[index.row()].errors_local[index.column()];
+        error = Manager::get_manager()
+                    .variables[index.row()]
+                    .errors_local[index.column()];
       }
 
       if (error->data != data) {
-        delete p_manager.variables[index.row()].errors_local[index.column()];
-        p_manager.variables[index.row()].errors_local[index.column()] =
-            new_error;
+        delete Manager::get_manager()
+            .variables[index.row()]
+            .errors_local[index.column()];
+        Manager::get_manager()
+            .variables[index.row()]
+            .errors_local[index.column()] = new_error;
       }
 
-      std::cout
-          << p_manager.variables[index.row()].errors_local[index.column()]->data
-          << " ee"
-          << "  " << index.row() << " == " << index.column() << std::endl;
       emit dataChanged(index, index, QList({role}));
-      std::cout
-          << p_manager.variables[index.row()].errors_local[index.column()]->data
-          << " fgf"
-          << "  " << index.row() << " == " << index.column() << std::endl;
-
-      std::cout << 1 << std::endl;
       return true;
     }
     return false;
