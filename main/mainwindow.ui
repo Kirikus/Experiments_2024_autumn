@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -22,7 +22,7 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <widget class="QWidget" name="CentralWidget">
+  <widget class="QWidget" name="centralWidget">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -41,97 +41,126 @@
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <widget class="QTabWidget" name="Graphics">
-      <property name="currentIndex">
-       <number>1</number>
-      </property>
-      <widget class="QWidget" name="MainGraph">
-       <attribute name="title">
-        <string>Main_graph</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_6">
-        <item row="0" column="0">
-         <widget class="QWidget" name="MainWidgetGraph" native="true"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="Graph2">
-       <attribute name="title">
-        <string>Graph 2</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_7">
-        <item row="1" column="0">
-         <widget class="QWidget" name="WidgetGraph2" native="true"/>
-        </item>
-       </layout>
-      </widget>
+   <layout class="QGridLayout" name="gridLayout_8" columnstretch="1,100,100" columnminimumwidth="0,0,0">
+    <item row="0" column="0">
+     <widget class="QWidget" name="leftMenu" native="true">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="buttonDeleteGraph">
+         <property name="text">
+          <string>🗑️</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="buttonAddGraph">
+         <property name="text">
+          <string>📈</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QPushButton" name="buttonFormula">
+         <property name="text">
+          <string>f(x)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QSplitter" name="Splitter">
+    <item row="0" column="1">
+     <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QTabWidget" name="TabWidget">
+      <widget class="QTabWidget" name="tableWidget">
        <property name="currentIndex">
-        <number>3</number>
+        <number>1</number>
        </property>
-       <widget class="QWidget" name="TableDataWidget">
+       <widget class="QWidget" name="tableDataWidget">
         <attribute name="title">
          <string>Data</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0" colspan="2">
-          <widget class="QTableView" name="TableData"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QPushButton" name="ButtonGraph">
-           <property name="text">
-            <string>New graph</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QPushButton" name="ButtonFormula">
-           <property name="text">
-            <string>New formula</string>
-           </property>
-          </widget>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QTableView" name="tableData"/>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="TableErrorsWidget">
+       <widget class="QWidget" name="tableErrorsWidget">
         <attribute name="title">
          <string>Errors</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0">
-          <widget class="QTableView" name="TableErrors"/>
+          <widget class="QTableView" name="tableErrors"/>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="TableTitlesWidget">
+       <widget class="QWidget" name="tableTitlesWidget">
         <attribute name="title">
          <string>Titles</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="0" column="0">
-          <widget class="QTableView" name="TableTitles"/>
+          <widget class="QTableView" name="tableTitles"/>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="TableParametrsWidget">
+       <widget class="QWidget" name="tableParametrsWidget">
         <attribute name="title">
          <string>Parameters</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_4">
+        <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
-          <widget class="QTableView" name="TableParametrs"/>
+          <widget class="QTableView" name="tableParametrs"/>
          </item>
         </layout>
        </widget>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QTabWidget" name="graphics">
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="graph1">
+       <attribute name="title">
+        <string>Graph</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QWidget" name="mainWidgetGraph" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="graph2">
+       <attribute name="title">
+        <string>Graph 2</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0">
+         <widget class="QWidget" name="widgetGraph2" native="true"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -204,17 +233,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
-   </property>
-  </action>
-  <action name="action_tab_page">
-   <property name="text">
-    <string>Add tab page</string>
-   </property>
-   <property name="toolTip">
-    <string>New tab page</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+P</string>
    </property>
   </action>
   <action name="action_Graph">
