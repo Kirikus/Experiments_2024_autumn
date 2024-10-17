@@ -52,18 +52,28 @@ class MeasurementModel : public QAbstractTableModel {
 
     QString output = QString::number(measurement);
     if (error != 0) {
-      output += "±" + QString::number(error);
+      return QString("%1±%2").arg(output, QString::number(error));
     }
     return output;
   }
   virtual bool setData(const QModelIndex& index, const QVariant& value,
                        int role = Qt::EditRole) {
     if (role == Qt::EditRole) {
-      if (!value.toBool() or !value.canConvert<double>()) {
+      QString data = value.toString();
+      QVariant new_value;
+      if (data.contains("±")) {
+        int i = data.indexOf("±");
+        data = data.first(i);
+        new_value = QVariant(data);
+      } else {
+        new_value = value;
+      }
+
+      if (!new_value.toBool() || !new_value.canConvert<double>()) {
         return false;
       }
       p_manager.variables[index.row()].measurements[index.column()] =
-          value.toDouble();
+          new_value.toDouble();
 
       emit dataChanged(index, index, QList({role}));
       return true;
