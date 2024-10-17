@@ -25,25 +25,28 @@ class ErrorRelative : public ErrorData {
 class VariableData {
  public:
   QList<double> measurements{};
-  QList<ErrorData*> errors{};
-
- private:
+  ErrorData* error_global{};         // error for all measurements
+  QList<ErrorData*> errors_local{};  // field if we want to specify error for
+                                     // some of measurements
   QString full_name{};
   QString short_name{};
   // instrument
 
  public:
-  VariableData(QList<double> measurements, QList<ErrorData*> errors_list,
+  VariableData(QList<double> measurements, ErrorData* error, QString full_name,
+               QString short_name)
+      : measurements{measurements},
+        error_global{error},
+        errors_local{QList<ErrorData*>(measurements.size(), nullptr)},
+        full_name{full_name},
+        short_name{short_name} {}
+  VariableData(QList<double> measurements, QList<ErrorData*> errors,
                QString full_name, QString short_name)
       : measurements{measurements},
+        error_global{errors[0]},
+        errors_local{errors},
         full_name{full_name},
-        short_name{short_name} {
-    ErrorData* standart_err = new ErrorAbsolute(0.);
-    errors = QList<ErrorData*>(measurements.size(), standart_err);
-    for (int i = 0; i < errors_list.size(); ++i) {
-      errors[i] = errors_list[i];
-    }
-  }
+        short_name{short_name} {}
 };
 
 class Manager {
@@ -66,14 +69,13 @@ class Manager {
   void add_measurement_row() {
     for (int i = 0; i < variables.size(); ++i) {
       variables[i].measurements.push_back(.0);
-      ErrorData* standart_err = new ErrorAbsolute(0.);
-      variables[i].errors.push_back(standart_err);
+      variables[i].errors_local.push_back(nullptr);
     }
   }
   void remove_measurement_row() {
     for (int i = 0; i < variables.size(); ++i) {
       variables[i].measurements.pop_back();
-      variables[i].errors.pop_back();
+      variables[i].errors_local.pop_back();
     }
   }
 

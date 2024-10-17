@@ -28,9 +28,17 @@ class MeasurementModel : public QAbstractTableModel {
     int col = index.column();
     double measurement =
         p_manager.variables[index.row()].measurements[index.column()];
-    double error =
-        p_manager.variables[index.row()].errors[index.column()]->getError(
-            measurement);
+
+    double error = 0;
+    if (!p_manager.variables[index.row()].errors_local[index.column()])
+      error = fabs(
+          p_manager.variables[index.row()].error_global->getError(measurement));
+    else {
+      error = fabs(p_manager.variables[index.row()]
+                       .errors_local[index.column()]
+                       ->getError(measurement));
+    }
+
     QString output = QString::number(measurement);
     if (error != 0) {
       output += "±" + QString::number(error);
