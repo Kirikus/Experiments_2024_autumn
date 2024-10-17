@@ -27,8 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   manager.add_variable(VariableData({1, 2, 3}, err, "Test", "tst"));
   manager.add_variable(VariableData({4, 5, 6}, err2, "Test2", "tst2"));
-  ui->TableData->setModel(model_measurements);
-  ui->TableErrors->setModel(model_err);
+  ui->tableData->setModel(model_measurements);
+  ui->tableErrors->setModel(model_err);
 
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
