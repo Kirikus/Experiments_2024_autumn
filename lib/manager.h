@@ -3,24 +3,7 @@
 
 #include <QList>
 
-class ErrorData {
- public:
-  double data{};
-  ErrorData(double data) : data{data} {}
-  virtual double getError(double measurement) = 0;
-};
-
-class ErrorAbsolute : public ErrorData {
- public:
-  using ErrorData::ErrorData;
-  double getError(double measurement) override { return data; }
-};
-
-class ErrorRelative : public ErrorData {
- public:
-  using ErrorData::ErrorData;
-  virtual double getError(double measurement) { return measurement * data; }
-};
+#include "errors_to_variable.h"
 
 class VariableData {
  public:

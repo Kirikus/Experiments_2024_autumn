@@ -7,7 +7,8 @@
 #include <QString>
 #include <QTextStream>
 
-#include "../lib/measurements.h"
+#include "../lib/error_model.h"
+#include "../lib/measurement_model.h"
 #include "./ui_mainwindow.h"
 
 void MainWindow::choose_file_open() {
@@ -16,7 +17,6 @@ void MainWindow::choose_file_open() {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
-
   ui->setupUi(this);
   MeasurementModel *model_measurements = new MeasurementModel;
   ErrorModel *model_err = new ErrorModel;
@@ -30,10 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
   ui->TableData->setModel(model_measurements);
   ui->TableErrors->setModel(model_err);
 
-
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
 }
-
 
 MainWindow::~MainWindow() { delete ui; }
