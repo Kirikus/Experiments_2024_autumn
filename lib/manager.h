@@ -22,15 +22,6 @@ class ErrorRelative : public ErrorData {
   virtual double getError(double measurement) { return measurement * data; }
 };
 
-template <int StandartValue>
-class ErrorReduced : public ErrorData {
- public:
-  using ErrorData::ErrorData;
-  virtual double getError(double measurement) {
-    return data / StandartValue * measurement;
-  }
-};
-
 class VariableData {
  public:
   QList<double> measurements{};
