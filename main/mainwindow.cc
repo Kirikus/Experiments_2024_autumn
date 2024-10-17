@@ -17,6 +17,7 @@ void MainWindow::choose_file_open() {
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
 
+
   ui->setupUi(this);
   MeasurementModel *model = new MeasurementModel;
   ErrorModel *model_err = new ErrorModel;
@@ -38,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(model_err, &QAbstractItemModel::dataChanged, model,
           &MeasurementModel::recalculate_data);
 }
+
 
 
 MainWindow::~MainWindow() { delete ui; }
