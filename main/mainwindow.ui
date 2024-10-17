@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -22,6 +22,7 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
+  <widget class="QWidget" name="centralWidget">
   <widget class="QWidget" name="centralWidget">
    <property name="enabled">
     <bool>true</bool>
@@ -52,19 +53,6 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="buttonAddGraph">
          <property name="text">
@@ -79,18 +67,35 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </item>
+    <item row="0" column="1">
+     <widget class="QSplitter" name="splitter">
     <item row="0" column="1">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QTabWidget" name="tableWidget">
+      <widget class="QTabWidget" name="tableWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>1</number>
        </property>
+       <widget class="QWidget" name="tableDataWidget">
        <widget class="QWidget" name="tableDataWidget">
         <attribute name="title">
          <string>Data</string>
@@ -98,9 +103,13 @@
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="0" column="0">
           <widget class="QTableView" name="tableData"/>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QTableView" name="tableData"/>
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="tableErrorsWidget">
        <widget class="QWidget" name="tableErrorsWidget">
         <attribute name="title">
          <string>Errors</string>
@@ -108,9 +117,11 @@
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0">
           <widget class="QTableView" name="tableErrors"/>
+          <widget class="QTableView" name="tableErrors"/>
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="tableTitlesWidget">
        <widget class="QWidget" name="tableTitlesWidget">
         <attribute name="title">
          <string>Titles</string>
@@ -121,20 +132,47 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="tableParametrsWidget">
+        <attribute name="title">
+         <string>Parameters</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <widget class="QTableView" name="tableParametrs"/>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
     <item row="0" column="2">
      <widget class="QTabWidget" name="graphics">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
       <property name="mouseTracking">
        <bool>false</bool>
       </property>
       <property name="currentIndex">
-       <number>-1</number>
+       <number>0</number>
       </property>
+      <widget class="QWidget" name="graph1">
+       <attribute name="title">
+        <string>Graph</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QWidget" name="mainWidgetGraph" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="graph2">
+       <attribute name="title">
+        <string>Graph 2</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0">
+         <widget class="QWidget" name="widgetGraph2" native="true"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
