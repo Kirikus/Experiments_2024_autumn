@@ -41,6 +41,7 @@ class MeasurementModel : public QAbstractTableModel {
     }
     return columns;
   }
+
   virtual QVariant data(const QModelIndex& index,
                         int role = Qt::DisplayRole) const {
     int row = index.row();
@@ -64,6 +65,7 @@ class MeasurementModel : public QAbstractTableModel {
     }
     return output;
   }
+
   virtual bool setData(const QModelIndex& index, const QVariant& value,
                        int role = Qt::EditRole) {
     if (role == Qt::EditRole) {
