@@ -12,6 +12,17 @@ class MeasurementModel : public QAbstractTableModel {
   Manager p_manager;
 
  public:
+  virtual QVariant headerData(int section, Qt::Orientation orientation,
+                              int role = Qt::DisplayRole) const {
+    if (role != Qt::DisplayRole) {
+      return QVariant();
+    }
+    if (orientation == Qt::Vertical) {
+      return p_manager.variables[section].short_name;
+    } else if (orientation == Qt::Horizontal) {
+      return QString::number(section + 1);
+    }
+  }
   virtual int rowCount(const QModelIndex& parent = QModelIndex()) const {
     return p_manager.variables.size();
   }
