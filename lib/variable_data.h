@@ -31,14 +31,19 @@ class VariableData {
         full_name{full_name},
         short_name{short_name} {}
 
-  QString getElemPresentation(int index) {
-    double error = 0;
-    double measurement = measurements[index];
+  ErrorData* getElemError(int index) {
+    ErrorData* error;
     if (!errors_local[index]) {
-      error = error_global->getError(measurement);
+      error = error_global;
     } else {
-      error = errors_local[index]->getError(measurement);
+      error = errors_local[index];
     }
+    return error;
+  }
+
+  QString getElemPresentation(int index) {
+    double measurement = measurements[index];
+    double error = getElemError(index)->getError(measurement);
     if (error == 0) {
       return QString::number(measurement);
     }

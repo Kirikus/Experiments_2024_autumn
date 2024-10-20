@@ -3,25 +3,14 @@
 
 QVariant ErrorModel::data(const QModelIndex& index,
                           int role = Qt::DisplayRole) const {
-  if (role == Qt::CheckStateRole) {
-    return QVariant();
+  if (role == Qt::DisplayRole) {
+    ErrorData* error =
+        Manager::get_manager().variables[index.row()].getElemError(
+            index.column());
+    return QString(*error);
   }
 
-  int row = index.row();
-  int col = index.column();
-
-  ErrorData* error;
-  if (!Manager::get_manager()
-           .variables[index.row()]
-           .errors_local[index.column()])
-    error = Manager::get_manager().variables[index.row()].error_global;
-  else {
-    error = Manager::get_manager()
-                .variables[index.row()]
-                .errors_local[index.column()];
-  }
-
-  return QString(*error);
+  return QVariant();
 }
 
 bool ErrorModel::setData(const QModelIndex& index, const QVariant& value,
@@ -49,16 +38,9 @@ bool ErrorModel::setData(const QModelIndex& index, const QVariant& value,
       new_error = new ErrorAbsolute(data);
     }
 
-    ErrorData* error;
-    if (!Manager::get_manager()
-             .variables[index.row()]
-             .errors_local[index.column()]) {
-      error = Manager::get_manager().variables[index.row()].error_global;
-    } else {
-      error = Manager::get_manager()
-                  .variables[index.row()]
-                  .errors_local[index.column()];
-    }
+    ErrorData* error =
+        Manager::get_manager().variables[index.row()].getElemError(
+            index.column());
 
     if (error->data != data) {
       delete Manager::get_manager()
