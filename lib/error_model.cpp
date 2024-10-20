@@ -19,19 +19,19 @@ bool ErrorModel::setData(const QModelIndex& index, const QVariant& value,
     QString input = value.toString();
     ErrorData* new_error;
     double data;
-    bool* success;
+    bool success;
     if (input.right(1) == '%') {
       input.chop(1);
-      input.toDouble(success);
-      if (input.isEmpty() || !*success) {
+      input.toDouble(&success);
+      if (input.isEmpty() || !success) {
         return false;
       }
       data = input.toDouble();
       new_error = new ErrorRelative(data / 100);
 
     } else {
-      input.toDouble(success);
-      if (input.isEmpty() || !*success) {
+      input.toDouble(&success);
+      if (input.isEmpty() || !success) {
         return false;
       }
       data = input.toDouble();
