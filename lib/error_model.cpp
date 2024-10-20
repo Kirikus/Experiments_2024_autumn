@@ -38,21 +38,14 @@ bool ErrorModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
       }
       data = input.toDouble();
-      if (data < 0) {
-        return false;
-      }
-
       new_error = new ErrorRelative(data / 100);
+
     } else {
       input.toDouble(success);
       if (input.isEmpty() || !*success) {
         return false;
       }
       data = input.toDouble();
-      if (data < 0) {
-        return false;
-      }
-
       new_error = new ErrorAbsolute(data);
     }
 
