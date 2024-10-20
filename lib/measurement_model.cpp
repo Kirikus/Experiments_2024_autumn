@@ -29,34 +29,11 @@ int MeasurementModel::columnCount(
 
 QVariant MeasurementModel::data(const QModelIndex& index,
                                 int role = Qt::DisplayRole) const {
-  if (role == Qt::CheckStateRole) {
-    return QVariant();
+  if (role == Qt::DisplayRole) {
+    return Manager::get_manager().variables[index.row()].getElemPresentation(
+        index.column());
   }
-  int row = index.row();
-  int col = index.column();
-  double measurement = Manager::get_manager()
-                           .variables[index.row()]
-                           .measurements[index.column()];
-
-  double error = 0;
-  if (!Manager::get_manager()
-           .variables[index.row()]
-           .errors_local[index.column()])
-    error =
-        Manager::get_manager().variables[index.row()].error_global->getError(
-            measurement);
-  else {
-    error = Manager::get_manager()
-                     .variables[index.row()]
-                     .errors_local[index.column()]
-                     ->getError(measurement);
-  }
-
-  QString output = QString::number(measurement);
-  if (error != 0) {
-    return QString("%1±%2").arg(output, QString::number(error));
-  }
-  return output;
+  return QVariant();
 }
 
 bool MeasurementModel::setData(const QModelIndex& index, const QVariant& value,
