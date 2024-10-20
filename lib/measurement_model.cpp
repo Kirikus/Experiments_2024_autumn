@@ -29,9 +29,11 @@ int MeasurementModel::columnCount(
 
 QVariant MeasurementModel::data(const QModelIndex& index,
                                 int role = Qt::DisplayRole) const {
+  VariableData row = Manager::get_manager().variables[index.row()];
   if (role == Qt::DisplayRole) {
-    return Manager::get_manager().variables[index.row()].getElemPresentation(
-        index.column());
+    return row.getElemPresentation(index.column());
+  } else if (role == Qt::EditRole) {
+    return row.measurements[index.column()];
   }
   return QVariant();
 }
