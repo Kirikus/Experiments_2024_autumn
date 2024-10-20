@@ -3,14 +3,14 @@
 
 QVariant MeasurementModel::headerData(int section, Qt::Orientation orientation,
                                       int role = Qt::DisplayRole) const {
-  if (role != Qt::DisplayRole) {
-    return QVariant();
+  if (role == Qt::DisplayRole) {
+    if (orientation == Qt::Vertical) {
+      return Manager::get_manager().variables[section].short_name;
+    } else if (orientation == Qt::Horizontal) {
+      return QString::number(section + 1);
+    }
   }
-  if (orientation == Qt::Vertical) {
-    return Manager::get_manager().variables[section].short_name;
-  } else if (orientation == Qt::Horizontal) {
-    return QString::number(section + 1);
-  }
+  return QVariant();
 }
 
 int MeasurementModel::rowCount(
