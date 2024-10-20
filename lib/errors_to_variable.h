@@ -4,7 +4,7 @@
 class ErrorData {
  public:
   double data{};
-  ErrorData(double data) : data{data} {}
+  ErrorData(double data) : data{fabs(data)} {}
   virtual double getError(double measurement) = 0;
   virtual operator QString() const = 0;
 };
@@ -19,7 +19,7 @@ class ErrorAbsolute : public ErrorData {
 class ErrorRelative : public ErrorData {
  public:
   using ErrorData::ErrorData;
-  virtual double getError(double measurement) { return measurement * data; }
+  virtual double getError(double measurement) { return fabs(measurement * data); }
   virtual operator QString() const { return QString::number(data * 100) + "%"; }
 };
 

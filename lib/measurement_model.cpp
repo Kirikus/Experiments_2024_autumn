@@ -42,14 +42,14 @@ QVariant MeasurementModel::data(const QModelIndex& index,
   if (!Manager::get_manager()
            .variables[index.row()]
            .errors_local[index.column()])
-    error = fabs(
+    error =
         Manager::get_manager().variables[index.row()].error_global->getError(
-            measurement));
+            measurement);
   else {
-    error = fabs(Manager::get_manager()
+    error = Manager::get_manager()
                      .variables[index.row()]
                      .errors_local[index.column()]
-                     ->getError(measurement));
+                     ->getError(measurement);
   }
 
   QString output = QString::number(measurement);
