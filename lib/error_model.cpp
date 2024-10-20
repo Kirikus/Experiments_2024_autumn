@@ -3,6 +3,10 @@
 
 QVariant ErrorModel::data(const QModelIndex& index,
                           int role = Qt::DisplayRole) const {
+  if (role == Qt::CheckStateRole) {
+    return QVariant();
+  }
+
   int row = index.row();
   int col = index.column();
 
@@ -17,12 +21,7 @@ QVariant ErrorModel::data(const QModelIndex& index,
                 .errors_local[index.column()];
   }
 
-  if (error->getError(1) !=
-      error->getError(2)) {  // check: *error != ErrorAbsolute
-    return QString("%1%").arg(error->data * 100);
-  }
-
-  return error->data;
+  return QString(*error);
 }
 
 bool ErrorModel::setData(const QModelIndex& index, const QVariant& value,
