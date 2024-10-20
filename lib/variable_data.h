@@ -30,6 +30,21 @@ class VariableData {
         errors_local{errors},
         full_name{full_name},
         short_name{short_name} {}
+
+  QString getElemPresentation(int index) {
+    double error = 0;
+    double measurement = measurements[index];
+    if (!errors_local[index]) {
+      error = error_global->getError(measurement);
+    } else {
+      error = errors_local[index]->getError(measurement);
+    }
+    if (error == 0) {
+      return QString::number(measurement);
+    }
+    return QString("%1±%2").arg(QString::number(measurement),
+                                QString::number(error));
+  }
 };
 
 #endif
