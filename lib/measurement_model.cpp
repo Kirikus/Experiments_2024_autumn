@@ -4,36 +4,36 @@
 QVariant MeasurementModel::headerData(int section, Qt::Orientation orientation,
                                       int role = Qt::DisplayRole) const {
   if (role == Qt::DisplayRole) {
-    if (orientation == Qt::Vertical) {
+    if (orientation == Qt::Horizontal) {
       return Manager::get_manager().variables[section].short_name;
-    } else if (orientation == Qt::Horizontal) {
+    } else if (orientation == Qt::Vertical) {
       return QString::number(section + 1);
     }
   }
   return QVariant();
 }
 
-int MeasurementModel::rowCount(
+int MeasurementModel::columnCount(
     const QModelIndex& parent = QModelIndex()) const {
   return Manager::get_manager().variables.size();
 }
 
-int MeasurementModel::columnCount(
+int MeasurementModel::rowCount(
     const QModelIndex& parent = QModelIndex()) const {
-  long long int columns = 0;
+  long long int row = 0;
   for (auto& i : Manager::get_manager().variables) {
-    columns = std::max(columns, i.measurements.size());
+    row = std::max(row, i.measurements.size());
   }
-  return columns;
+  return row;
 }
 
 QVariant MeasurementModel::data(const QModelIndex& index,
                                 int role = Qt::DisplayRole) const {
-  VariableData row = Manager::get_manager().variables[index.row()];
+  VariableData row = Manager::get_manager().variables[index.column()];
   if (role == Qt::DisplayRole) {
-    return row.getElemPresentation(index.column());
+    return row.getElemPresentation(index.row());
   } else if (role == Qt::EditRole) {
-    return row.measurements[index.column()];
+    return row.measurements[index.row()];
   }
   return QVariant();
 }
@@ -44,7 +44,7 @@ bool MeasurementModel::setData(const QModelIndex& index, const QVariant& value,
     if (!value.toBool() || !value.canConvert<double>()) {
       return false;
     }
-    Manager::get_manager().variables[index.row()].measurements[index.column()] =
+    Manager::get_manager().variables[index.column()].measurements[index.row()] =
         value.toDouble();
 
     emit dataChanged(index, index, QList({role}));

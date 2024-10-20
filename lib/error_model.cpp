@@ -5,8 +5,8 @@ QVariant ErrorModel::data(const QModelIndex& index,
                           int role = Qt::DisplayRole) const {
   if (role == Qt::DisplayRole || role == Qt::EditRole) {
     ErrorData* error =
-        Manager::get_manager().variables[index.row()].getElemError(
-            index.column());
+        Manager::get_manager().variables[index.column()].getElemError(
+            index.row());
     return QString(*error);
   }
 
@@ -39,16 +39,16 @@ bool ErrorModel::setData(const QModelIndex& index, const QVariant& value,
     }
 
     ErrorData* error =
-        Manager::get_manager().variables[index.row()].getElemError(
-            index.column());
+        Manager::get_manager().variables[index.column()].getElemError(
+            index.row());
 
     if (error->data != data) {
       delete Manager::get_manager()
-          .variables[index.row()]
-          .errors_local[index.column()];
+          .variables[index.column()]
+          .errors_local[index.row()];
       Manager::get_manager()
-          .variables[index.row()]
-          .errors_local[index.column()] = new_error;
+          .variables[index.column()]
+          .errors_local[index.row()] = new_error;
     }
 
     emit dataChanged(index, index, QList({role}));
