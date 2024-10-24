@@ -19,7 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
 
   ui->setupUi(this);
   MeasurementModel *model_measurements = new MeasurementModel;
+  MeasurementModel *model_measurements = new MeasurementModel;
   ErrorModel *model_err = new ErrorModel;
+  Manager &manager = Manager().get_manager();
   Manager &manager = Manager().get_manager();
 
   ErrorData *err = new ErrorAbsolute(0.);
@@ -29,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
   manager.add_variable(VariableData({4, 5, 6}, err2, "Test2", "tst2"));
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
-
 
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
