@@ -3,7 +3,7 @@
 
 #include <QList>
 
-#include "errors_to_variable.h"
+#include "error_data.h"
 
 class VariableData {
  public:
