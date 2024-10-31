@@ -19,11 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   ui->setupUi(this);
   MeasurementModel *model_measurements = new MeasurementModel;
-  MeasurementModel *model_measurements = new MeasurementModel;
   ErrorModel *model_err = new ErrorModel;
   Manager &manager = Manager().get_manager();
-  Manager &manager = Manager().get_manager();
-
   ErrorData *err = new ErrorAbsolute(0.);
   ErrorData *err2 = new ErrorRelative(0.12);
 
