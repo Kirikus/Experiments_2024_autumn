@@ -20,8 +20,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>../../../../Загрузки/1591476297136061096.png</normaloff>../../../../Загрузки/1591476297136061096.png</iconset>
+   <iconset theme="cut.png"/>
   </property>
   <property name="toolTip">
    <string/>
@@ -66,12 +65,12 @@
         </spacer>
        </item>
        <item row="2" column="0">
-        <widget class="QPushButton" name="buttonParametrs">
+        <widget class="QPushButton" name="buttonParameters">
          <property name="toolTip">
-          <string>Set qraph parametrs </string>
+          <string>Set graph parameters </string>
          </property>
          <property name="text">
-          <string>Parametrs</string>
+          <string>Parameters</string>
          </property>
         </widget>
        </item>
@@ -105,7 +104,7 @@
       </property>
       <widget class="QTabWidget" name="tableWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tableDataWidget">
         <attribute name="title">
@@ -252,7 +251,7 @@
     <string>New graph</string>
    </property>
    <property name="toolTip">
-    <string comment="46" extracomment="1345678">Add new graph</string>
+    <string>Add new graph</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+G</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogParametrs</class>
- <widget class="QDialog" name="DialogParametrs">
+ <class>DialogParameters</class>
+ <widget class="QDialog" name="DialogParameters">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Parametrs</string>
+   <string>Parameters</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -41,7 +41,7 @@
   <connection>
    <sender>buttonBoxApplyDiscard</sender>
    <signal>accepted()</signal>
-   <receiver>DialogParametrs</receiver>
+   <receiver>DialogParameters</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -57,7 +57,7 @@
   <connection>
    <sender>buttonBoxApplyDiscard</sender>
    <signal>rejected()</signal>
-   <receiver>DialogParametrs</receiver>
+   <receiver>DialogParameters</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

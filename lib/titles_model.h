@@ -1,5 +1,5 @@
-#ifndef __TITIES_H__
-#define __TITIES_H__
+#ifndef __TITLES_H__
+#define __TITLES_H__
 
 #include <QAbstractTableModel>
 #include <QString>
