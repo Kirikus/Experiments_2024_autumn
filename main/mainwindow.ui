@@ -252,7 +252,7 @@
     <string>New graph</string>
    </property>
    <property name="toolTip">
-    <string>Add new graph</string>
+    <string comment="46" extracomment="1345678">Add new graph</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+G</string>
