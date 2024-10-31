@@ -20,7 +20,8 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="cut.png"/>
+   <iconset theme="cut.png">
+    <normaloff>../../</normaloff>../../</iconset>
   </property>
   <property name="toolTip">
    <string/>
@@ -47,8 +48,8 @@
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <layout class="QGridLayout" name="gridLayout_8" columnstretch="1,100,100" columnminimumwidth="0,0,0">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
      <widget class="QWidget" name="leftMenu" native="true">
       <layout class="QGridLayout" name="gridLayout">
        <item row="3" column="0">
@@ -97,7 +98,7 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -110,7 +111,7 @@
         <attribute name="title">
          <string>Data</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_4">
+        <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
           <widget class="QTableView" name="tableData"/>
          </item>
@@ -120,7 +121,7 @@
         <attribute name="title">
          <string>Errors</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_3">
+        <layout class="QGridLayout" name="gridLayout_6">
          <item row="0" column="0">
           <widget class="QTableView" name="tableErrors"/>
          </item>
@@ -130,48 +131,58 @@
         <attribute name="title">
          <string>Titles</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_5">
+        <layout class="QGridLayout" name="gridLayout_8">
          <item row="0" column="0">
           <widget class="QTableView" name="tableTitles"/>
          </item>
         </layout>
        </widget>
       </widget>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QTabWidget" name="graphics">
-      <property name="mouseTracking">
-       <bool>false</bool>
-      </property>
-      <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <property name="tabsClosable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="graph1">
-       <attribute name="title">
-        <string>Graph</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QWidget" name="mainWidgetGraph" native="true"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="graph2">
-       <attribute name="title">
-        <string>Graph 2</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0">
-         <widget class="QWidget" name="widgetGraph2" native="true"/>
-        </item>
-       </layout>
+      <widget class="QTabWidget" name="graphics">
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
+       </property>
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
+       <property name="tabsClosable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="graph1">
+        <attribute name="title">
+         <string>Graph</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QSplitter" name="splitter_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QWidget" name="widget" native="true"/>
+           <widget class="QTableWidget" name="tableWidget_2"/>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="graph2">
+        <attribute name="title">
+         <string>Graph 2</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QSplitter" name="splitter_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QWidget" name="widget_2" native="true"/>
+           <widget class="QTableWidget" name="tableWidget_3"/>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
