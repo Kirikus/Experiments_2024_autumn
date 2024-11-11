@@ -22,6 +22,8 @@ class MeasurementModel : public QAbstractTableModel {
                        int role);
 
   Qt::ItemFlags flags(const QModelIndex& index) const;
+
+  void keyPressEvent(QKeyEvent* event) const;
 };
 
 class MeasurementView : public QTableView {};
