@@ -160,7 +160,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -171,7 +171,18 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
-         <widget class="QWidget" name="mainWidgetGraph" native="true"/>
+         <widget class="QWidget" name="mainWidgetGraph" native="true">
+          <widget class="QTableWidget" name="test_table">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>311</width>
+             <height>391</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -181,9 +192,24 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
         <item row="0" column="0">
-         <widget class="QWidget" name="widgetGraph2" native="true"/>
+         <widget class="QCustomPlot" name="widgetGraph2" native="true"/>
         </item>
        </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Page</string>
+       </attribute>
+       <widget class="QWidget" name="WWW" native="true">
+        <property name="geometry">
+         <rect>
+          <x>29</x>
+          <y>19</y>
+          <width>271</width>
+          <height>361</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -289,6 +315,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
