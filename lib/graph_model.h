@@ -1,76 +1,17 @@
 #ifndef __GRAPH_MODEL_H__
 #define __GRAPH_MODEL_H__
 
-#include <QComboBox>
 #include <QHBoxLayout>
 #include <QList>
 #include <QObject>
 #include <QPen>
 #include <QString>
-#include <QStyledItemDelegate>
-#include <QVector>
 #include <QWidget>
 
+#include "delegates.h"
 #include "manager.h"
 #include "measurement_model.h"
 #include "qcustomplot.h"
-
-class ColorDelegate : public QStyledItemDelegate {
- public:
-  ColorDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {}
-
-  virtual void paint(QPainter* painter, const QStyleOptionViewItem& option,
-                     const QModelIndex& index) const {
-    drawBackground(painter, option, index);
-    QStyledItemDelegate::paint(painter, option, index);
-  }
-
-  QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&,
-                        const QModelIndex& index) const {
-    return new QColorDialog(parent);
-  }
-
-  void setModelData(QWidget* editor, QAbstractItemModel* model,
-                    const QModelIndex& index) const {
-    QColorDialog* color_dialog = static_cast<QColorDialog*>(editor);
-    model->setData(index, color_dialog->selectedColor(), Qt::BackgroundRole);
-  }
-
- protected:
-  virtual void drawBackground(QPainter* painter,
-                              const QStyleOptionViewItem& option,
-                              const QModelIndex& index) const {
-    painter->fillRect(option.rect, index.model()->data(index).value<QColor>());
-  }
-};
-
-class LineStyleDelegate : public QStyledItemDelegate {
- public:
-  QList<QString> line_styles = {"None",      "Line",       "StepLeft",
-                                "StepRight", "StepCenter", "Impulse"};
-
-  LineStyleDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {}
-
-  virtual void paint(QPainter* painter, const QStyleOptionViewItem& option,
-                     const QModelIndex& index) const {
-    QStyledItemDelegate::paint(painter, option, index);
-  }
-
-  QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&,
-                        const QModelIndex& index) const {
-    auto editor = new QComboBox(parent);
-    for (auto& style : line_styles) {
-      editor->addItem(style);
-    }
-    return editor;
-  }
-
-  void setModelData(QWidget* editor, QAbstractItemModel* model,
-                    const QModelIndex& index) const {
-    QComboBox* set_editor = static_cast<QComboBox*>(editor);
-    model->setData(index, set_editor->currentText(), Qt::EditRole);
-  }
-};
 
 class SettingsModel : public QTableWidget {
  public:
