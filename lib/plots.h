@@ -1,5 +1,5 @@
-#ifndef __GRAPH_MODEL_H__
-#define __GRAPH_MODEL_H__
+#ifndef __PLOTS_H__
+#define __PLOTS_H__
 
 #include <QHBoxLayout>
 #include <QList>

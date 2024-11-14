@@ -9,7 +9,7 @@
 #include <QVector>
 
 #include "../lib/error_model.h"
-#include "../lib/graph_model.h"
+#include "../lib/plots.h"
 #include "../lib/measurement_model.h"
 #include "./ui_mainwindow.h"
 #include "qcustomplot.h"
