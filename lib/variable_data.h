@@ -31,6 +31,8 @@ class VariableData {
         full_name{full_name},
         short_name{short_name} {}
 
+  auto size() { return measurements.size(); }
+
   ErrorData* getElemError(int index) {
     ErrorData* error;
     if (!errors_local[index]) {
