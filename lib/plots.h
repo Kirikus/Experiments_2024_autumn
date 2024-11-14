@@ -21,7 +21,7 @@ class AbstractPlot : public QWidget {
   virtual void update_settings(int num) = 0;
   virtual void update_data(int num) = 0;
  public slots:
-  virtual void draw(QModelIndex& index) = 0;
+  virtual void draw(int row, int column) = 0;
 
  protected:
   void create_environment(QWidget* parent = nullptr) {
@@ -43,8 +43,7 @@ class AbstractPlot : public QWidget {
     layout->addWidget(splitter);
     splitter->addWidget(plot);
     splitter->addWidget(settings);
-    // QObject::connect(settings, &QTableWidget::dataChanged, parent,
-    //                  &AbstractPlot::draw);
+    connect(settings, &QTableWidget::cellChanged, this, &AbstractPlot::draw);
   }
 };
 
@@ -53,7 +52,15 @@ class ScatterPlot : public AbstractPlot {
   ScatterPlot(QWidget* parent = nullptr) { create_environment(this); }
  public slots:
 
-  virtual void draw(QModelIndex& index) {}
+  virtual void draw(int row, int column) {
+    switch (column) {
+      case 2: {
+        plot->graph(row)->setPen(QPen(settings->item(row, 2)->background(), 1));
+        break;
+      }
+    }
+    plot->replot();
+  }
 
  public:
   virtual void update_data(int num) override {
