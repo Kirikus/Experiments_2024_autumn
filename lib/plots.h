@@ -43,39 +43,65 @@ class AbstractPlot : public QWidget {
       {"PlusCircle", QCPScatterStyle::ssPlusCircle},
       {"Peace", QCPScatterStyle::ssPeace}};
 
-  virtual void set_start_pose() = 0;
   virtual void update_data(QList<int> indexes) = 0;
  public slots:
   virtual void redraw_settings(int row, int column) = 0;
+};
 
- protected:
-  void start_init(QWidget* parent = nullptr) {
+class ScatterPlot : public AbstractPlot {
+ public:
+  ScatterPlot(QWidget* parent = nullptr) {
     plot = new QCustomPlot();
     plot->xAxis->setLabel("x");
     plot->yAxis->setLabel("y");
     settings = new SettingsModel();
     int rows_count = settings->rowCount();
-    set_start_pose();
 
-    for (int i = 0; i < rows_count; ++i) {
-      update_data({i});
-    }
-
-    QHBoxLayout* layout = new QHBoxLayout(parent);
+    QHBoxLayout* layout = new QHBoxLayout(this);
     QSplitter* splitter = new QSplitter(Qt::Vertical, nullptr);
     layout->addWidget(splitter);
     splitter->addWidget(plot);
     splitter->addWidget(settings);
     connect(settings, &QTableWidget::cellChanged, this,
             &AbstractPlot::redraw_settings);
+
+    auto manager_line = Manager::get_manager().variables;
+    bool is_active;
+    auto style = QCPGraph::lsLine;
+    double min_y = manager_line[0].measurements[0];
+    double max_y = manager_line[0].measurements[0];
+
+    for (int i = 0; i < rows_count; ++i) {
+      is_active = settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
+      auto graph = plot->addGraph();
+      update_data({i});
+
+      if (is_active) {
+        min_y = std::min(min_y,
+                         *std::min_element(manager_line[i].measurements.begin(),
+                                           manager_line[i].measurements.end()));
+        max_y = std::max(max_y,
+                         *std::max_element(manager_line[i].measurements.begin(),
+                                           manager_line[i].measurements.end()));
+
+        for (int k : QList({SettingsModel::Column::Is_Active,
+                            SettingsModel::Column::Style,
+                            SettingsModel::Column::Line_Size,
+                            SettingsModel::Column::Scatter_Size})) {
+          redraw_settings(i, k);
+        }
+      }
+    }
+    plot->xAxis->setRange(0, 1);
+    plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
+                          max_y + (max_y - min_y) / 20.);
+
+    plot->setInteraction(QCP::iRangeZoom, true);
+    plot->setInteraction(QCP::iRangeDrag, true);
+    plot->replot();
   }
-};
 
-class ScatterPlot : public AbstractPlot {
- public:
-  ScatterPlot(QWidget* parent = nullptr) { start_init(this); }
  public slots:
-
   virtual void redraw_settings(int row, int column) {
     auto cell = settings->item(row, column);
     auto graph = plot->graph(row);
@@ -131,48 +157,6 @@ class ScatterPlot : public AbstractPlot {
       x[i] = step * i + 0.025;
     }
     plot->graph(indexes[0])->setData(x, y);
-    plot->replot();
-  }
-
-  virtual void set_start_pose() override {
-    auto manager_line = Manager::get_manager().variables;
-    int rows_count = settings->rowCount();
-    bool is_active = false;
-    auto style = QCPGraph::lsLine;
-    double min_y = manager_line[0].measurements[0];
-    double max_y = manager_line[0].measurements[0];
-
-    for (int i = 0; i < rows_count; ++i) {
-      is_active = settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
-      auto graph = plot->addGraph();
-      if (is_active) {
-        min_y = std::min(min_y,
-                         *std::min_element(manager_line[i].measurements.begin(),
-                                           manager_line[i].measurements.end()));
-        max_y = std::max(max_y,
-                         *std::max_element(manager_line[i].measurements.begin(),
-                                           manager_line[i].measurements.end()));
-
-        QString user_style = settings->item(i, SettingsModel::Column::Style)
-                                 ->data(Qt::DisplayRole)
-                                 .value<QString>();
-        graph->setLineStyle(colors_map[user_style]);
-
-        auto color =
-            settings->item(i, SettingsModel::Column::Color)->background();
-        graph->setPen(
-            QPen(color, settings->item(i, SettingsModel::Column::Scatter_Size)
-                            ->data(Qt::DisplayRole)
-                            .value<double>()));
-      }
-      graph->setVisible(is_active);
-    }
-    plot->xAxis->setRange(0, 1);
-    plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
-                          max_y + (max_y - min_y) / 20.);
-
-    plot->setInteraction(QCP::iRangeZoom, true);
-    plot->setInteraction(QCP::iRangeDrag, true);
     plot->replot();
   }
 };
