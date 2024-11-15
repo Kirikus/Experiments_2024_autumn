@@ -35,21 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
 
-  // tests
-
-  QTableWidget *test = ui->test_table;
-  test->setRowCount(2);
-  test->setColumnCount(3);
-
-  for (int i = 0; i < 2; ++i) {
-    for (int j = 0; j < 2; ++j) {
-      QTableWidgetItem *item =
-          new QTableWidgetItem(QString::number(i + 1) + QString::number(j + 1));
-      test->setItem(i, j, item);
-    }
-  }
-
-  ui->graphics->addTab(new ScatterPlot(), "hmm?");
+  ui->graphics->addTab(new ScatterPlot(), "Scatter");
 
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
