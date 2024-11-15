@@ -3,6 +3,7 @@
 
 #include <QHBoxLayout>
 #include <QList>
+#include <QMap>
 #include <QObject>
 #include <QPen>
 #include <QString>
@@ -18,6 +19,11 @@ class AbstractPlot : public QWidget {
  public:
   QCustomPlot* plot;
   SettingsModel* settings;
+  QMap<QString, int> colors_map{{"Line", QCPGraph::lsLine},
+                                {"StepLeft", QCPGraph::lsStepLeft},
+                                {"StepRight", QCPGraph::lsStepRight},
+                                {"StepCenter", QCPGraph::lsStepCenter},
+                                {"Impulse", QCPGraph::lsImpulse}};
   virtual void update_settings(int num) = 0;
   virtual void update_data(int num) = 0;
  public slots:
@@ -100,11 +106,8 @@ class ScatterPlot : public AbstractPlot {
       auto style = QCPGraph::lsLine;
       QString user_style =
           settings->item(num, 1)->data(Qt::DisplayRole).value<QString>();
-      if (user_style == "StepLeft") style = QCPGraph::lsStepLeft;
-      if (user_style == "StepCenter") style = QCPGraph::lsStepCenter;
-      if (user_style == "StepRight") style = QCPGraph::lsStepRight;
-      if (user_style == "Impulse") style = QCPGraph::lsImpulse;
-      graph->setLineStyle(style);
+      graph->setLineStyle(
+          static_cast<QCPGraph::LineStyle>(colors_map[user_style]));
 
       auto color = settings->item(num, 2)->background();
       graph->setPen(QPen(color, 1));
