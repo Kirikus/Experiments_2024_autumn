@@ -31,14 +31,14 @@ class SettingsModel : public QTableWidget {
 
     int rows_size = rowCount();
     for (int i = 0; i < rows_size; ++i) {
-      QTableWidgetItem* item0 = new QTableWidgetItem("0");
+      QTableWidgetItem* itemActive = new QTableWidgetItem("1");
       QTableWidgetItem* itemNone = new QTableWidgetItem("Line");
       QTableWidgetItem* itemColor = new QTableWidgetItem("");
       QTableWidgetItem* itemScatter = new QTableWidgetItem("None");
       QTableWidgetItem* itemScatterSize = new QTableWidgetItem("10");
       QTableWidgetItem* itemLineSize = new QTableWidgetItem("2");
 
-      setItem(i, Is_Active, item0);
+      setItem(i, Is_Active, itemActive);
       setItem(i, Style, itemNone);
       setItem(i, Color, itemColor);
       setItem(i, Scatter, itemScatter);
