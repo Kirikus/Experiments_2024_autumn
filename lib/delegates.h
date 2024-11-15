@@ -3,6 +3,7 @@
 
 #include <QColorDialog>
 #include <QComboBox>
+#include <QObject>
 #include <QPainter>
 #include <QStyledItemDelegate>
 
@@ -35,12 +36,11 @@ class ColorDelegate : public QStyledItemDelegate {
   }
 };
 
-class LineStyleDelegate : public QStyledItemDelegate {
+class AbstractComboBoxDelegate : public QStyledItemDelegate {
  public:
-  QList<QString> line_styles = {"None",      "Line",       "StepLeft",
-                                "StepRight", "StepCenter", "Impulse"};
+  QList<QString> options;
 
-  LineStyleDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {}
+  AbstractComboBoxDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {}
 
   virtual void paint(QPainter* painter, const QStyleOptionViewItem& option,
                      const QModelIndex& index) const {
@@ -50,8 +50,8 @@ class LineStyleDelegate : public QStyledItemDelegate {
   QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&,
                         const QModelIndex& index) const {
     auto editor = new QComboBox(parent);
-    for (auto& style : line_styles) {
-      editor->addItem(style);
+    for (auto& option_string : options) {
+      editor->addItem(option_string);
     }
     return editor;
   }
@@ -60,6 +60,13 @@ class LineStyleDelegate : public QStyledItemDelegate {
                     const QModelIndex& index) const {
     QComboBox* set_editor = static_cast<QComboBox*>(editor);
     model->setData(index, set_editor->currentText(), Qt::EditRole);
+  }
+};
+
+class LineStyleDelegate : public AbstractComboBoxDelegate {
+ public:
+  LineStyleDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {
+    options = {"Line", "StepLeft", "StepRight", "StepCenter", "Impulse"};
   }
 };
 
