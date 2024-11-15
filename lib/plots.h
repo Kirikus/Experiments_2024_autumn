@@ -137,26 +137,19 @@ class ScatterPlot : public AbstractPlot {
     int rows_count = settings->rowCount();
     bool is_active = false;
     auto style = QCPGraph::lsLine;
+    double min_y = manager_line[0].measurements[0];
+    double max_y = manager_line[0].measurements[0];
 
     for (int i = 0; i < rows_count; ++i) {
       is_active = settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = plot->addGraph();
       if (is_active) {
-        double min_y = manager_line[i].measurements[0];
-        double max_y = manager_line[i].measurements[0];
-
-        for (int j = 0; j < manager_line.size(); ++j) {
-          min_y = std::min(
-              min_y, *std::min_element(manager_line[j].measurements.begin(),
-                                       manager_line[j].measurements.end()));
-          max_y = std::max(
-              max_y, *std::max_element(manager_line[j].measurements.begin(),
-                                       manager_line[j].measurements.end()));
-        }
-
-        plot->xAxis->setRange(0, 1);
-        plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
-                              max_y + (max_y - min_y) / 20.);
+        min_y = std::min(min_y,
+                         *std::min_element(manager_line[i].measurements.begin(),
+                                           manager_line[i].measurements.end()));
+        max_y = std::max(max_y,
+                         *std::max_element(manager_line[i].measurements.begin(),
+                                           manager_line[i].measurements.end()));
 
         QString user_style = settings->item(i, SettingsModel::Column::Style)
                                  ->data(Qt::DisplayRole)
@@ -165,13 +158,19 @@ class ScatterPlot : public AbstractPlot {
 
         auto color =
             settings->item(i, SettingsModel::Column::Color)->background();
-        graph->setPen(QPen(
-            color, settings->item(i, SettingsModel::Column::Scatter_Size)
-                       ->data(Qt::DisplayRole)
-                       .value<double>()));
+        graph->setPen(
+            QPen(color, settings->item(i, SettingsModel::Column::Scatter_Size)
+                            ->data(Qt::DisplayRole)
+                            .value<double>()));
       }
       graph->setVisible(is_active);
     }
+    plot->xAxis->setRange(0, 1);
+    plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
+                          max_y + (max_y - min_y) / 20.);
+
+    plot->setInteraction(QCP::iRangeZoom, true);
+    plot->setInteraction(QCP::iRangeDrag, true);
     plot->replot();
   }
 };
