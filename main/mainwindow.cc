@@ -34,10 +34,13 @@ MainWindow::MainWindow(QWidget *parent)
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
 
-  ui->graphics->addTab(new ScatterPlot(), "Scatter");
+  ScatterPlot *plot = new ScatterPlot();
+  ui->graphics->addTab(plot, "Scatter");
 
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
+  connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
+          &AbstractPlot::update_data_slot);
 }
 
 MainWindow::~MainWindow() { delete ui; }

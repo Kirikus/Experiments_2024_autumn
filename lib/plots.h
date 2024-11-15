@@ -43,8 +43,13 @@ class AbstractPlot : public QWidget {
       {"PlusCircle", QCPScatterStyle::ssPlusCircle},
       {"Peace", QCPScatterStyle::ssPeace}};
 
-  virtual void update_data(QList<int> indexes) = 0;
+  virtual void update_data(const int topleft, const int bottomRight,
+                           const QList<int>& roles = QList<int>()) = 0;
+
  public slots:
+  virtual void update_data_slot(const QModelIndex& topleft,
+                                const QModelIndex& bottomRight,
+                                const QList<int>& roles = QList<int>()) = 0;
   virtual void redraw_settings(int row, int column) = 0;
 };
 
@@ -74,7 +79,8 @@ class ScatterPlot : public AbstractPlot {
     for (int i = 0; i < rows_count; ++i) {
       is_active = settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = plot->addGraph();
-      update_data({i});
+
+      update_data(i, i);
 
       if (is_active) {
         min_y = std::min(min_y,
@@ -144,20 +150,43 @@ class ScatterPlot : public AbstractPlot {
     plot->replot();
   }
 
+  virtual void update_data_slot(
+      const QModelIndex& topLeft, const QModelIndex& bottomRight,
+      const QList<int>& roles = QList<int>()) override {
+    update_data(topLeft.column(), bottomRight.column(), roles);
+  }
+
  public:
-  virtual void update_data(QList<int> indexes) override {
-    if (indexes.size() != 1) {
-      return;
+  virtual void update_data(const int topLeft, const int bottomRight,
+                           const QList<int>& roles = QList<int>()) override {
+    int row_width = roles.size() / (topLeft - bottomRight + 1);
+    bool line_changed;
+    bool table_changed = false;
+    for (int row = bottomRight; row < (topLeft + 1); ++row) {
+      line_changed = false;
+      for (int k = row_width * (row - bottomRight);
+           k < row_width * (row - bottomRight + 1); ++k) {
+        if (roles[k] == Qt::EditRole) {
+          line_changed = true;
+          break;
+        }
+      }
+      if (line_changed || (roles.size() == 0)) {
+        table_changed = true;
+      } else {
+        continue;
+      }
+
+      auto manager_line = Manager::get_manager().variables[row];
+      QVector<double> x(manager_line.size());
+      QVector<double> y = QVector<double>::fromList(manager_line.measurements);
+      double step = .95 / manager_line.size();
+      for (int i = 0; i < x.size(); ++i) {
+        x[i] = step * i + 0.025;
+      }
+      plot->graph(row)->setData(x, y);
     }
-    auto manager_line = Manager::get_manager().variables[indexes[0]];
-    QVector<double> x(manager_line.size());
-    QVector<double> y = QVector<double>::fromList(manager_line.measurements);
-    double step = .95 / manager_line.size();
-    for (int i = 0; i < x.size(); ++i) {
-      x[i] = step * i + 0.025;
-    }
-    plot->graph(indexes[0])->setData(x, y);
-    plot->replot();
+    if (table_changed) plot->replot();
   }
 };
 
