@@ -108,7 +108,9 @@ class ScatterPlot : public AbstractPlot {
 
         graph->setScatterStyle(
             QCPScatterStyle(scatters_map[shape.value<QString>()],
-                            settings->item(row, 2)->background().color(),
+                            settings->item(row, SettingsModel::Column::Color)
+                                ->background()
+                                .color(),
                             size.value<double>()));
         break;
       }
