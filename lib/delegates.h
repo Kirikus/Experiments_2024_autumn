@@ -70,4 +70,14 @@ class LineStyleDelegate : public AbstractComboBoxDelegate {
   }
 };
 
+class ScatterStyleDelegate : public AbstractComboBoxDelegate {
+  ScatterStyleDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {
+    options = {"Cross",       "Plus",       "Circle",
+               "Disc",        "Square",     "Diamond",
+               "Star",        "Triangle",   "TriangleInverted",
+               "CrossSquare", "PlusSquare", "CrossCircle",
+               "PlusCircle",  "Peace",      "Custom"};
+  }
+};
+
 #endif
