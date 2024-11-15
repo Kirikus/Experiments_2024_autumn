@@ -1,6 +1,8 @@
 #ifndef __DELEGATES_H__
 #define __DELEGATES_H__
 
+#include <QApplication>
+#include <QCheckBox>
 #include <QColorDialog>
 #include <QComboBox>
 #include <QObject>
@@ -33,6 +35,49 @@ class ColorDelegate : public QStyledItemDelegate {
                               const QStyleOptionViewItem& option,
                               const QModelIndex& index) const {
     painter->fillRect(option.rect, index.model()->data(index).value<QColor>());
+  }
+};
+
+class CheckBoxDelegate : public QStyledItemDelegate {
+ public:
+  CheckBoxDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {}
+
+  bool editorEvent(QEvent* event, QAbstractItemModel* model,
+                   const QStyleOptionViewItem& option,
+                   const QModelIndex& index) {
+    if (event->type() == QEvent::MouseButtonRelease) {
+      bool value = index.data(Qt::DisplayRole).toBool();
+      model->setData(index, !value, Qt::DisplayRole);
+      return true;
+    }
+
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
+  }
+
+  void paint(QPainter* painter, const QStyleOptionViewItem& option,
+             const QModelIndex& index) const {
+    QStyleOptionButton option_button;
+    option_button.rect = option.rect;
+
+    bool isChecked = index.data(Qt::DisplayRole).toBool();
+    if (isChecked) {
+      option_button.state |= QStyle::State_On;
+    } else {
+      option_button.state |= QStyle::State_Off;
+    }
+
+    QApplication::style()->drawControl(QStyle::CE_CheckBox, &option_button, painter);
+  }
+
+  QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&,
+                        const QModelIndex& index) const {
+    return new QCheckBox(parent);
+  }
+
+  void setModelData(QWidget* editor, QAbstractItemModel* model,
+                    const QModelIndex& index) const {
+    QCheckBox* checker = static_cast<QCheckBox*>(editor);
+    model->setData(index, checker->isChecked(), Qt::BackgroundRole);
   }
 };
 
