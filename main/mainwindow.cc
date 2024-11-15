@@ -9,11 +9,10 @@
 #include <QVector>
 
 #include "../lib/error_model.h"
-#include "../lib/plots.h"
 #include "../lib/measurement_model.h"
+#include "../lib/plots.h"
 #include "./ui_mainwindow.h"
 #include "qcustomplot.h"
-// #include "graph_model.h"
 
 void MainWindow::choose_file_open() {
   QFile file(QFileDialog::getOpenFileName(0, "Открыть", "", "*.csv"), this);
