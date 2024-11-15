@@ -53,6 +53,7 @@ class AbstractComboBoxDelegate : public QStyledItemDelegate {
     for (auto& option_string : options) {
       editor->addItem(option_string);
     }
+    editor->setCurrentText(index.model()->data(index).toString());
     return editor;
   }
 
@@ -71,12 +72,16 @@ class LineStyleDelegate : public AbstractComboBoxDelegate {
 };
 
 class ScatterStyleDelegate : public AbstractComboBoxDelegate {
+ public:
   ScatterStyleDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {
-    options = {"Cross",       "Plus",       "Circle",
-               "Disc",        "Square",     "Diamond",
-               "Star",        "Triangle",   "TriangleInverted",
-               "CrossSquare", "PlusSquare", "CrossCircle",
-               "PlusCircle",  "Peace",      "Custom"};
+    options = {"None",        "Cross",
+               "Plus",        "Circle",
+               "Disc",        "Square",
+               "Diamond",     "Star",
+               "Triangle",    "TriangleInverted",
+               "CrossSquare", "PlusSquare",
+               "CrossCircle", "PlusCircle",
+               "Peace"};
   }
 };
 
