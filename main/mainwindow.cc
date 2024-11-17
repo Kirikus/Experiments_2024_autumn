@@ -20,21 +20,20 @@ void MainWindow::choose_file_open() {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
-  ui->setupUi(this);
-
+  Manager &manager = Manager().get_manager();
   MeasurementModel *model_measurements = new MeasurementModel;
   ErrorModel *model_err = new ErrorModel;
-  Manager &manager = Manager().get_manager();
-
   ErrorData *err = new ErrorAbsolute(0.);
   ErrorData *err2 = new ErrorRelative(0.12);
 
   manager.add_variable(VariableData({1, 3.5, -4}, err, "Test", "tst"));
   manager.add_variable(VariableData({4, 25, 26}, err2, "Test2", "tst2"));
+
+  ui->setupUi(this);
+  ScatterPlot *plot = new ScatterPlot();
+
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
-
-  ScatterPlot *plot = new ScatterPlot();
   ui->graphics->addTab(plot, "Scatter");
 
   connect(ui->actionOpen, &QAction::triggered, this,
