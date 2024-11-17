@@ -33,6 +33,14 @@ class VariableData {
 
   auto size() { return measurements.size(); }
 
+  double getMinMeasurement() {
+    return *std::min_element(measurements.begin(), measurements.end());
+  }
+
+  double getMaxMeasurement() {
+    return *std::max_element(measurements.begin(), measurements.end());
+  }
+
   ErrorData* getElemError(int index) {
     ErrorData* error;
     if (!errors_local[index]) {
