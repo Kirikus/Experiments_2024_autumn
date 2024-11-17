@@ -20,13 +20,13 @@ class AbstractPlot : public QWidget {
   QCustomPlot* plot;
   SettingsModel* settings;
 
-  QMap<QString, QCPGraph::LineStyle> colors_map{
+  QMap<QString, QCPGraph::LineStyle> line_style_map{
       {"Line", QCPGraph::lsLine},
       {"StepLeft", QCPGraph::lsStepLeft},
       {"StepRight", QCPGraph::lsStepRight},
       {"StepCenter", QCPGraph::lsStepCenter},
       {"Impulse", QCPGraph::lsImpulse}};
-  QMap<QString, QCPScatterStyle::ScatterShape> scatters_map{
+  QMap<QString, QCPScatterStyle::ScatterShape> scatter_style_map{
       {"None", QCPScatterStyle::ssNone},
       {"Cross", QCPScatterStyle::ssCross},
       {"Plus", QCPScatterStyle::ssPlus},
@@ -119,7 +119,7 @@ class ScatterPlot : public AbstractPlot {
       }
       case SettingsModel::Column::Style: {
         auto cell_data = cell->data(Qt::DisplayRole).value<QString>();
-        graph->setLineStyle(colors_map[cell_data]);
+        graph->setLineStyle(line_style_map[cell_data]);
         break;
       }
       case SettingsModel::Column::Line_Size:
@@ -139,7 +139,7 @@ class ScatterPlot : public AbstractPlot {
                         ->data(Qt::DisplayRole);
 
         graph->setScatterStyle(
-            QCPScatterStyle(scatters_map[shape.value<QString>()],
+            QCPScatterStyle(scatter_style_map[shape.value<QString>()],
                             settings->item(row, SettingsModel::Column::Color)
                                 ->background()
                                 .color(),
