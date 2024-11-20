@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "dialogwindow.h"
 
 #include <QDataStream>
 #include <QFileDialog>
@@ -19,6 +20,13 @@ void MainWindow::choose_file_open() {
   QFile file(QFileDialog::getOpenFileName(0, "Открыть", "", "*.csv"), this);
 }
 
+void MainWindow::create_dialog() {
+  DialogWindow d;
+  // d.ui->setupUi(d);
+  d.show();
+  d.exec();
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   Manager &manager = Manager().get_manager();
@@ -37,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->tableErrors->setModel(model_err);
   ui->graphics->addTab(plot, "Scatter");
 
+  connect(ui->buttonGraph, &QPushButton::clicked, this, &MainWindow::create_dialog);
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,

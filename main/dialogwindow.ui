@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogParametrs</class>
- <widget class="QDialog" name="DialogParametrs">
+ <class>DialogWindow</class>
+ <widget class="QDialog" name="DialogWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>300</height>
+    <width>350</width>
+    <height>100</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Parametrs</string>
+   <string>Dialog</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>../../../../Загрузки/1591476297136061096.png</normaloff>../../../../Загрузки/1591476297136061096.png</iconset>
+   <iconset theme="xc">
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
-    <widget class="QTableView" name="tableViewParametrs"/>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Which graph do you want to generate?</string>
+     </property>
+    </widget>
    </item>
-   <item row="1" column="1">
+   <item row="1" column="0" colspan="2">
+    <widget class="QComboBox" name="comboBox">
+     <property name="toolTip">
+      <string>Choose an option</string>
+     </property>
+     <property name="toolTipDuration">
+      <number>1</number>
+     </property>
+     <property name="currentText">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
     <widget class="QDialogButtonBox" name="buttonBoxApplyDiscard">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -41,7 +58,7 @@
   <connection>
    <sender>buttonBoxApplyDiscard</sender>
    <signal>accepted()</signal>
-   <receiver>DialogParametrs</receiver>
+   <receiver>DialogWindow</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -57,7 +74,7 @@
   <connection>
    <sender>buttonBoxApplyDiscard</sender>
    <signal>rejected()</signal>
-   <receiver>DialogParametrs</receiver>
+   <receiver>DialogWindow</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

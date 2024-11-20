@@ -19,10 +19,6 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>../../../../Загрузки/1591476297136061096.png</normaloff>../../../../Загрузки/1591476297136061096.png</iconset>
-  </property>
   <property name="toolTip">
    <string/>
   </property>
@@ -49,8 +45,8 @@
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <layout class="QGridLayout" name="gridLayout_8" columnstretch="1,100,100" columnminimumwidth="0,0,0">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
      <widget class="QWidget" name="leftMenu" native="true">
       <layout class="QGridLayout" name="gridLayout">
        <item row="3" column="0">
@@ -67,12 +63,12 @@
         </spacer>
        </item>
        <item row="2" column="0">
-        <widget class="QPushButton" name="buttonParametrs">
+        <widget class="QPushButton" name="buttonParameters">
          <property name="toolTip">
-          <string>Set qraph parametrs </string>
+          <string>Set graph parameters </string>
          </property>
          <property name="text">
-          <string>Parametrs</string>
+          <string>Parameters</string>
          </property>
         </widget>
        </item>
@@ -99,7 +95,7 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item>
      <widget class="QSplitter" name="splitter">
     <item row="0" column="1">
      <widget class="QSplitter" name="splitter">
@@ -116,7 +112,7 @@
         <attribute name="title">
          <string>Data</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_4">
+        <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
           <widget class="QTableView" name="tableData"/>
         <layout class="QGridLayout" name="gridLayout_4">
@@ -130,7 +126,7 @@
         <attribute name="title">
          <string>Errors</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_3">
+        <layout class="QGridLayout" name="gridLayout_6">
          <item row="0" column="0">
           <widget class="QTableView" name="tableErrors"/>
           <widget class="QTableView" name="tableErrors"/>
@@ -142,65 +138,76 @@
         <attribute name="title">
          <string>Titles</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_5">
+        <layout class="QGridLayout" name="gridLayout_8">
          <item row="0" column="0">
           <widget class="QTableView" name="tableTitles"/>
          </item>
         </layout>
        </widget>
       </widget>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QTabWidget" name="graphics">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="mouseTracking">
-       <bool>false</bool>
-      </property>
-      <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
-      </property>
-      <property name="currentIndex">
-       <number>-1</number>
-      </property>
-      <property name="tabsClosable">
-       <bool>true</bool>
-      </property>
-      <property name="tabsClosable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="graph1">
-       <attribute name="title">
-        <string>Graph</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QWidget" name="mainWidgetGraph" native="true">
-          <widget class="QTableWidget" name="test_table">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>311</width>
-             <height>391</height>
-            </rect>
+      <widget class="QTabWidget" name="graphics">
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <property name="tabsClosable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="graph1">
+        <attribute name="title">
+         <string>Graph</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QSplitter" name="splitter_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
+           <widget class="QWidget" name="widget" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+           <widget class="QTableWidget" name="tableWidget_2"/>
           </widget>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="graph2">
-       <attribute name="title">
-        <string>Graph 2</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0">
-         <widget class="QCustomPlot" name="widgetGraph2" native="true"/>
-        </item>
-       </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="graph2">
+        <attribute name="title">
+         <string>Graph 2</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QSplitter" name="splitter_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QWidget" name="widget_2" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+           <widget class="QTableWidget" name="tableWidget_3">
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustIgnored</enum>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -295,7 +302,7 @@
     <string>New graph</string>
    </property>
    <property name="toolTip">
-    <string comment="46" extracomment="1345678">Add new graph</string>
+    <string>Add new graph</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+G</string>
