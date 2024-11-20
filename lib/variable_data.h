@@ -3,7 +3,7 @@
 
 #include <QList>
 
-#include "errors_to_variable.h"
+#include "error_data.h"
 
 class VariableData {
  public:
@@ -30,6 +30,16 @@ class VariableData {
         errors_local{errors},
         full_name{full_name},
         short_name{short_name} {}
+
+  auto size() { return measurements.size(); }
+
+  double getMinMeasurement() {
+    return *std::min_element(measurements.begin(), measurements.end());
+  }
+
+  double getMaxMeasurement() {
+    return *std::max_element(measurements.begin(), measurements.end());
+  }
 
   ErrorData* getElemError(int index) {
     ErrorData* error;
