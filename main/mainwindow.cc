@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->tableTitles->setModel(model_titles);
   ui->graphics->addTab(plot, "Scatter");
 
+
   connect(ui->buttonGraph, &QPushButton::clicked, this, &MainWindow::create_dialog);
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);

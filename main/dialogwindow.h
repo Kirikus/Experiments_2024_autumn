@@ -1,8 +1,8 @@
 #include <QDialog>
 #include <QFile>
 #include <QFileDialog>
-
-#include "ui_dialogwindow.h"
+#include <QList>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -14,36 +14,11 @@ QT_END_NAMESPACE
 class DialogWindow : public QDialog{
     Q_OBJECT
 private:
+    QList<QString> graph_types = {"Line plot", "Scatter plot", "Histogram", "Heatmap"};
 public:
     Ui::DialogWindow *ui;
-    DialogWindow(QWidget *parent = nullptr) : QDialog(parent), ui(new Ui::DialogWindow) {
-        ui->setupUi(this);
-        
-        // QDialog(parent);
-    }
-    // virtual void accept() override;
+    DialogWindow(QWidget *parent = nullptr);
 
-    
+    //virtual void accept() override;
+
 };
-
-/*
-createGraph(){
-
-DialogWindow dialog*;
-dialog.exec()
-data = dialig.data
-
-switch(data)
-
-class GraphTypeLINE
-
-}
-
-connect(button., createGraph);
-
-
-class T:
-private
-public
-public slots
-*/
