@@ -17,7 +17,7 @@ private:
     QList<QString> graph_types = {"Line plot", "Scatter plot", "Histogram", "Heatmap"};
 public:
     Ui::DialogWindow *ui;
-    DialogWindow(QWidget *parent = nullptr);
+    DialogWindow(QWidget *parent);
 
     //virtual void accept() override;
 
