@@ -8,8 +8,9 @@
 #include <QPen>
 #include <QString>
 #include <QWidget>
+#include <limits>
 
-#include "delegates.h"
+#include "./ui_scatterplot.h"
 #include "graph_settings_model.h"
 #include "manager.h"
 #include "measurement_model.h"
@@ -17,9 +18,6 @@
 
 class AbstractPlot : public QWidget {
  public:
-  QCustomPlot* plot;
-  SettingsModel* settings;
-
   QMap<QString, QCPGraph::LineStyle> line_style_map{
       {"Line", QCPGraph::lsLine},
       {"StepLeft", QCPGraph::lsStepLeft},
@@ -53,21 +51,25 @@ class AbstractPlot : public QWidget {
   virtual void redraw_settings(int row, int column) = 0;
 };
 
-class ScatterPlot : public AbstractPlot {
- public:
-  ScatterPlot(QWidget* parent = nullptr) {
-    plot = new QCustomPlot();
-    plot->xAxis->setLabel("x");
-    plot->yAxis->setLabel("y");
-    settings = new SettingsModel();
-    int rows_count = settings->rowCount();
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class ScatterPlot;
+}
+QT_END_NAMESPACE
 
-    QHBoxLayout* layout = new QHBoxLayout(this);
-    QSplitter* splitter = new QSplitter(Qt::Vertical, nullptr);
-    layout->addWidget(splitter);
-    splitter->addWidget(plot);
-    splitter->addWidget(settings);
-    connect(settings, &QTableWidget::cellChanged, this,
+class ScatterPlot : public AbstractPlot {
+ private:
+  Ui::ScatterPlot* ui;
+
+ public:
+  ScatterPlot(QWidget* parent = nullptr) : ui(new Ui::ScatterPlot) {
+    ui->setupUi(this);
+
+    ui->plot->xAxis->setLabel("x");
+    ui->plot->yAxis->setLabel("y");
+    int rows_count = ui->settings->rowCount();
+
+    connect(ui->settings, &QTableWidget::cellChanged, this,
             &AbstractPlot::redraw_settings);
 
     auto manager_line = Manager::get_manager().variables;
@@ -77,8 +79,8 @@ class ScatterPlot : public AbstractPlot {
     double max_y = manager_line[0].measurements[0];
 
     for (int i = 0; i < rows_count; ++i) {
-      is_active = settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
-      auto graph = plot->addGraph();
+      is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
+      auto graph = ui->plot->addGraph();
 
       update_data(i, i);
 
@@ -98,19 +100,19 @@ class ScatterPlot : public AbstractPlot {
         }
       }
     }
-    plot->xAxis->setRange(0, 1);
-    plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
-                          max_y + (max_y - min_y) / 20.);
+    ui->plot->xAxis->setRange(0, 1);
+    ui->plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
+                              max_y + (max_y - min_y) / 20.);
 
-    plot->setInteraction(QCP::iRangeZoom, true);
-    plot->setInteraction(QCP::iRangeDrag, true);
-    plot->replot();
+    ui->plot->setInteraction(QCP::iRangeZoom, true);
+    ui->plot->setInteraction(QCP::iRangeDrag, true);
+    ui->plot->replot();
   }
 
  public slots:
   virtual void redraw_settings(int row, int column) {
-    auto cell = settings->item(row, column);
-    auto graph = plot->graph(row);
+    auto cell = ui->settings->item(row, column);
+    auto graph = ui->plot->graph(row);
 
     switch (column) {
       case SettingsModel::Column::Is_Active: {
@@ -125,29 +127,29 @@ class ScatterPlot : public AbstractPlot {
       case SettingsModel::Column::Line_Size:
       case SettingsModel::Column::Color: {
         graph->setPen(QPen(
-            settings->item(row, SettingsModel::Column::Color)->background(),
-            settings->item(row, SettingsModel::Column::Line_Size)
+            ui->settings->item(row, SettingsModel::Column::Color)->background(),
+            ui->settings->item(row, SettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
                 .value<double>()));
         break;
       }
       case SettingsModel::Column::Scatter_Size:
       case SettingsModel::Column::Scatter: {
-        auto shape = settings->item(row, SettingsModel::Column::Scatter)
+        auto shape = ui->settings->item(row, SettingsModel::Column::Scatter)
                          ->data(Qt::DisplayRole);
-        auto size = settings->item(row, SettingsModel::Column::Scatter_Size)
+        auto size = ui->settings->item(row, SettingsModel::Column::Scatter_Size)
                         ->data(Qt::DisplayRole);
 
-        graph->setScatterStyle(
-            QCPScatterStyle(scatter_style_map[shape.value<QString>()],
-                            settings->item(row, SettingsModel::Column::Color)
-                                ->background()
-                                .color(),
-                            size.value<double>()));
+        graph->setScatterStyle(QCPScatterStyle(
+            scatter_style_map[shape.value<QString>()],
+            ui->settings->item(row, SettingsModel::Column::Color)
+                ->background()
+                .color(),
+            size.value<double>()));
         break;
       }
     }
-    plot->replot();
+    ui->plot->replot();
   }
 
   virtual void update_data_slot(
@@ -184,9 +186,9 @@ class ScatterPlot : public AbstractPlot {
       for (int i = 0; i < x.size(); ++i) {
         x[i] = step * i + 0.025;
       }
-      plot->graph(row)->setData(x, y);
+      ui->plot->graph(row)->setData(x, y);
     }
-    if (table_changed) plot->replot();
+    if (table_changed) ui->plot->replot();
   }
 };
 
