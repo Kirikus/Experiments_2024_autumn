@@ -1,49 +1,40 @@
 #include <QDialog>
 #include <QFile>
 #include <QFileDialog>
+#include <QList>
+#include <QString>
+#include <QTabWidget>
 
-#include "ui_dialogwindow.h"
+#include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-    class DialogWindow;
+class DialogWindow;
 }
 QT_END_NAMESPACE
 
+class DialogWindow : public QDialog {
+  Q_OBJECT
+ private:
+  enum PlotTypes {
+    LinePlotType = 0,
+    ScatterPlotType,
+    HistogramType,
+    HeatmapType
+  };
+  QMap<QString, PlotTypes> plot_type_map{{"Line plot", LinePlotType},
+                                         {"Scatter plot", ScatterPlotType},
+                                         {"Histogram", HistogramType},
+                                         {"Heatmap", HeatmapType}};
+  QList<QString> graph_types = {"Line plot", "Scatter plot", "Histogram",
+                                "Heatmap"};
 
-class DialogWindow : public QDialog{
-    Q_OBJECT
-private:
-public:
-    Ui::DialogWindow *ui;
-    DialogWindow(QWidget *parent = nullptr) : QDialog(parent), ui(new Ui::DialogWindow) {
-        ui->setupUi(this);
-        
-        // QDialog(parent);
-    }
-    // virtual void accept() override;
+ public:
+  Ui::DialogWindow* ui;
+  QTabWidget* target_tab_widget;
+  DialogWindow(QWidget* parent, QTabWidget* target_tab_widget);
 
-    
+ private slots:
+  void create_graph();
+  void close_dialog();
 };
-
-/*
-createGraph(){
-
-DialogWindow dialog*;
-dialog.exec()
-data = dialig.data
-
-switch(data)
-
-class GraphTypeLINE
-
-}
-
-connect(button., createGraph);
-
-
-class T:
-private
-public
-public slots
-*/

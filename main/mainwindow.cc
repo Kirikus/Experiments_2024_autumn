@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "dialogwindow.h"
 
 #include <QDataStream>
 #include <QFileDialog>
@@ -13,7 +12,9 @@
 #include "../lib/titles_model.h"
 #include "../lib/measurement_model.h"
 #include "../lib/plots.h"
+#include "../lib/titles_model.h"
 #include "./ui_mainwindow.h"
+#include "dialogwindow.h"
 #include "qcustomplot.h"
 
 void MainWindow::choose_file_open() {
@@ -21,10 +22,10 @@ void MainWindow::choose_file_open() {
 }
 
 void MainWindow::create_dialog() {
-  DialogWindow d;
+  DialogWindow *d = new DialogWindow(nullptr, this->ui->graphics);
   // d.ui->setupUi(d);
-  d.show();
-  d.exec();
+  d->show();
+  d->exec();
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -48,7 +49,8 @@ MainWindow::MainWindow(QWidget *parent)
   ui->tableTitles->setModel(model_titles);
   ui->graphics->addTab(plot, "Scatter");
 
-  connect(ui->buttonGraph, &QPushButton::clicked, this, &MainWindow::create_dialog);
+  connect(ui->buttonGraph, &QPushButton::clicked, this,
+          &MainWindow::create_dialog);
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
