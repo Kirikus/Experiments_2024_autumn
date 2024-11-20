@@ -9,6 +9,7 @@
 #include <QVector>
 
 #include "../lib/error_model.h"
+#include "../lib/titles_model.h"
 #include "../lib/measurement_model.h"
 #include "../lib/plots.h"
 #include "../lib/titles_model.h"
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
   TitleModel *model_titles = new TitleModel;
   ErrorData *err = new ErrorAbsolute(0.);
   ErrorData *err2 = new ErrorRelative(0.12);
+
 
   manager.add_variable(VariableData({1, 3.5, -4}, err, "Test", "tst"));
   manager.add_variable(VariableData({4, 25, 26}, err2, "Test2", "tst2"));
