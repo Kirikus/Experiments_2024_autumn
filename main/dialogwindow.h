@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QFileDialog>
 
+#include "ui_dialogwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
