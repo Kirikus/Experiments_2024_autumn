@@ -19,10 +19,6 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="windowIcon">
-   <iconset theme="cut.png">
-    <normaloff>../../</normaloff>../../</iconset>
-  </property>
   <property name="toolTip">
    <string/>
   </property>
@@ -105,7 +101,7 @@
       </property>
       <widget class="QTabWidget" name="tableWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tableDataWidget">
         <attribute name="title">
@@ -146,7 +142,7 @@
         <enum>QTabWidget::Rounded</enum>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="tabsClosable">
         <bool>true</bool>
@@ -161,7 +157,14 @@
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <widget class="QWidget" name="widget" native="true"/>
+           <widget class="QWidget" name="widget" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
            <widget class="QTableWidget" name="tableWidget_2"/>
           </widget>
          </item>
@@ -177,8 +180,19 @@
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <widget class="QWidget" name="widget_2" native="true"/>
-           <widget class="QTableWidget" name="tableWidget_3"/>
+           <widget class="QWidget" name="widget_2" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+           <widget class="QTableWidget" name="tableWidget_3">
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustIgnored</enum>
+            </property>
+           </widget>
           </widget>
          </item>
         </layout>

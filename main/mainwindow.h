@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow {
   Ui::MainWindow *ui;
 
  private slots:
+  void create_dialog();
   void choose_file_open();
 };
 #endif  // MAINWINDOW_H
