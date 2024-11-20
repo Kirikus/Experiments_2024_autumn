@@ -45,7 +45,7 @@ class SettingsModel : public QTableWidget {
       item(row, Column::Color)->setBackground(QBrush(QColor(rgb)));
       setItem(row, Column::Scatter, new QTableWidgetItem("None"));
       setItem(row, Column::Scatter_Size, new QTableWidgetItem("10"));
-      setItem(row, Column::Line_Size, new QTableWidgetItem("2"));
+      setItem(row, Column::Line_Size, new QTableWidgetItem("3"));
     }
   }
 };
