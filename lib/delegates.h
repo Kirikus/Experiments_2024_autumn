@@ -66,7 +66,8 @@ class CheckBoxDelegate : public QStyledItemDelegate {
       option_button.state |= QStyle::State_Off;
     }
 
-    QApplication::style()->drawControl(QStyle::CE_CheckBox, &option_button, painter);
+    QApplication::style()->drawControl(QStyle::CE_CheckBox, &option_button,
+                                       painter);
   }
 
   QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&,
