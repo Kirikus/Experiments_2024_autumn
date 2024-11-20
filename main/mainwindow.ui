@@ -26,7 +26,6 @@
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralWidget">
-  <widget class="QWidget" name="centralWidget">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -97,17 +96,13 @@
     </item>
     <item>
      <widget class="QSplitter" name="splitter">
-    <item row="0" column="1">
-     <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QTabWidget" name="tableWidget">
-      <widget class="QTabWidget" name="tableWidget">
        <property name="currentIndex">
         <number>2</number>
        </property>
-       <widget class="QWidget" name="tableDataWidget">
        <widget class="QWidget" name="tableDataWidget">
         <attribute name="title">
          <string>Data</string>
@@ -115,13 +110,9 @@
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
           <widget class="QTableView" name="tableData"/>
-        <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0">
-          <widget class="QTableView" name="tableData"/>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tableErrorsWidget">
        <widget class="QWidget" name="tableErrorsWidget">
         <attribute name="title">
          <string>Errors</string>
@@ -129,11 +120,9 @@
         <layout class="QGridLayout" name="gridLayout_6">
          <item row="0" column="0">
           <widget class="QTableView" name="tableErrors"/>
-          <widget class="QTableView" name="tableErrors"/>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tableTitlesWidget">
        <widget class="QWidget" name="tableTitlesWidget">
         <attribute name="title">
          <string>Titles</string>
@@ -207,21 +196,6 @@
           </widget>
          </item>
         </layout>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>Page</string>
-       </attribute>
-       <widget class="QWidget" name="WWW" native="true">
-        <property name="geometry">
-         <rect>
-          <x>29</x>
-          <y>19</y>
-          <width>271</width>
-          <height>361</height>
-         </rect>
-        </property>
        </widget>
       </widget>
      </widget>
