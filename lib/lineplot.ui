@@ -21,8 +21,22 @@
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
-       <widget class="QCustomPlot" name="plot" native="true"/>
-       <widget class="SettingsModel" name="settings"/>
+       <widget class="QCustomPlot" name="plot" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>4</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+       <widget class="SettingsModel" name="settings">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>1</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </widget>
      </item>
     </layout>
