@@ -99,6 +99,13 @@ class AbstractComboBoxDelegate : public QStyledItemDelegate {
     for (auto& option_string : options) {
       editor->addItem(option_string);
     }
+    QObject::connect(
+        editor, &QComboBox::currentTextChanged, parent,
+        [this, editor, parent, index]() {
+          setModelData(editor,
+                       static_cast<QTableWidget*>(parent->parent())->model(),
+                       index);
+        });
     editor->setCurrentText(index.model()->data(index).toString());
     return editor;
   }
