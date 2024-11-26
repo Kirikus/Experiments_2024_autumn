@@ -2,8 +2,8 @@
 
 #include <QCheckBox>
 
-#include "delegates.h"
-#include "manager.h"
+#include "../data/manager.h"
+#include "../delegates.h"
 
 QList<QString> SettingsModel::heading = {
     "Is Active", "Style", "Color", "Scatter", "Scatter Size", "Line Size"};
