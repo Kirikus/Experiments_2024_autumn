@@ -1,6 +1,6 @@
 #include "dialogwindow.h"
 
-#include "../lib/plots.h"
+#include "../lib/plots/plots.h"
 #include "ui_dialogwindow.h"
 
 void DialogWindow::close_dialog() { close(); }

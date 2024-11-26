@@ -8,10 +8,10 @@
 #include <QTextStream>
 #include <QVector>
 
-#include "../lib/error_model.h"
-#include "../lib/measurement_model.h"
-#include "../lib/plots.h"
-#include "../lib/titles_model.h"
+#include "../lib/data/error_model.h"
+#include "../lib/data/measurement_model.h"
+#include "../lib/plots/plots.h"
+#include "../lib/data/titles_model.h"
 #include "./ui_mainwindow.h"
 #include "dialogwindow.h"
 #include "qcustomplot.h"

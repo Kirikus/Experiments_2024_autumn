@@ -10,10 +10,10 @@
 #include <QWidget>
 #include <limits>
 
+#include "../data/manager.h"
+#include "../data/measurement_model.h"
 #include "./ui_lineplot.h"
 #include "graph_settings_model.h"
-#include "manager.h"
-#include "measurement_model.h"
 #include "qcustomplot.h"
 
 class AbstractPlot : public QWidget {
