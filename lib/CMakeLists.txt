@@ -1,7 +1,7 @@
 project(core VERSION 0.1 LANGUAGES CXX)
 
 
-file(GLOB PROJECT_SOURCES "*.cpp" "*.h" "*.hpp" "*.cc" "*.c" "*.ui" "data/*.cpp" "data/*.h" "data/*.hpp" "data/*.cc" "data/*.c" "data/*.ui" "plots/*.cpp" "plots/*.h" "plots/*.hpp" "plots/*.cc" "plots/*.c" "plots/*.ui")
+file(GLOB PROJECT_SOURCES "*.cpp" "*.h" "*.hpp" "*.cc" "*.c" "*.ui" "data/*.cpp" "data/*.h" "data/*.hpp" "data/*.cc" "data/*.c" "data/*.ui" "plots/*.cpp" "plots/*.h" "plots/*.hpp" "plots/*.cc" "plots/*.c" "plots/*.ui" "data/*.cpp" "data/*.h" "data/*.hpp" "data/*.cc" "data/*.c" "data/*.ui" "plots/*.cpp" "plots/*.h" "plots/*.hpp" "plots/*.cc" "plots/*.c" "plots/*.ui")
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 qt_add_library(core
