@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
   manager.add_variable(VariableData({4, 25, 26}, err2, "Test2", "tst2"));
 
   ui->setupUi(this);
-  ScatterPlot *plot = new ScatterPlot();
+  LinePlot *plot = new LinePlot();
 
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);

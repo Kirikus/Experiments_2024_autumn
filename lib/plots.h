@@ -10,7 +10,7 @@
 #include <QWidget>
 #include <limits>
 
-#include "./ui_scatterplot.h"
+#include "./ui_lineplot.h"
 #include "graph_settings_model.h"
 #include "manager.h"
 #include "measurement_model.h"
@@ -53,16 +53,16 @@ class AbstractPlot : public QWidget {
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class ScatterPlot;
+class LinePlot;
 }
 QT_END_NAMESPACE
 
-class ScatterPlot : public AbstractPlot {
+class LinePlot : public AbstractPlot {
  private:
-  Ui::ScatterPlot* ui;
+  Ui::LinePlot* ui;
 
  public:
-  ScatterPlot(QWidget* parent = nullptr) : ui(new Ui::ScatterPlot) {
+  LinePlot(QWidget* parent = nullptr) : ui(new Ui::LinePlot) {
     ui->setupUi(this);
 
     ui->plot->xAxis->setLabel("x");

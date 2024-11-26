@@ -14,10 +14,10 @@ void DialogWindow::create_graph() {
   int t = plot_type_map[chosen_type];
   switch (t) {
     case LinePlotType: {
+      target_tab_widget->addTab(new LinePlot(), "NewTab");
       break;
     }
     case ScatterPlotType: {
-      target_tab_widget->addTab(new ScatterPlot(), "NewTab");
       break;
     }
     case HistogramType:
