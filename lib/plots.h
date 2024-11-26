@@ -100,7 +100,7 @@ class LinePlot : public AbstractPlot {
         }
       }
     }
-    ui->plot->xAxis->setRange(0, 1);
+    ui->plot->xAxis->setRange(0, manager_line[0].size() + 1);
     ui->plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
                               max_y + (max_y - min_y) / 20.);
 
@@ -182,9 +182,8 @@ class LinePlot : public AbstractPlot {
       auto manager_line = Manager::get_manager().variables[row];
       QVector<double> x(manager_line.size());
       QVector<double> y = QVector<double>::fromList(manager_line.measurements);
-      double step = .95 / manager_line.size();
       for (int i = 0; i < x.size(); ++i) {
-        x[i] = step * i + 0.025;
+        x[i] = i + 1;
       }
       ui->plot->graph(row)->setData(x, y);
     }
