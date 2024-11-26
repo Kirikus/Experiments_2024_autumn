@@ -41,13 +41,10 @@ class AbstractPlot : public QWidget {
       {"PlusCircle", QCPScatterStyle::ssPlusCircle},
       {"Peace", QCPScatterStyle::ssPeace}};
 
-  virtual void update_data(const int topleft, const int bottomRight,
-                           const QList<int>& roles = QList<int>()) = 0;
-
  public slots:
-  virtual void update_data_slot(const QModelIndex& topleft,
-                                const QModelIndex& bottomRight,
-                                const QList<int>& roles = QList<int>()) = 0;
+  virtual void update_data(const QModelIndex& topLeft,
+                           const QModelIndex& bottomRight,
+                           const QList<int>& roles = QList<int>()) = 0;
   virtual void redraw_settings(int row, int column) = 0;
 };
 
@@ -82,7 +79,8 @@ class LinePlot : public AbstractPlot {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = ui->plot->addGraph();
 
-      update_data(i, i);
+      update_data(ui->settings->model()->index(i, i),
+                  ui->settings->model()->index(i, i));
 
       if (is_active) {
         min_y = std::min(min_y,
@@ -152,22 +150,17 @@ class LinePlot : public AbstractPlot {
     ui->plot->replot();
   }
 
-  virtual void update_data_slot(
-      const QModelIndex& topLeft, const QModelIndex& bottomRight,
-      const QList<int>& roles = QList<int>()) override {
-    update_data(topLeft.column(), bottomRight.column(), roles);
-  }
-
- public:
-  virtual void update_data(const int topLeft, const int bottomRight,
-                           const QList<int>& roles = QList<int>()) override {
-    int row_width = roles.size() / (topLeft - bottomRight + 1);
+  virtual void update_data(const QModelIndex& topLeft,
+                           const QModelIndex& bottomRight,
+                           const QList<int>& roles = QList<int>()) {
+    int row_width =
+        roles.size() / (topLeft.column() - bottomRight.column() + 1);
     bool line_changed;
     bool table_changed = false;
-    for (int row = bottomRight; row < (topLeft + 1); ++row) {
+    for (int row = bottomRight.column(); row < (topLeft.column() + 1); ++row) {
       line_changed = false;
-      for (int k = row_width * (row - bottomRight);
-           k < row_width * (row - bottomRight + 1); ++k) {
+      for (int k = row_width * (row - bottomRight.column());
+           k < row_width * (row - bottomRight.column() + 1); ++k) {
         if (roles[k] == Qt::EditRole) {
           line_changed = true;
           break;
