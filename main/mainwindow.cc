@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
-          &AbstractPlot::update_data_slot);
+          &AbstractPlot::update_data);
 }
 
 MainWindow::~MainWindow() { delete ui; }
