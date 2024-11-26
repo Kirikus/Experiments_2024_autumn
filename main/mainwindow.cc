@@ -9,7 +9,6 @@
 #include <QVector>
 
 #include "../lib/error_model.h"
-#include "../lib/titles_model.h"
 #include "../lib/measurement_model.h"
 #include "../lib/plots.h"
 #include "../lib/titles_model.h"
