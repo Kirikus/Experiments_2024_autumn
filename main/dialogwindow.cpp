@@ -30,7 +30,9 @@ void DialogWindow::create_graph() {
 
 DialogWindow::DialogWindow(QWidget* parent = nullptr,
                            QTabWidget* target_tab_widget = nullptr)
-    : QDialog(parent), ui(new Ui::DialogWindow), target_tab_widget(target_tab_widget) {
+    : QDialog(parent),
+      ui(new Ui::DialogWindow),
+      target_tab_widget(target_tab_widget) {
   ui->setupUi(this);
   ui->comboBox->addItems(graph_types);
 
