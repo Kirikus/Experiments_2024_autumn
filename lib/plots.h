@@ -83,12 +83,8 @@ class LinePlot : public AbstractPlot {
                   ui->settings->model()->index(i, i));
 
       if (is_active) {
-        min_y = std::min(min_y,
-                         *std::min_element(manager_line[i].measurements.begin(),
-                                           manager_line[i].measurements.end()));
-        max_y = std::max(max_y,
-                         *std::max_element(manager_line[i].measurements.begin(),
-                                           manager_line[i].measurements.end()));
+        min_y = std::min(min_y, manager_line[i].getMinMeasurement());
+        max_y = std::max(max_y, manager_line[i].getMaxMeasurement());
 
         for (int k : QList({SettingsModel::Column::Is_Active,
                             SettingsModel::Column::Style,
