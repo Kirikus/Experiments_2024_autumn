@@ -63,8 +63,8 @@ class LinePlot : public AbstractPlot {
   LinePlot(QWidget* parent = nullptr) : ui(new Ui::LinePlot) {
     ui->setupUi(this);
 
-    ui->plot->xAxis->setLabel("x");
-    ui->plot->yAxis->setLabel("y");
+    ui->plot->xAxis->setLabel("Measurement number");
+    ui->plot->yAxis->setLabel("Value");
     int rows_count = ui->settings->rowCount();
 
     connect(ui->settings, &QTableWidget::cellChanged, this,
