@@ -34,6 +34,6 @@ void SettingsModel::fillDefaultValues(const QModelIndex& parent, int start,
     item(row, Column::Color)->setBackground(QBrush(QColor(rgb)));
     setItem(row, Column::Scatter, new QTableWidgetItem("None"));
     setItem(row, Column::Scatter_Size, new QTableWidgetItem("10"));
-    setItem(row, Column::Line_Size, new QTableWidgetItem("3"));
+    setItem(row, Column::Line_Size, new QTableWidgetItem("1"));
   }
 }
