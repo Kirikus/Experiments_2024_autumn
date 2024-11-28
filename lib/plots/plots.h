@@ -126,7 +126,9 @@ class LinePlot : public AbstractPlot {
             ui->settings->item(row, SettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
                 .value<double>()));
-        break;
+        if (column == SettingsModel::Column::Line_Size) {
+          break;
+        }
       }
       case SettingsModel::Column::Scatter_Size:
       case SettingsModel::Column::Scatter: {
