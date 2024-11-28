@@ -131,7 +131,9 @@ class OneAxisPlot : public AbstractPlot {
             ui->settings->item(row, OneAxisSettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
                 .value<double>()));
-        break;
+        if (column == SettingsModel::Column::Line_Size) {
+          break;
+        }
       }
       case OneAxisSettingsModel::Column::Scatter_Size:
       case OneAxisSettingsModel::Column::Scatter: {
