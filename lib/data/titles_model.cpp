@@ -2,13 +2,13 @@
  
 QVariant TitleModel::headerData(int section, Qt::Orientation orientation,
                                     int role = Qt::DisplayRole) const {
-  // if (role == Qt::DisplayRole) {
-  //   if (orientation == Qt::Horizontal) {
-  //     return QString();
-  //   } else if (orientation == Qt::Vertical) {
-  //     return QVariant();
-  //   }
-  // }
+  if (role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal) {
+      return Manager::get_manager().variables[section].short_name;
+    } else if (orientation == Qt::Vertical) {
+      return QVariant();
+    }
+  }
   return QVariant();
 }
 
@@ -18,7 +18,7 @@ QVariant TitleModel::data(const QModelIndex& index,
         return QVariant();
     }
     QString title = Manager::get_manager()
-                                .variables[index.row()].short_name;
+                                .variables[index.column()].short_name;
     return title;
     }
 
@@ -27,7 +27,7 @@ bool TitleModel::setData(const QModelIndex& index, const QVariant& value,
                        int role = Qt::EditRole){ 
     if ((role == Qt::EditRole) || (value.toBool())) {
       Manager::get_manager()
-          .variables[index.row()].short_name = value.toString();
+          .variables[index.column()].short_name = value.toString();
 
       emit dataChanged(index, index, QList({role}));
       return true;
@@ -35,12 +35,7 @@ bool TitleModel::setData(const QModelIndex& index, const QVariant& value,
     return false;
   }
 
-int TitleModel::columnCount(
-    const QModelIndex& parent = QModelIndex()) const{
-  return 1;
-}
-
 int TitleModel::rowCount(
     const QModelIndex& parent = QModelIndex()) const{
-  return Manager::get_manager().variables.size();
+  return 1;
 }
