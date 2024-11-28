@@ -103,6 +103,7 @@ class LinePlot : public AbstractPlot {
     ui->plot->setInteraction(QCP::iRangeDrag, true);
     ui->plot->replot();
   }
+  ~LinePlot() { delete ui; }
 
  public slots:
   virtual void redraw_settings(int row, int column) {
