@@ -9,6 +9,7 @@ QList<QString> SettingsModel::heading = {
     "Is Active", "Style", "Color", "Scatter", "Scatter Size", "Line Size"};
 
 SettingsModel::SettingsModel(QWidget* parent = nullptr) : QTableWidget(parent) {
+  srand(time(NULL));
   connect(model(), &QAbstractItemModel::rowsInserted, this,
           &SettingsModel::fillDefaultValues);
 
