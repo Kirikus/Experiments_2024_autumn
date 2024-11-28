@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->tableErrors->setModel(model_err);
   ui->tableTitles->setModel(model_titles);
   ui->graphics->addTab(plot, "Scatter");
+  ui->tableTitles->verticalHeader()->hide();
 
   connect(ui->buttonGraph, &QPushButton::clicked, this,
           &MainWindow::create_dialog);

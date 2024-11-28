@@ -1,16 +1,4 @@
  #include "titles_model.h"
- 
-QVariant TitleModel::headerData(int section, Qt::Orientation orientation,
-                                    int role = Qt::DisplayRole) const {
-  if (role == Qt::DisplayRole) {
-    if (orientation == Qt::Horizontal) {
-      return Manager::get_manager().variables[section].short_name;
-    } else if (orientation == Qt::Vertical) {
-      return QVariant();
-    }
-  }
-  return QVariant();
-}
 
 QVariant TitleModel::data(const QModelIndex& index,
                         int role = Qt::DisplayRole) const{
