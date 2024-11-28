@@ -14,7 +14,8 @@ void DialogWindow::create_graph() {
   int t = plot_type_map[chosen_type];
   switch (t) {
     case LinePlotType: {
-      target_tab_widget->addTab(new LinePlot(), "NewTab");
+      int index = target_tab_widget->addTab(new LinePlot(), "NewTab");
+      target_tab_widget->setCurrentIndex(index);
       break;
     }
     case ScatterPlotType: {
