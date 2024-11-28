@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
   ui->tableTitles->setModel(model_titles);
-  ui->graphics->addTab(plot, "Scatter");
+  ui->graphics->addTab(plot, "Start plot");
 
   connect(ui->buttonGraph, &QPushButton::clicked, this,
           &MainWindow::create_dialog);
