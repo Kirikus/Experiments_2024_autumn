@@ -23,6 +23,7 @@
 class AbstractPlot : public QWidget {
  public:
   QMap<QString, QCPGraph::LineStyle> line_style_map{
+      {"None", QCPGraph::lsNone},
       {"Line", QCPGraph::lsLine},
       {"StepLeft", QCPGraph::lsStepLeft},
       {"StepRight", QCPGraph::lsStepRight},

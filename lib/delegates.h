@@ -130,7 +130,8 @@ class ColumnNameDelegate : public AbstractComboBoxDelegate {
 class LineStyleDelegate : public AbstractComboBoxDelegate {
  public:
   LineStyleDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {
-    options = {"Line", "StepLeft", "StepRight", "StepCenter", "Impulse"};
+    options = {"None",      "Line",       "StepLeft",
+               "StepRight", "StepCenter", "Impulse"};
   }
 };
 
