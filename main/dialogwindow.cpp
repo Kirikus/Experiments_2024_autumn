@@ -14,7 +14,8 @@ void DialogWindow::create_graph() {
   int t = plot_type_map[chosen_type];
   switch (t) {
     case OneAxisPlotType: {
-      target_tab_widget->addTab(new OneAxisPlot(), "NewTab");
+      int index = target_tab_widget->addTab(new OneAxisPlot(), "NewTab");
+      target_tab_widget->setCurrentIndex(index);
       break;
     }
     case TwoAxesPlotType: {
