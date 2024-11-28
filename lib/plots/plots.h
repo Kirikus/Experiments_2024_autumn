@@ -63,6 +63,8 @@ QT_END_NAMESPACE
 class OneAxisPlot : public AbstractPlot {
  private:
   Ui::OneAxisPlot* ui;
+  QList<QCPErrorBars*> bars_list;
+  QList<bool> bars_visibility;
 
  public:
   OneAxisPlot(QWidget* parent = nullptr) : ui(new Ui::OneAxisPlot) {
@@ -84,6 +86,11 @@ class OneAxisPlot : public AbstractPlot {
     for (int i = 0; i < rows_count; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = ui->plot->addGraph();
+      QCPErrorBars* errorBars =
+          new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
+      errorBars->setDataPlottable(graph);
+      bars_list.append(errorBars);
+      bars_visibility.append(true);
 
       update_data(ui->settings->model()->index(i, i),
                   ui->settings->model()->index(i, i));
@@ -118,6 +125,8 @@ class OneAxisPlot : public AbstractPlot {
     switch (column) {
       case OneAxisSettingsModel::Column::Is_Active: {
         graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
+        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
+                                   bars_visibility[row]);
         break;
       }
       case OneAxisSettingsModel::Column::Style: {
@@ -125,13 +134,22 @@ class OneAxisPlot : public AbstractPlot {
         graph->setLineStyle(line_style_map[cell_data]);
         break;
       }
+      case SettingsModel::Column::Error_Scatter: {
+        bars_visibility[row] = !bars_visibility[row];
+        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
+                                   bars_visibility[row]);
+        break;
+      }
       case OneAxisSettingsModel::Column::Line_Size:
       case OneAxisSettingsModel::Column::Color: {
-        graph->setPen(QPen(
+        QPen pen = QPen(
             ui->settings->item(row, OneAxisSettingsModel::Column::Color)->background(),
             ui->settings->item(row, OneAxisSettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
-                .value<double>()));
+                .value<double>());
+
+        graph->setPen(pen);
+        bars_list[row]->setPen(pen);
         if (column == SettingsModel::Column::Line_Size) {
           break;
         }
@@ -184,6 +202,8 @@ class OneAxisPlot : public AbstractPlot {
         x[i] = i + 1;
       }
       ui->plot->graph(row)->setData(x, y);
+      QList<double> errors = Manager::get_manager().variables[row].getErrors();
+      bars_list[row]->setData(errors, errors);
     }
     if (table_changed) ui->plot->replot();
   }
