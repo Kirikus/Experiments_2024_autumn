@@ -79,6 +79,8 @@ MainWindow::MainWindow(QWidget *parent)
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
+  connect(ui->graphics, &QTabWidget::tabCloseRequested,
+          &QTabWidget::removeTab);
 }
 
 MainWindow::~MainWindow() { delete ui; }

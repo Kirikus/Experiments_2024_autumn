@@ -10,6 +10,9 @@
 
 class TitleModel : public MeasurementModel {
  public:
+ 
+  virtual QVariant headerData(int section, Qt::Orientation orientation,
+                              int role) const override;
 
   virtual QVariant data(const QModelIndex& index,
                         int role) const override;
@@ -18,7 +21,6 @@ class TitleModel : public MeasurementModel {
                        int role) override;
 
   virtual int rowCount(const QModelIndex& parent) const override;
-
 };
 
 #endif
