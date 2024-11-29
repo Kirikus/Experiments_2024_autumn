@@ -27,8 +27,34 @@ void MainWindow::create_dialog() {
   d->exec();
 }
 
+void MainWindow::changeTheme() {
+  theme_is_dark = !theme_is_dark;
+  if (theme_is_dark) {
+    qApp->setPalette(*dark_palette);
+    ui->action_Theme_button->setText("Light theme");
+    return;
+  }
+  qApp->setPalette(style()->standardPalette());
+  ui->action_Theme_button->setText("Dark theme");
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
+  dark_palette = new QPalette();
+  dark_palette->setColor(QPalette::Window, QColor(53, 53, 53));
+  dark_palette->setColor(QPalette::WindowText, Qt::white);
+  dark_palette->setColor(QPalette::Base, QColor(25, 25, 25));
+  dark_palette->setColor(QPalette::AlternateBase, QColor(53, 53, 53));
+  dark_palette->setColor(QPalette::ToolTipBase, Qt::white);
+  dark_palette->setColor(QPalette::ToolTipText, Qt::white);
+  dark_palette->setColor(QPalette::Text, Qt::white);
+  dark_palette->setColor(QPalette::Button, QColor(53, 53, 53));
+  dark_palette->setColor(QPalette::ButtonText, Qt::white);
+  dark_palette->setColor(QPalette::BrightText, Qt::red);
+  dark_palette->setColor(QPalette::Link, QColor(42, 130, 218));
+  dark_palette->setColor(QPalette::Highlight, QColor(42, 130, 218));
+  dark_palette->setColor(QPalette::HighlightedText, Qt::black);
+
   Manager &manager = Manager().get_manager();
   MeasurementModel *model_measurements = new MeasurementModel;
   ErrorModel *model_err = new ErrorModel;
@@ -75,12 +101,13 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::create_dialog);
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
+  connect(ui->action_Theme_button, &QAction::triggered, this,
+          &MainWindow::changeTheme);
   connect(model_err, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
-  connect(ui->graphics, &QTabWidget::tabCloseRequested,
-          &QTabWidget::removeTab);
+  connect(ui->graphics, &QTabWidget::tabCloseRequested, &QTabWidget::removeTab);
 }
 
 MainWindow::~MainWindow() { delete ui; }

@@ -229,6 +229,8 @@
     </property>
     <addaction name="action_Graph"/>
     <addaction name="action_New_formula"/>
+    <addaction name="separator"/>
+    <addaction name="action_Theme_button"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -299,6 +301,11 @@
    </property>
    <property name="toolTip">
     <string>Add new formula</string>
+   </property>
+  </action>
+  <action name="action_Theme_button">
+   <property name="text">
+    <string>Dark theme</string>
    </property>
   </action>
  </widget>

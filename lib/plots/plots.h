@@ -65,6 +65,8 @@ class LinePlot : public AbstractPlot {
   LinePlot(QWidget* parent = nullptr) : ui(new Ui::LinePlot) {
     ui->setupUi(this);
 
+    ui->plot->setBackground(Qt::transparent);
+
     ui->plot->xAxis->setLabel("Measurement number");
     ui->plot->yAxis->setLabel("Value");
     int rows_count = ui->settings->rowCount();
