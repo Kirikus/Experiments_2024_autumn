@@ -19,6 +19,7 @@
 class AbstractPlot : public QWidget {
  public:
   QMap<QString, QCPGraph::LineStyle> line_style_map{
+      {"None", QCPGraph::lsNone},
       {"Line", QCPGraph::lsLine},
       {"StepLeft", QCPGraph::lsStepLeft},
       {"StepRight", QCPGraph::lsStepRight},
@@ -57,13 +58,15 @@ QT_END_NAMESPACE
 class LinePlot : public AbstractPlot {
  private:
   Ui::LinePlot* ui;
+  QList<QCPErrorBars*> bars_list;
+  QList<bool> bars_visibility;
 
  public:
   LinePlot(QWidget* parent = nullptr) : ui(new Ui::LinePlot) {
     ui->setupUi(this);
 
-    ui->plot->xAxis->setLabel("x");
-    ui->plot->yAxis->setLabel("y");
+    ui->plot->xAxis->setLabel("Measurement number");
+    ui->plot->yAxis->setLabel("Value");
     int rows_count = ui->settings->rowCount();
 
     connect(ui->settings, &QTableWidget::cellChanged, this,
@@ -78,6 +81,11 @@ class LinePlot : public AbstractPlot {
     for (int i = 0; i < rows_count; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = ui->plot->addGraph();
+      QCPErrorBars* errorBars =
+          new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
+      errorBars->setDataPlottable(graph);
+      bars_list.append(errorBars);
+      bars_visibility.append(true);
 
       update_data(ui->settings->model()->index(i, i),
                   ui->settings->model()->index(i, i));
@@ -102,6 +110,7 @@ class LinePlot : public AbstractPlot {
     ui->plot->setInteraction(QCP::iRangeDrag, true);
     ui->plot->replot();
   }
+  ~LinePlot() { delete ui; }
 
  public slots:
   virtual void redraw_settings(int row, int column) {
@@ -111,6 +120,8 @@ class LinePlot : public AbstractPlot {
     switch (column) {
       case SettingsModel::Column::Is_Active: {
         graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
+        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
+                                   bars_visibility[row]);
         break;
       }
       case SettingsModel::Column::Style: {
@@ -118,14 +129,25 @@ class LinePlot : public AbstractPlot {
         graph->setLineStyle(line_style_map[cell_data]);
         break;
       }
+      case SettingsModel::Column::Error_Scatter: {
+        bars_visibility[row] = !bars_visibility[row];
+        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
+                                   bars_visibility[row]);
+        break;
+      }
       case SettingsModel::Column::Line_Size:
       case SettingsModel::Column::Color: {
-        graph->setPen(QPen(
+        QPen pen = QPen(
             ui->settings->item(row, SettingsModel::Column::Color)->background(),
             ui->settings->item(row, SettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
-                .value<double>()));
-        break;
+                .value<double>());
+
+        graph->setPen(pen);
+        bars_list[row]->setPen(pen);
+        if (column == SettingsModel::Column::Line_Size) {
+          break;
+        }
       }
       case SettingsModel::Column::Scatter_Size:
       case SettingsModel::Column::Scatter: {
@@ -175,6 +197,8 @@ class LinePlot : public AbstractPlot {
         x[i] = i + 1;
       }
       ui->plot->graph(row)->setData(x, y);
+      QList<double> errors = Manager::get_manager().variables[row].getErrors();
+      bars_list[row]->setData(errors, errors);
     }
     if (table_changed) ui->plot->replot();
   }

@@ -41,6 +41,14 @@ class VariableData {
     return *std::max_element(measurements.begin(), measurements.end());
   }
 
+  QList<double> getErrors() {
+    QList<double> errors(measurements.size());
+    for (int i = 0; i < measurements.size(); ++i) {
+      errors[i] = getElemError(i)->getError(measurements[i]);
+    }
+    return errors;
+  }
+
   ErrorData* getElemError(int index) {
     ErrorData* error;
     if (!errors_local[index]) {

@@ -11,7 +11,6 @@ QVariant TitleModel::headerData(int section, Qt::Orientation orientation,
   }
   return QVariant();
 }
-
 QVariant TitleModel::data(const QModelIndex& index,
                         int role = Qt::DisplayRole) const{
     if ((role != Qt::DisplayRole) && (role != Qt::EditRole)){
