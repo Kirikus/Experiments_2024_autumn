@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
   dark_palette->setColor(QPalette::ButtonText, Qt::white);
   dark_palette->setColor(QPalette::BrightText, Qt::red);
   dark_palette->setColor(QPalette::Link, QColor(42, 130, 218));
-  dark_palette->setColor(QPalette::Highlight, QColor(42, 130, 218));
+  dark_palette->setColor(QPalette::Highlight, QColor(255, 99, 71));
   dark_palette->setColor(QPalette::HighlightedText, Qt::black);
 
   Manager &manager = Manager().get_manager();
