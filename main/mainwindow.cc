@@ -41,6 +41,23 @@ void MainWindow::changeTheme() {
 void MainWindow::add_row() {
   Manager::get_manager().add_measurement_row();
   ui->tableData->model()->insertRows(0, 1);
+  ui->tableErrors->model()->insertRows(0, 1);
+}
+
+void MainWindow::add_variable() {
+  auto &man = Manager::get_manager();
+  int size = Manager::get_manager().variables[0].size();
+  bool ok;
+  ErrorAbsolute *err = new ErrorAbsolute(0.);
+  QString name = QInputDialog::getText(
+      this, "Add column", "Variable name:", QLineEdit::Normal, "", &ok);
+  if (!ok) {
+    return;
+  }
+  man.add_variable(VariableData(QList<double>(size, 0.), err, name, name));
+  ui->tableData->model()->insertColumns(0, 1);
+  ui->tableErrors->model()->insertColumns(0, 1);
+  ui->tableTitles->model()->insertColumns(0, 1);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -105,6 +122,8 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->buttonGraph, &QPushButton::clicked, this,
           &MainWindow::create_dialog);
   connect(ui->buttonAdd_row, &QPushButton::clicked, this, &MainWindow::add_row);
+  connect(ui->buttonAdd_variable, &QPushButton::clicked, this,
+          &MainWindow::add_variable);
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
   connect(ui->action_Theme_button, &QAction::triggered, this,

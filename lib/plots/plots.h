@@ -82,12 +82,7 @@ class LinePlot : public AbstractPlot {
 
     for (int i = 0; i < rows_count; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
-      auto graph = ui->plot->addGraph();
-      QCPErrorBars* errorBars =
-          new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
-      errorBars->setDataPlottable(graph);
-      bars_list.append(errorBars);
-      bars_visibility.append(true);
+      auto graph = create_new_graph();
 
       update_data(ui->settings->model()->index(i, i),
                   ui->settings->model()->index(i, i));
@@ -113,6 +108,16 @@ class LinePlot : public AbstractPlot {
     ui->plot->replot();
   }
   ~LinePlot() { delete ui; }
+
+  QCPGraph* create_new_graph() {
+    auto graph = ui->plot->addGraph();
+    QCPErrorBars* errorBars =
+        new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
+    errorBars->setDataPlottable(graph);
+    bars_list.append(errorBars);
+    bars_visibility.append(true);
+    return graph;
+  }
 
  public slots:
   virtual void redraw_settings(int row, int column) {
@@ -173,9 +178,24 @@ class LinePlot : public AbstractPlot {
   virtual void update_data(const QModelIndex& topLeft,
                            const QModelIndex& bottomRight,
                            const QList<int>& roles = QList<int>()) {
-    int row_width =
-        roles.size() / (bottomRight.column() - topLeft.column() + 1);
-    bool table_changed = false;
+    if (bottomRight.column() >= ui->plot->graphCount()) {
+      disconnect(ui->settings, &QTableWidget::cellChanged, this,
+                 &AbstractPlot::redraw_settings);
+      int last_ind = ui->settings->rowCount() - 1;
+      ui->settings->setRowCount(bottomRight.column() + 1);
+      for (int i = ui->plot->graphCount(); i < bottomRight.column() + 1; ++i) {
+        create_new_graph();
+        for (int k : QList({SettingsModel::Column::Is_Active,
+                            SettingsModel::Column::Style,
+                            SettingsModel::Column::Line_Size,
+                            SettingsModel::Column::Scatter_Size})) {
+          redraw_settings(i, k);
+        }
+      }
+      connect(ui->settings, &QTableWidget::cellChanged, this,
+              &AbstractPlot::redraw_settings);
+    }
+
     for (int row = topLeft.column(); row < bottomRight.column() + 1; ++row) {
       auto manager_line = Manager::get_manager().variables[row];
       QVector<double> x(manager_line.size());

@@ -70,7 +70,7 @@ bool MeasurementModel::insertRows(int row, int count, const QModelIndex&) {
 
 bool MeasurementModel::insertColumns(int column, int count,
                                      const QModelIndex&) {
-  if (column < 1 || column < 0 ||
+  if (count < 1 || column < 0 ||
       column > Manager::get_manager().variables.size())
     return false;
 

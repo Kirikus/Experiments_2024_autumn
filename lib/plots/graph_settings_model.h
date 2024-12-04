@@ -18,7 +18,7 @@ class SettingsModel : public QTableWidget {
 
   SettingsModel(QWidget* parent);
 
- private slots:
+ public slots:
   void fillDefaultValues(const QModelIndex& parent, int start, int end);
 };
 

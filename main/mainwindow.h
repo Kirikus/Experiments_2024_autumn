@@ -25,6 +25,7 @@ class MainWindow : public QMainWindow {
 
  private slots:
   void add_row();
+  void add_variable();
   void changeTheme();
   void create_dialog();
   void choose_file_open();
