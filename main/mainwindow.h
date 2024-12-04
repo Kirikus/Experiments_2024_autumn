@@ -24,6 +24,7 @@ class MainWindow : public QMainWindow {
   bool theme_is_dark = false;
 
  private slots:
+  void add_row();
   void changeTheme();
   void create_dialog();
   void choose_file_open();

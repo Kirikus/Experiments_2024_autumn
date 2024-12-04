@@ -38,6 +38,11 @@ void MainWindow::changeTheme() {
   ui->action_Theme_button->setText("Dark theme");
 }
 
+void MainWindow::add_row() {
+  Manager::get_manager().add_measurement_row();
+  ui->tableData->model()->insertRows(0, 1);
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   dark_palette = new QPalette();
@@ -99,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   connect(ui->buttonGraph, &QPushButton::clicked, this,
           &MainWindow::create_dialog);
+  connect(ui->buttonAdd_row, &QPushButton::clicked, this, &MainWindow::add_row);
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
   connect(ui->action_Theme_button, &QAction::triggered, this,

@@ -53,6 +53,26 @@ bool MeasurementModel::setData(const QModelIndex& index, const QVariant& value,
   return false;
 }
 
+bool MeasurementModel::insertRows(int row, int count, const QModelIndex&) {
+  if (count < 1 || row < 0 || row > Manager::get_manager().variables[0].size())
+    return false;
+
+  beginInsertRows(QModelIndex(), row, row + count - 1);
+  endInsertRows();
+  return true;
+}
+
+bool MeasurementModel::insertColumns(int column, int count,
+                                     const QModelIndex&) {
+  if (column < 1 || column < 0 ||
+      column > Manager::get_manager().variables.size())
+    return false;
+
+  beginInsertColumns(QModelIndex(), column, column + count - 1);
+  endInsertColumns();
+  return true;
+}
+
 Qt::ItemFlags MeasurementModel::flags(const QModelIndex& index) const {
   return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
 }
