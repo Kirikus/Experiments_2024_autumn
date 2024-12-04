@@ -31,8 +31,8 @@ void TwoAxesSettingsModel::fillDefaultValues(const QModelIndex& parent, int star
   for (int row = start; row <= end; row++) {
     srand(time(NULL));
     setItem(row, Column::Is_Active, new QTableWidgetItem("1"));
-    setItem(row, Column::Axis_X, new QTableWidgetItem("test1"));                  //ПОМЕНЯТЬ HARDCODE!!!
-    setItem(row, Column::Axis_Y, new QTableWidgetItem("test2"));                  //ПОМЕНЯТЬ HARDCODE!!!
+    setItem(row, Column::Axis_X, new QTableWidgetItem("None"));
+    setItem(row, Column::Axis_Y, new QTableWidgetItem("None"));
     setItem(row, Column::Style, new QTableWidgetItem("Line"));
     setItem(row, Column::Color, new QTableWidgetItem(""));
     QRgb rgb = qRgba(rand() % 255, rand() % 255, rand() % 255, 255);
