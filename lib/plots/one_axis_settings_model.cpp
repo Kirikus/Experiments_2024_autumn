@@ -1,4 +1,4 @@
-#include "graph_one_axis_settings_model.h"
+#include "one_axis_settings_model.h"
 
 #include <QCheckBox>
 

@@ -53,7 +53,7 @@
   <customwidget>
    <class>OneAxisSettingsModel</class>
    <extends>QTableWidget</extends>
-   <header>../../../../lib/plots/graph_one_axis_settings_model.h</header>
+   <header>../../../../lib/plots/one_axis_settings_model.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
