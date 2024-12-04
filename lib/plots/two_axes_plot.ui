@@ -53,7 +53,7 @@
   <customwidget>
    <class>TwoAxesSettingsModel</class>
    <extends>QTableWidget</extends>
-   <header>../../../../lib/plots/graph_two_axes_settings_model.h</header>
+   <header>../../../../lib/plots/two_axes_settings_model.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

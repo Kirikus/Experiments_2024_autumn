@@ -7,6 +7,8 @@ class TwoAxesSettingsModel : public QTableWidget {
  public:
   enum Column {
     Is_Active = 0,  // Column for switching graph on/off
+    Axis_X,
+    Axis_Y,
     Style,          // Column for line type
     Color,          // Column for graph color
     Scatter,        // Column for scatters type at graph

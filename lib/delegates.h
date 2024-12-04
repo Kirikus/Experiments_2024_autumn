@@ -38,6 +38,8 @@ class ColorDelegate : public QStyledItemDelegate {
   }
 };
 
+
+
 class CheckBoxDelegate : public QStyledItemDelegate {
  public:
   CheckBoxDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {}
@@ -114,6 +116,13 @@ class AbstractComboBoxDelegate : public QStyledItemDelegate {
                     const QModelIndex& index) const {
     QComboBox* set_editor = static_cast<QComboBox*>(editor);
     model->setData(index, set_editor->currentText(), Qt::EditRole);
+  }
+};
+
+class ColumnDelegate : public AbstractComboBoxDelegate {
+ public:
+  ColumnDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {                  //ПОМЕНЯТЬ HARDCODE!!!
+    options = {"test1", "test2"};
   }
 };
 
