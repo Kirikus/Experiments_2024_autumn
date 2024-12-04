@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QPainter>
 #include <QStyledItemDelegate>
+#include <QTableWidget>
 
 class ColorDelegate : public QStyledItemDelegate {
  public:
@@ -119,10 +120,10 @@ class AbstractComboBoxDelegate : public QStyledItemDelegate {
   }
 };
 
-class ColumnDelegate : public AbstractComboBoxDelegate {
+class ColumnNameDelegate : public AbstractComboBoxDelegate {
  public:
-  ColumnDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {                  //ПОМЕНЯТЬ HARDCODE!!!
-    options = {"test1", "test2"};
+  ColumnNameDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {                  //ПОМЕНЯТЬ HARDCODE!!!
+    options = {"None"};
   }
 };
 
