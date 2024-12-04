@@ -17,7 +17,7 @@
 #include "./ui_one_axis_plot.h"
 #include "./ui_two_axes_plot.h"
 #include "one_axis_settings_model.h"
-#include "two_axes_settings_model.h"
+#include "two_axes_line_settings_model.h"
 #include "qcustomplot.h"
 
 class AbstractPlot : public QWidget {
