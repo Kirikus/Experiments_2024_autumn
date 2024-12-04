@@ -255,6 +255,11 @@ class TwoAxesPlot : public AbstractPlot {
     for (int i = 0; i < graph_num; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = ui->plot->addGraph();
+      QCPErrorBars* errorBars =
+          new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
+      errorBars->setDataPlottable(graph);
+      bars_list.append(errorBars);
+      bars_visibility.append(true);
 
       update_data(ui->settings->model()->index(0, i),
                   ui->settings->model()->index(0, i));
@@ -285,6 +290,7 @@ class TwoAxesPlot : public AbstractPlot {
     ui->plot->setInteraction(QCP::iRangeDrag, true);
     ui->plot->replot();
   }
+  ~LinePlot() { delete ui; }
 
  public slots:
   virtual void redraw_settings(int row, int column) {
@@ -329,6 +335,8 @@ class TwoAxesPlot : public AbstractPlot {
       }
       case TwoAxesSettingsModel::Column::Is_Active: {
         graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
+        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
+                                   bars_visibility[row]);
         break;
       }
       case TwoAxesSettingsModel::Column::Style: {
@@ -343,7 +351,12 @@ class TwoAxesPlot : public AbstractPlot {
             ui->settings->item(row, TwoAxesSettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
                 .value<double>()));
-        break;
+        
+        graph->setPen(pen);
+        bars_list[row]->setPen(pen);
+        if (column == SettingsModel::Column::Line_Size) {
+          break;
+        }
       }
       case TwoAxesSettingsModel::Column::Scatter_Size:
       case TwoAxesSettingsModel::Column::Scatter: {
