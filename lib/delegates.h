@@ -41,6 +41,8 @@ class ColorDelegate : public QStyledItemDelegate {
 
 
 
+
+
 class CheckBoxDelegate : public QStyledItemDelegate {
  public:
   CheckBoxDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {}
