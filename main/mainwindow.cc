@@ -22,7 +22,6 @@ void MainWindow::choose_file_open() {
 
 void MainWindow::create_dialog() {
   DialogWindow *d = new DialogWindow(nullptr, this->ui->graphics);
-  // d.ui->setupUi(d);
   d->show();
   d->exec();
 }
