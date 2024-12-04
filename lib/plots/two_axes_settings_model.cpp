@@ -16,8 +16,9 @@ TwoAxesSettingsModel::TwoAxesSettingsModel(QWidget* parent = nullptr) : QTableWi
   setRowCount(1);                                                               //ПОМЕНЯТЬ HARDCODE!!!
 
   setItemDelegateForColumn(Is_Active, new CheckBoxDelegate());
-  setItemDelegateForColumn(Axis_X, new ColumnDelegate());
-  setItemDelegateForColumn(Axis_Y, new ColumnDelegate());
+  auto delegate_variable = new ColumnNameDelegate();
+  setItemDelegateForColumn(Axis_X, delegate_variable);
+  setItemDelegateForColumn(Axis_Y, delegate_variable);
   setItemDelegateForColumn(Style, new LineStyleDelegate());
   setItemDelegateForColumn(Color, new ColorDelegate());
   setItemDelegateForColumn(Scatter, new ScatterStyleDelegate());
