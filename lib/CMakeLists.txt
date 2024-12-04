@@ -36,7 +36,7 @@ MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
 MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
-target_sources(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/plots/graph_line_settings_model.h)
+target_sources(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/plots/graph_one_axis_settings_model.h)
 target_include_directories(core INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/core_autogen/include)
 
 if(QT_VERSION_MAJOR EQUAL 6)

@@ -1,16 +1,16 @@
-#include "graph_line_settings_model.h"
+#include "graph_one_axis_settings_model.h"
 
 #include <QCheckBox>
 
 #include "../data/manager.h"
 #include "../delegates.h"
 
-QList<QString> LineSettingsModel::heading = {
+QList<QString> OneAxisSettingsModel::heading = {
     "Is Active", "Style", "Color", "Scatter", "Scatter Size", "Line Size"};
 
-LineSettingsModel::LineSettingsModel(QWidget* parent = nullptr) : QTableWidget(parent) {
+OneAxisSettingsModel::OneAxisSettingsModel(QWidget* parent = nullptr) : QTableWidget(parent) {
   connect(model(), &QAbstractItemModel::rowsInserted, this,
-          &LineSettingsModel::fillDefaultValues);
+          &OneAxisSettingsModel::fillDefaultValues);
 
   setColumnCount(heading.size());
   setRowCount(Manager::get_manager().variables.size());
@@ -23,7 +23,7 @@ LineSettingsModel::LineSettingsModel(QWidget* parent = nullptr) : QTableWidget(p
   setHorizontalHeaderLabels(heading);
 }
 
-void LineSettingsModel::fillDefaultValues(const QModelIndex& parent, int start,
+void OneAxisSettingsModel::fillDefaultValues(const QModelIndex& parent, int start,
                                       int end) {
   for (int row = start; row <= end; row++) {
     setItem(row, Column::Is_Active, new QTableWidgetItem("1"));

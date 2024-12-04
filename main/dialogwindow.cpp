@@ -13,11 +13,11 @@ void DialogWindow::create_graph() {
       ui->comboBox->currentData(Qt::DisplayRole).value<QString>();
   int t = plot_type_map[chosen_type];
   switch (t) {
-    case LinePlotType: {
-      target_tab_widget->addTab(new LinePlot(), "NewTab");
+    case OneAxisPlotType: {
+      target_tab_widget->addTab(new OneAxisPlot(), "NewTab");
       break;
     }
-    case ScatterPlotType: {
+    case TwoAxesPlotType: {
       break;
     }
     case HistogramType:

@@ -56,12 +56,12 @@ MainWindow::MainWindow(QWidget *parent)
       err2, "Test2", "tst2"));
 
   ui->setupUi(this);
-  LinePlot *plot = new LinePlot();
+  OneAxisPlot *plot = new OneAxisPlot();
 
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
   ui->tableTitles->setModel(model_titles);
-  ui->graphics->addTab(plot, "LinePlot");
+  ui->graphics->addTab(plot, "OneAxisPlot");
   ui->tableTitles->verticalHeader()->hide();
 
   connect(ui->buttonGraph, &QPushButton::clicked, this,

@@ -12,8 +12,9 @@
 
 #include "../data/manager.h"
 #include "../data/measurement_model.h"
-#include "./ui_lineplot.h"
-#include "graph_line_settings_model.h"
+#include "./ui_one_axis_plot.h"
+#include "graph_one_axis_settings_model.h"
+//#include "graph_two_axes_settings_model.h"
 #include "qcustomplot.h"
 
 class AbstractPlot : public QWidget {
@@ -50,16 +51,16 @@ class AbstractPlot : public QWidget {
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class LinePlot;
+class OneAxisPlot;
 }
 QT_END_NAMESPACE
 
-class LinePlot : public AbstractPlot {
+class OneAxisPlot : public AbstractPlot {
  private:
-  Ui::LinePlot* ui;
+  Ui::OneAxisPlot* ui;
 
  public:
-  LinePlot(QWidget* parent = nullptr) : ui(new Ui::LinePlot) {
+  OneAxisPlot(QWidget* parent = nullptr) : ui(new Ui::OneAxisPlot) {
     ui->setupUi(this);
 
     ui->plot->xAxis->setLabel("x");
@@ -86,10 +87,10 @@ class LinePlot : public AbstractPlot {
         min_y = std::min(min_y, manager_line[i].getMinMeasurement());
         max_y = std::max(max_y, manager_line[i].getMaxMeasurement());
 
-        for (int k : QList({LineSettingsModel::Column::Is_Active,
-                            LineSettingsModel::Column::Style,
-                            LineSettingsModel::Column::Line_Size,
-                            LineSettingsModel::Column::Scatter_Size})) {
+        for (int k : QList({OneAxisSettingsModel::Column::Is_Active,
+                            OneAxisSettingsModel::Column::Style,
+                            OneAxisSettingsModel::Column::Line_Size,
+                            OneAxisSettingsModel::Column::Scatter_Size})) {
           redraw_settings(i, k);
         }
       }
@@ -109,34 +110,34 @@ class LinePlot : public AbstractPlot {
     auto graph = ui->plot->graph(row);
 
     switch (column) {
-      case LineSettingsModel::Column::Is_Active: {
+      case OneAxisSettingsModel::Column::Is_Active: {
         graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
         break;
       }
-      case LineSettingsModel::Column::Style: {
+      case OneAxisSettingsModel::Column::Style: {
         auto cell_data = cell->data(Qt::DisplayRole).value<QString>();
         graph->setLineStyle(line_style_map[cell_data]);
         break;
       }
-      case LineSettingsModel::Column::Line_Size:
-      case LineSettingsModel::Column::Color: {
+      case OneAxisSettingsModel::Column::Line_Size:
+      case OneAxisSettingsModel::Column::Color: {
         graph->setPen(QPen(
-            ui->settings->item(row, LineSettingsModel::Column::Color)->background(),
-            ui->settings->item(row, LineSettingsModel::Column::Line_Size)
+            ui->settings->item(row, OneAxisSettingsModel::Column::Color)->background(),
+            ui->settings->item(row, OneAxisSettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
                 .value<double>()));
         break;
       }
-      case LineSettingsModel::Column::Scatter_Size:
-      case LineSettingsModel::Column::Scatter: {
-        auto shape = ui->settings->item(row, LineSettingsModel::Column::Scatter)
+      case OneAxisSettingsModel::Column::Scatter_Size:
+      case OneAxisSettingsModel::Column::Scatter: {
+        auto shape = ui->settings->item(row, OneAxisSettingsModel::Column::Scatter)
                          ->data(Qt::DisplayRole);
-        auto size = ui->settings->item(row, LineSettingsModel::Column::Scatter_Size)
+        auto size = ui->settings->item(row, OneAxisSettingsModel::Column::Scatter_Size)
                         ->data(Qt::DisplayRole);
 
         graph->setScatterStyle(QCPScatterStyle(
             scatter_style_map[shape.value<QString>()],
-            ui->settings->item(row, LineSettingsModel::Column::Color)
+            ui->settings->item(row, OneAxisSettingsModel::Column::Color)
                 ->background()
                 .color(),
             size.value<double>()));
@@ -180,4 +181,131 @@ class LinePlot : public AbstractPlot {
   }
 };
 
+/*
+class TwoAxesPlot : public AbstractPlot {
+ private:
+  Ui::TwoAxesPlot* ui;
+
+ public:
+  TwoAxesPlot(QWidget* parent = nullptr) : ui(new Ui::TwoAxesPlot) {
+    ui->setupUi(this);
+
+    ui->plot->xAxis->setLabel("x");
+    ui->plot->yAxis->setLabel("y");
+    int rows_count = ui->settings->rowCount();
+
+    connect(ui->settings, &QTableWidget::cellChanged, this,
+            &AbstractPlot::redraw_settings);
+
+    auto manager_line = Manager::get_manager().variables;
+    bool is_active;
+    auto style = QCPGraph::lsLine;
+    double min_y = manager_line[0].measurements[0];
+    double max_y = manager_line[0].measurements[0];
+
+    for (int i = 0; i < rows_count; ++i) {
+      is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
+      auto graph = ui->plot->addGraph();
+
+      update_data(ui->settings->model()->index(i, i),
+                  ui->settings->model()->index(i, i));
+
+      if (is_active) {
+        min_y = std::min(min_y, manager_line[i].getMinMeasurement());
+        max_y = std::max(max_y, manager_line[i].getMaxMeasurement());
+
+        for (int k : QList({TwoAxesSettingsModel::Column::Is_Active,
+                            TwoAxesSettingsModel::Column::Style,
+                            TwoAxesSettingsModel::Column::Line_Size,
+                            TwoAxesSettingsModel::Column::Scatter_Size})) {
+          redraw_settings(i, k);
+        }
+      }
+    }
+    ui->plot->xAxis->setRange(0, manager_line[0].size() + 1);
+    ui->plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
+                              max_y + (max_y - min_y) / 20.);
+
+    ui->plot->setInteraction(QCP::iRangeZoom, true);
+    ui->plot->setInteraction(QCP::iRangeDrag, true);
+    ui->plot->replot();
+  }
+
+ public slots:
+  virtual void redraw_settings(int row, int column) {
+    auto cell = ui->settings->item(row, column);
+    auto graph = ui->plot->graph(row);
+
+    switch (column) {
+      case TwoAxesSettingsModel::Column::Is_Active: {
+        graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
+        break;
+      }
+      case TwoAxesSettingsModel::Column::Style: {
+        auto cell_data = cell->data(Qt::DisplayRole).value<QString>();
+        graph->setLineStyle(line_style_map[cell_data]);
+        break;
+      }
+      case TwoAxesSettingsModel::Column::Line_Size:
+      case TwoAxesSettingsModel::Column::Color: {
+        graph->setPen(QPen(
+            ui->settings->item(row, TwoAxesSettingsModel::Column::Color)->background(),
+            ui->settings->item(row, TwoAxesSettingsModel::Column::Line_Size)
+                ->data(Qt::DisplayRole)
+                .value<double>()));
+        break;
+      }
+      case TwoAxesSettingsModel::Column::Scatter_Size:
+      case TwoAxesSettingsModel::Column::Scatter: {
+        auto shape = ui->settings->item(row, TwoAxesSettingsModel::Column::Scatter)
+                         ->data(Qt::DisplayRole);
+        auto size = ui->settings->item(row, TwoAxesSettingsModel::Column::Scatter_Size)
+                        ->data(Qt::DisplayRole);
+
+        graph->setScatterStyle(QCPScatterStyle(
+            scatter_style_map[shape.value<QString>()],
+            ui->settings->item(row, TwoAxesSettingsModel::Column::Color)
+                ->background()
+                .color(),
+            size.value<double>()));
+        break;
+      }
+    }
+    ui->plot->replot();
+  }
+
+  virtual void update_data(const QModelIndex& topLeft,
+                           const QModelIndex& bottomRight,
+                           const QList<int>& roles = QList<int>()) {
+    int row_width =
+        roles.size() / (topLeft.column() - bottomRight.column() + 1);
+    bool line_changed;
+    bool table_changed = false;
+    for (int row = bottomRight.column(); row < (topLeft.column() + 1); ++row) {
+      line_changed = false;
+      for (int k = row_width * (row - bottomRight.column());
+           k < row_width * (row - bottomRight.column() + 1); ++k) {
+        if (roles[k] == Qt::EditRole) {
+          line_changed = true;
+          break;
+        }
+      }
+      if (line_changed || (roles.size() == 0)) {
+        table_changed = true;
+      } else {
+        continue;
+      }
+
+      auto manager_line = Manager::get_manager().variables[row];
+      QVector<double> x(manager_line.size());
+      QVector<double> y = QVector<double>::fromList(manager_line.measurements);
+      for (int i = 0; i < x.size(); ++i) {
+        x[i] = i + 1;
+      }
+      ui->plot->graph(row)->setData(x, y);
+    }
+    if (table_changed) ui->plot->replot();
+  }
+};
+*/
 #endif
