@@ -16,12 +16,12 @@ void DialogWindow::create_graph() {
       chosen_type + "_" + QString::number(target_tab_widget->count());
   switch (t) {
     case OneAxisPlotType: {
-      int index = target_tab_widget->addTab(new OneAxisPlot(), "NewTab");
+      int index = target_tab_widget->addTab(new OneAxisPlot(), new_name);
       target_tab_widget->setCurrentIndex(index);
       break;
     }
     case TwoAxesPlotType: {
-      target_tab_widget->addTab(new TwoAxesPlot(), "NewTab");
+      target_tab_widget->addTab(new TwoAxesPlot(), new_name);
       break;
     }
     case HistogramType:
