@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>OneAxisPlot</class>
- <widget class="QWidget" name="OneAxisPlot">
+ <class>TwoAxesPlot</class>
+ <widget class="QWidget" name="TwoAxesPlot">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -29,7 +29,7 @@
          </sizepolicy>
         </property>
        </widget>
-       <widget class="OneAxisSettingsModel" name="settings">
+       <widget class="TwoAxesSettingsModel" name="settings">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -51,9 +51,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>OneAxisSettingsModel</class>
+   <class>TwoAxesSettingsModel</class>
    <extends>QTableWidget</extends>
-   <header>../../../../lib/plots/graph_one_axis_settings_model.h</header>
+   <header>../../../../lib/plots/graph_two_axes_settings_model.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
