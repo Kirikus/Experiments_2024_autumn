@@ -13,7 +13,7 @@
 #include "../data/manager.h"
 #include "../data/measurement_model.h"
 #include "./ui_lineplot.h"
-#include "graph_settings_model.h"
+#include "graph_line_settings_model.h"
 #include "qcustomplot.h"
 
 class AbstractPlot : public QWidget {
@@ -86,10 +86,10 @@ class LinePlot : public AbstractPlot {
         min_y = std::min(min_y, manager_line[i].getMinMeasurement());
         max_y = std::max(max_y, manager_line[i].getMaxMeasurement());
 
-        for (int k : QList({SettingsModel::Column::Is_Active,
-                            SettingsModel::Column::Style,
-                            SettingsModel::Column::Line_Size,
-                            SettingsModel::Column::Scatter_Size})) {
+        for (int k : QList({LineSettingsModel::Column::Is_Active,
+                            LineSettingsModel::Column::Style,
+                            LineSettingsModel::Column::Line_Size,
+                            LineSettingsModel::Column::Scatter_Size})) {
           redraw_settings(i, k);
         }
       }
@@ -109,34 +109,34 @@ class LinePlot : public AbstractPlot {
     auto graph = ui->plot->graph(row);
 
     switch (column) {
-      case SettingsModel::Column::Is_Active: {
+      case LineSettingsModel::Column::Is_Active: {
         graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
         break;
       }
-      case SettingsModel::Column::Style: {
+      case LineSettingsModel::Column::Style: {
         auto cell_data = cell->data(Qt::DisplayRole).value<QString>();
         graph->setLineStyle(line_style_map[cell_data]);
         break;
       }
-      case SettingsModel::Column::Line_Size:
-      case SettingsModel::Column::Color: {
+      case LineSettingsModel::Column::Line_Size:
+      case LineSettingsModel::Column::Color: {
         graph->setPen(QPen(
-            ui->settings->item(row, SettingsModel::Column::Color)->background(),
-            ui->settings->item(row, SettingsModel::Column::Line_Size)
+            ui->settings->item(row, LineSettingsModel::Column::Color)->background(),
+            ui->settings->item(row, LineSettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
                 .value<double>()));
         break;
       }
-      case SettingsModel::Column::Scatter_Size:
-      case SettingsModel::Column::Scatter: {
-        auto shape = ui->settings->item(row, SettingsModel::Column::Scatter)
+      case LineSettingsModel::Column::Scatter_Size:
+      case LineSettingsModel::Column::Scatter: {
+        auto shape = ui->settings->item(row, LineSettingsModel::Column::Scatter)
                          ->data(Qt::DisplayRole);
-        auto size = ui->settings->item(row, SettingsModel::Column::Scatter_Size)
+        auto size = ui->settings->item(row, LineSettingsModel::Column::Scatter_Size)
                         ->data(Qt::DisplayRole);
 
         graph->setScatterStyle(QCPScatterStyle(
             scatter_style_map[shape.value<QString>()],
-            ui->settings->item(row, SettingsModel::Column::Color)
+            ui->settings->item(row, LineSettingsModel::Column::Color)
                 ->background()
                 .color(),
             size.value<double>()));
