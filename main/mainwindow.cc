@@ -60,6 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::choose_file_open);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
+  connect(model_measurements, &QAbstractTableModel::dataChanged, plot2,
+          &TwoAxesPlot::update_var_names);
   connect(ui->graphics, &QTabWidget::tabCloseRequested,
           &QTabWidget::removeTab);
 }
