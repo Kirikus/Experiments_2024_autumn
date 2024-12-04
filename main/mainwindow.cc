@@ -118,12 +118,13 @@ MainWindow::MainWindow(QWidget *parent)
   ui->tableTitles->setModel(model_titles);
   ui->graphics->addTab(plot, "Start plot");
 
-  connect(ui->buttonGraph, &QPushButton::clicked, this,
+  connect(ui->button_Graph, &QPushButton::clicked, this,
           &MainWindow::create_dialog);
-  connect(ui->buttonAdd_row, &QPushButton::clicked, this, &MainWindow::add_row);
-  connect(ui->buttonAdd_variable, &QPushButton::clicked, this,
+  connect(ui->button_Add_row, &QPushButton::clicked, this,
+          &MainWindow::add_row);
+  connect(ui->button_Add_variable, &QPushButton::clicked, this,
           &MainWindow::add_variable);
-  connect(ui->actionOpen, &QAction::triggered, this,
+  connect(ui->action_Open, &QAction::triggered, this,
           &MainWindow::choose_file_open);
   connect(ui->action_Theme_button, &QAction::triggered, this,
           &MainWindow::changeTheme);
