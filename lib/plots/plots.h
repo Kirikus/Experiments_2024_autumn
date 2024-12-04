@@ -174,24 +174,9 @@ class LinePlot : public AbstractPlot {
                            const QModelIndex& bottomRight,
                            const QList<int>& roles = QList<int>()) {
     int row_width =
-        roles.size() / (topLeft.column() - bottomRight.column() + 1);
-    bool line_changed;
+        roles.size() / (bottomRight.column() - topLeft.column() + 1);
     bool table_changed = false;
-    for (int row = bottomRight.column(); row < (topLeft.column() + 1); ++row) {
-      line_changed = false;
-      for (int k = row_width * (row - bottomRight.column());
-           k < row_width * (row - bottomRight.column() + 1); ++k) {
-        if (roles[k] == Qt::EditRole) {
-          line_changed = true;
-          break;
-        }
-      }
-      if (line_changed || (roles.size() == 0)) {
-        table_changed = true;
-      } else {
-        continue;
-      }
-
+    for (int row = topLeft.column(); row < bottomRight.column() + 1; ++row) {
       auto manager_line = Manager::get_manager().variables[row];
       QVector<double> x(manager_line.size());
       QVector<double> y = QVector<double>::fromList(manager_line.measurements);
@@ -202,7 +187,7 @@ class LinePlot : public AbstractPlot {
       QList<double> errors = Manager::get_manager().variables[row].getErrors();
       bars_list[row]->setData(errors, errors);
     }
-    if (table_changed) ui->plot->replot();
+    ui->plot->replot();
   }
 };
 
