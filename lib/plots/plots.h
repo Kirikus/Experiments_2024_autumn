@@ -115,7 +115,7 @@ class OneAxisPlot : public AbstractPlot {
     ui->plot->setInteraction(QCP::iRangeDrag, true);
     ui->plot->replot();
   }
-  ~LinePlot() { delete ui; }
+  ~OneAxisPlot() { delete ui; }
 
  public slots:
   virtual void redraw_settings(int row, int column) {
@@ -134,7 +134,7 @@ class OneAxisPlot : public AbstractPlot {
         graph->setLineStyle(line_style_map[cell_data]);
         break;
       }
-      case SettingsModel::Column::Error_Scatter: {
+      case OneAxisSettingsModel::Column::Error_Scatter: {
         bars_visibility[row] = !bars_visibility[row];
         bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
                                    bars_visibility[row]);
@@ -150,7 +150,7 @@ class OneAxisPlot : public AbstractPlot {
 
         graph->setPen(pen);
         bars_list[row]->setPen(pen);
-        if (column == SettingsModel::Column::Line_Size) {
+        if (column == OneAxisSettingsModel::Column::Line_Size) {
           break;
         }
       }
@@ -163,7 +163,6 @@ class OneAxisPlot : public AbstractPlot {
 
         graph->setScatterStyle(QCPScatterStyle(
             scatter_style_map[shape.value<QString>()],
-            ui->settings->item(row, OneAxisSettingsModel::Column::Color)
             ui->settings->item(row, OneAxisSettingsModel::Column::Color)
                 ->background()
                 .color(),
@@ -215,6 +214,8 @@ class TwoAxesPlot : public AbstractPlot {
   Ui::TwoAxesPlot* ui;
   QMap<QString, QPair<QList<int>, QList<int>>> var_to_graph_connection;
   QVector<double> none_var;
+  QList<QCPErrorBars*> bars_list;
+  QList<bool> bars_visibility;
 
  public:
   TwoAxesPlot(int graph_num = 1, QWidget* parent = nullptr) : ui(new Ui::TwoAxesPlot) {
@@ -290,7 +291,7 @@ class TwoAxesPlot : public AbstractPlot {
     ui->plot->setInteraction(QCP::iRangeDrag, true);
     ui->plot->replot();
   }
-  ~LinePlot() { delete ui; }
+  ~TwoAxesPlot() { delete ui; }
 
  public slots:
   virtual void redraw_settings(int row, int column) {
@@ -328,7 +329,6 @@ class TwoAxesPlot : public AbstractPlot {
         ColumnNameDelegate* delegate = static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(column));
         auto names = delegate->options;
         int var_index = names.indexOf(name);
-        qDebug() << name << " " << var_index << " " << names;
         auto ind = ui->settings->model()->index(0, var_index);
         update_data(ind, ind, QList<int>({Qt::EditRole}));
         break;
@@ -346,15 +346,15 @@ class TwoAxesPlot : public AbstractPlot {
       }
       case TwoAxesSettingsModel::Column::Line_Size:
       case TwoAxesSettingsModel::Column::Color: {
-        graph->setPen(QPen(
+        QPen pen = QPen(
             ui->settings->item(row, TwoAxesSettingsModel::Column::Color)->background(),
             ui->settings->item(row, TwoAxesSettingsModel::Column::Line_Size)
                 ->data(Qt::DisplayRole)
-                .value<double>()));
+                .value<double>());
         
         graph->setPen(pen);
         bars_list[row]->setPen(pen);
-        if (column == SettingsModel::Column::Line_Size) {
+        if (column == TwoAxesSettingsModel::Column::Line_Size) {
           break;
         }
       }
@@ -398,11 +398,6 @@ class TwoAxesPlot : public AbstractPlot {
         indexes.insert(ind_y);
       }
       for (int graph_ind : indexes) {
-        // auto r = ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_X);
-        qDebug() << graph_ind;
-        qDebug() << ui->settings->item(0, TwoAxesSettingsModel::Column::Axis_X);
-        qDebug() << var_to_graph_connection;
-        qDebug() << bottomRight << " " << topLeft;
         QString name_x = ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_X)->data(Qt::DisplayRole).value<QString>();
         QString name_y = ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_Y)->data(Qt::DisplayRole).value<QString>();
         ColumnNameDelegate* delegate = static_cast <ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(TwoAxesSettingsModel::Column::Axis_X));
