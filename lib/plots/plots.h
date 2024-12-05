@@ -9,6 +9,7 @@
 #include <QString>
 #include <QWidget>
 #include <limits>
+#include <QPair>
 
 #include "../data/manager.h"
 #include "../delegates.h"
@@ -187,7 +188,8 @@ class OneAxisPlot : public AbstractPlot {
 class TwoAxesPlot : public AbstractPlot {
  private:
   Ui::TwoAxesPlot* ui;
-  QMap<QString, QList<int>> var_to_graph_connection;
+  QMap<QString, QPair<QList<int>, QList<int>>> var_to_graph_connection;
+  QVector<double> none_var;
 
  public:
   TwoAxesPlot(int graph_num = 1, QWidget* parent = nullptr) : ui(new Ui::TwoAxesPlot) {
@@ -197,12 +199,16 @@ class TwoAxesPlot : public AbstractPlot {
     ui->plot->yAxis->setLabel("y");
     int rows_count = ui->settings->rowCount();
 
+    for (int i = 0; i < Manager::get_manager().variables[0].measurements.size(); ++i) {
+      none_var.append(i + 1);
+    }
+
     connect(ui->settings, &QTableWidget::cellChanged, this,
             &AbstractPlot::redraw_settings);
 
     auto man_vars = Manager::get_manager().variables;
-    auto manager_line_x = man_vars[0];                  //ПОМЕНЯТЬ HARDCODE!!!
-    auto manager_line_y = man_vars[1];                  //ПОМЕНЯТЬ HARDCODE!!!
+    auto manager_line_x = man_vars[0];
+    auto manager_line_y = man_vars[0];
     bool is_active;
     auto style = QCPGraph::lsLine;
     double min_x = manager_line_x.measurements[0];
@@ -210,10 +216,16 @@ class TwoAxesPlot : public AbstractPlot {
     double min_y = manager_line_y.measurements[0];
     double max_y = manager_line_y.measurements[0];
 
+    var_to_graph_connection["None"] = QPair<QList<int>, QList<int>>(QList<int>(), QList<int>());
+    for ( int i = 0; i < graph_num; ++i) {
+      var_to_graph_connection["None"].first.append(i);
+      var_to_graph_connection["None"].second.append(i);
+    }
     for (int i = 0; i < man_vars.size(); ++i) {
-      var_to_graph_connection[man_vars[i].short_name] = QList<int>();
+      var_to_graph_connection[man_vars[i].short_name] = QPair<QList<int>, QList<int>>(QList<int>(), QList<int>());
       static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(TwoAxesSettingsModel::Column::Axis_X))->options.append(man_vars[i].short_name);
     }
+
 
     for (int i = 0; i < graph_num; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
@@ -257,17 +269,30 @@ class TwoAxesPlot : public AbstractPlot {
     switch (column) {
       case TwoAxesSettingsModel::Column::Axis_X:
       case TwoAxesSettingsModel::Column::Axis_Y: {
+        auto name_x = ui->settings->item(row, column)->data(Qt::DisplayRole).value<QString>();
+        auto name_y = ui->settings->item(row, column)->data(Qt::DisplayRole).value<QString>();
+
         auto name = ui->settings->item(row, column)->data(Qt::DisplayRole).value<QString>();
 
-        int ind_remove;
-        for (auto elems: var_to_graph_connection) {
-          ind_remove = elems.indexOf(row);
-          if (ind_remove != -1) {
-            elems.removeAt(ind_remove);
+        int ind_remove_x;
+        int ind_remove_y;
+        for (auto& elems: var_to_graph_connection) {
+          ind_remove_x = elems.first.indexOf(row);
+          ind_remove_y = elems.second.indexOf(row);
+          if (ind_remove_x != -1) {
+            elems.first.removeAt(ind_remove_x);
+            break;
+          }
+          if (ind_remove_y != -1) {
+            elems.second.removeAt(ind_remove_y);
             break;
           }
         }
-        var_to_graph_connection[name].append(row);
+        if (column == TwoAxesSettingsModel::Column::Axis_X){
+          var_to_graph_connection[name].first.append(row);
+        } else {
+          var_to_graph_connection[name].second.append(row);
+        }
 
         ColumnNameDelegate* delegate = static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(column));
         auto names = delegate->options;
@@ -321,18 +346,42 @@ class TwoAxesPlot : public AbstractPlot {
     int start = bottomRight.column() - 1;
     int end = topLeft.column() - 1;
     for (int i = start; i < end + 1; ++i) {
+      QString name;
       if (i < 0) {
-        continue;  // delete in next commits (stab)
+        name = "None";
+      } else {
+        name = Manager::get_manager().variables[i].short_name;
       }
-      QString name = Manager::get_manager().variables[i].short_name;
-      for (int graph_ind : var_to_graph_connection[name]) {
-        auto name_x = ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_X)->data(Qt::DisplayRole).value<QString>();
-        auto name_y = ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_Y)->data(Qt::DisplayRole).value<QString>();
+      QSet<int> indexes;
+      for (int ind_x : var_to_graph_connection[name].first) {
+        indexes.insert(ind_x);
+      }
+      for (int ind_y : var_to_graph_connection[name].second) {
+        indexes.insert(ind_y);
+      }
+      for (int graph_ind : indexes) {
+        // auto r = ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_X);
+        qDebug() << graph_ind;
+        qDebug() << ui->settings->item(0, TwoAxesSettingsModel::Column::Axis_X);
+        qDebug() << var_to_graph_connection;
+        qDebug() << bottomRight << " " << topLeft;
+        QString name_x = ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_X)->data(Qt::DisplayRole).value<QString>();
+        QString name_y = ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_Y)->data(Qt::DisplayRole).value<QString>();
         ColumnNameDelegate* delegate = static_cast <ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(TwoAxesSettingsModel::Column::Axis_X));
         int var_x_index = delegate->options.indexOf(name_x);
         int var_y_index = delegate->options.indexOf(name_y);
-        QVector<double> x = QVector<double>::fromList(Manager::get_manager().variables[var_x_index].measurements);
-        QVector<double> y = QVector<double>::fromList(Manager::get_manager().variables[var_y_index].measurements);
+        QVector<double> x;
+        QVector<double> y;
+        if (var_x_index == 0) {
+          x = none_var;
+        } else {
+          x = QVector<double>::fromList(Manager::get_manager().variables[var_x_index-1].measurements);
+        }
+        if (var_y_index == 0) {
+          y = none_var;
+        } else {
+          y = QVector<double>::fromList(Manager::get_manager().variables[var_y_index-1].measurements);
+        }
         ui->plot->graph(graph_ind)->setData(x, y);
       }
     }

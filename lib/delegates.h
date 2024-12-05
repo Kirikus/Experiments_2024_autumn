@@ -122,7 +122,7 @@ class AbstractComboBoxDelegate : public QStyledItemDelegate {
 
 class ColumnNameDelegate : public AbstractComboBoxDelegate {
  public:
-  ColumnNameDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {                  //ПОМЕНЯТЬ HARDCODE!!!
+  ColumnNameDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {
     options = {"None"};
   }
 };
