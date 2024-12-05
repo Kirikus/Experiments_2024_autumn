@@ -23,6 +23,10 @@ class MeasurementModel : public QAbstractTableModel {
 
   Qt::ItemFlags flags(const QModelIndex& index) const;
 
+  virtual bool insertRows(int row, int column, const QModelIndex&);
+
+  virtual bool insertColumns(int column, int count, const QModelIndex&);
+
   void keyPressEvent(QKeyEvent* event) const;
 };
 
