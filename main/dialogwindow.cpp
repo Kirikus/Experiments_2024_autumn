@@ -21,7 +21,8 @@ void DialogWindow::create_graph() {
       break;
     }
     case TwoAxesPlotType: {
-      target_tab_widget->addTab(new TwoAxesPlot(), new_name);
+      int index = target_tab_widget->addTab(new TwoAxesPlot(), new_name);
+      target_tab_widget->setCurrentIndex(index);
       break;
     }
     case HistogramType:
