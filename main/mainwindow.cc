@@ -17,7 +17,46 @@
 #include "qcustomplot.h"
 
 void MainWindow::choose_file_open() {
-  QFile file(QFileDialog::getOpenFileName(0, "Открыть", "", "*.csv"), this);
+  active_file = QFileDialog::getOpenFileName(0, "Открыть", "", "*.csv");
+  QFile file(active_file);
+  file.close();
+}
+
+void MainWindow::import_data() {
+  QFile file(QFileDialog::getOpenFileName(0, "Импортировать", "", "*.csv"));
+  if (!file.open(QIODevice::ReadOnly)) {
+    file.close();
+    return;
+  }
+  QTextStream in(&file);
+  // ErrorAbsolute error(0.);
+  QStringList titles(in.readLine().split(","));
+  for (auto title : titles) {
+    VariableData var_data({}, new ErrorAbsolute(0.), title, title);
+    Manager::get_manager().add_variable(var_data);
+  }
+  // QList<QList<double>> file_data(titles.size(), QList<double>());
+
+  auto &man = Manager::get_manager();
+  QList<double> temp_list;
+
+  while (!in.atEnd()) {
+    auto line = in.readLine().split(",");
+    // add_row();
+    temp_list.clear();
+    for (auto elem : line) {
+      temp_list.append(elem.toDouble());
+    }
+    man.add_measurement_row(man.variables.size() - line.size(), -1, temp_list);
+  }
+
+  ui->tableData->model()->insertColumns(
+      Manager::get_manager().variables.size() - titles.size(), titles.size());
+  ui->tableErrors->model()->insertColumns(
+      Manager::get_manager().variables.size() - titles.size(), titles.size());
+  ui->tableTitles->model()->insertColumns(
+      Manager::get_manager().variables.size() - titles.size(), titles.size());
+  file.close();
 }
 
 void MainWindow::create_dialog() {
@@ -39,12 +78,15 @@ void MainWindow::changeTheme() {
 
 void MainWindow::add_row() {
   Manager::get_manager().add_measurement_row();
-  ui->tableData->model()->insertRows(0, 1);
-  ui->tableErrors->model()->insertRows(0, 1);
+  ui->tableData->model()->insertRows(
+      Manager::get_manager().variables[0].measurements.size() - 1, 1);
+  ui->tableErrors->model()->insertRows(
+      Manager::get_manager().variables[0].measurements.size() - 1, 1);
 }
 
 void MainWindow::add_variable() {
   auto &man = Manager::get_manager();
+  int vars_num = Manager::get_manager().variables.size();
   int size = Manager::get_manager().variables[0].size();
   bool ok;
   ErrorAbsolute *err = new ErrorAbsolute(0.);
@@ -54,9 +96,9 @@ void MainWindow::add_variable() {
     return;
   }
   man.add_variable(VariableData(QList<double>(size, 0.), err, name, name));
-  ui->tableData->model()->insertColumns(0, 1);
-  ui->tableErrors->model()->insertColumns(0, 1);
-  ui->tableTitles->model()->insertColumns(0, 1);
+  ui->tableData->model()->insertColumns(vars_num, 1);
+  ui->tableErrors->model()->insertColumns(vars_num, 1);
+  ui->tableTitles->model()->insertColumns(vars_num, 1);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -126,6 +168,8 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::add_variable);
   connect(ui->action_Open, &QAction::triggered, this,
           &MainWindow::choose_file_open);
+  connect(ui->action_Import_data, &QAction::triggered, this,
+          &MainWindow::import_data);
   connect(ui->action_Theme_button, &QAction::triggered, this,
           &MainWindow::changeTheme);
   connect(model_err, &QAbstractTableModel::dataChanged, plot,

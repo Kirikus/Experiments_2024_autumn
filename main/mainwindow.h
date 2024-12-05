@@ -29,5 +29,6 @@ class MainWindow : public QMainWindow {
   void changeTheme();
   void create_dialog();
   void choose_file_open();
+  void import_data();
 };
 #endif  // MAINWINDOW_H

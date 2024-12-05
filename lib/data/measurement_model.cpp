@@ -60,7 +60,7 @@ bool MeasurementModel::insertRows(int row, int count, const QModelIndex&) {
   beginInsertRows(QModelIndex(), row, row + count - 1);
   endInsertRows();
 
-  QModelIndex index_start = index(rowCount() - 1, 0);
+  QModelIndex index_start = index(rowCount() - 1 - count, 0);
   QModelIndex index_end = index(rowCount() - 1, columnCount() - 1);
   emit dataChanged(
       index_start, index_end,
@@ -77,7 +77,7 @@ bool MeasurementModel::insertColumns(int column, int count,
   beginInsertColumns(QModelIndex(), column, column + count - 1);
   endInsertColumns();
 
-  QModelIndex index_start = index(0, columnCount() - 1);
+  QModelIndex index_start = index(0, columnCount() - 1 - count);
   QModelIndex index_end = index(rowCount() - 1, columnCount() - 1);
   emit dataChanged(
       index_start, index_end,

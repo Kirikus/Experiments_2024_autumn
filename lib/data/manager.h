@@ -22,6 +22,7 @@ class Manager {
 
   void add_calculated(VariableData var);
 
+  void add_measurement_row(int start, int end, QList<double>& measurements);
   void add_measurement_row();
   void remove_measurement_row();
 };
