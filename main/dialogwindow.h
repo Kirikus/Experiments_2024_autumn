@@ -17,16 +17,16 @@ class DialogWindow : public QDialog {
   Q_OBJECT
  private:
   enum PlotTypes {
-    LinePlotType = 0,
-    ScatterPlotType,
+    OneAxisPlotType = 0,
+    TwoAxesPlotType,
     HistogramType,
     HeatmapType
   };
-  QMap<QString, PlotTypes> plot_type_map{{"Line plot", LinePlotType},
-                                         {"Scatter plot", ScatterPlotType},
+  QMap<QString, PlotTypes> plot_type_map{{"One axis plot", OneAxisPlotType},
+                                         {"Two axes plot", TwoAxesPlotType},
                                          {"Histogram", HistogramType},
                                          {"Heatmap", HeatmapType}};
-  QList<QString> graph_types = {"Line plot", "Scatter plot", "Histogram",
+  QList<QString> graph_types = {"One axis plot", "Two axes plot", "Histogram",
                                 "Heatmap"};
 
  public:

@@ -1,9 +1,9 @@
-#ifndef __GRAPH_SETTINGS_MODEL_H__
-#define __GRAPH_SETTINGS_MODEL_H__
+#ifndef __ONE_AXIS_GRAPH_SETTINGS_MODEL_H__
+#define __ONE_AXIS_GRAPH_SETTINGS_MODEL_H__
 
 #include <QTableWidget>
 
-class SettingsModel : public QTableWidget {
+class OneAxisSettingsModel : public QTableWidget {
  public:
   enum Column {
     Is_Active = 0,  // Column for switching graph on/off
@@ -16,7 +16,7 @@ class SettingsModel : public QTableWidget {
   };
   static QList<QString> heading;
 
-  SettingsModel(QWidget* parent);
+  OneAxisSettingsModel(QWidget* parent);
 
  private slots:
   void fillDefaultValues(const QModelIndex& parent, int start, int end);

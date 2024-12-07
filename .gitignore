@@ -56,3 +56,4 @@ compile_commands.json
 # Cmake build files
 
 build
+.vscode/
