@@ -14,6 +14,8 @@ void DialogWindow::create_graph() {
   int t = plot_type_map[chosen_type];
   QString new_name =
       chosen_type + "_" + QString::number(target_tab_widget->count());
+  QString new_name =
+      chosen_type + "_" + QString::number(target_tab_widget->count());
   switch (t) {
     case OneAxisPlotType: {
       int index = target_tab_widget->addTab(new OneAxisPlot(), new_name);

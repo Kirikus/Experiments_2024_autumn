@@ -24,6 +24,7 @@ class AbstractPlot : public QWidget {
  public:
   QMap<QString, QCPGraph::LineStyle> line_style_map{
       {"None", QCPGraph::lsNone},
+      {"None", QCPGraph::lsNone},
       {"Line", QCPGraph::lsLine},
       {"StepLeft", QCPGraph::lsStepLeft},
       {"StepRight", QCPGraph::lsStepRight},
@@ -72,6 +73,8 @@ class OneAxisPlot : public AbstractPlot {
 
     ui->plot->xAxis->setLabel("Measurement number");
     ui->plot->yAxis->setLabel("Value");
+    ui->plot->xAxis->setLabel("Measurement number");
+    ui->plot->yAxis->setLabel("Value");
     int rows_count = ui->settings->rowCount();
 
     connect(ui->settings, &QTableWidget::cellChanged, this,
@@ -86,6 +89,11 @@ class OneAxisPlot : public AbstractPlot {
     for (int i = 0; i < rows_count; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = ui->plot->addGraph();
+      QCPErrorBars* errorBars =
+          new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
+      errorBars->setDataPlottable(graph);
+      bars_list.append(errorBars);
+      bars_visibility.append(true);
       QCPErrorBars* errorBars =
           new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
       errorBars->setDataPlottable(graph);
@@ -125,6 +133,8 @@ class OneAxisPlot : public AbstractPlot {
     switch (column) {
       case OneAxisSettingsModel::Column::Is_Active: {
         graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
+        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
+                                   bars_visibility[row]);
         bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
                                    bars_visibility[row]);
         break;
@@ -202,6 +212,8 @@ class OneAxisPlot : public AbstractPlot {
         x[i] = i + 1;
       }
       ui->plot->graph(row)->setData(x, y);
+      QList<double> errors = Manager::get_manager().variables[row].getErrors();
+      bars_list[row]->setData(errors, errors);
       QList<double> errors = Manager::get_manager().variables[row].getErrors();
       bars_list[row]->setData(errors, errors);
     }

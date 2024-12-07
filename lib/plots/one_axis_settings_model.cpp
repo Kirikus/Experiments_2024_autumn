@@ -20,6 +20,7 @@ OneAxisSettingsModel::OneAxisSettingsModel(QWidget* parent = nullptr) : QTableWi
   setItemDelegateForColumn(Style, new LineStyleDelegate());
   setItemDelegateForColumn(Color, new ColorDelegate());
   setItemDelegateForColumn(Error_Scatter, new CheckBoxDelegate());
+  setItemDelegateForColumn(Error_Scatter, new CheckBoxDelegate());
   setItemDelegateForColumn(Scatter, new ScatterStyleDelegate());
 
   setHorizontalHeaderLabels(heading);
@@ -34,8 +35,10 @@ void OneAxisSettingsModel::fillDefaultValues(const QModelIndex& parent, int star
     QRgb rgb = qRgba(rand() % 255, rand() % 255, rand() % 255, 255);
     item(row, Column::Color)->setBackground(QBrush(QColor(rgb)));
     setItem(row, Column::Error_Scatter, new QTableWidgetItem("1"));
+    setItem(row, Column::Error_Scatter, new QTableWidgetItem("1"));
     setItem(row, Column::Scatter, new QTableWidgetItem("None"));
     setItem(row, Column::Scatter_Size, new QTableWidgetItem("10"));
+    setItem(row, Column::Line_Size, new QTableWidgetItem("1"));
     setItem(row, Column::Line_Size, new QTableWidgetItem("1"));
   }
 }
