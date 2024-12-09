@@ -446,12 +446,12 @@ class TwoAxesPlot : public AbstractPlot {
     auto delegate =
         static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
             TwoAxesSettingsModel::Column::Axis_X));
-    for (int i = 0; i < man_vars.size(); ++i) {
+    for (int i = 1; i < man_vars.size() + 1; ++i) {
       if (i < delegate->options.size()) {
-        delegate->options[i] = man_vars[i].short_name;
+        delegate->options[i] = man_vars[i - 1].short_name;
         continue;
       }
-      delegate->options.append(man_vars[i].short_name);
+      delegate->options.append(man_vars[i - 1].short_name);
     }
   }
 };
