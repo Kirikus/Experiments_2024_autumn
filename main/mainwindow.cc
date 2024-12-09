@@ -22,7 +22,6 @@ void MainWindow::choose_file_open() {
 
 void MainWindow::create_dialog() {
   DialogWindow *d = new DialogWindow(nullptr, this->ui->graphics);
-  // d.ui->setupUi(d);
   d->show();
   d->exec();
 }
@@ -78,8 +77,6 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::create_dialog);
   connect(ui->actionOpen, &QAction::triggered, this,
           &MainWindow::choose_file_open);
-  connect(model_err, &QAbstractTableModel::dataChanged, plot,
-          &AbstractPlot::update_data);
   connect(model_err, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
