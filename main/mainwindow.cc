@@ -21,7 +21,10 @@ void MainWindow::choose_file_open() {
 }
 
 void MainWindow::create_dialog() {
-  DialogWindow *d = new DialogWindow(nullptr, this->ui->graphics);
+  DialogWindow *d = new DialogWindow(
+      ui->graphics, dynamic_cast<MeasurementModel *>(ui->tableData->model()),
+      dynamic_cast<ErrorModel *>(ui->tableErrors->model()),
+      dynamic_cast<TitleModel *>(ui->tableTitles->model()), nullptr);
   d->show();
   d->exec();
 }

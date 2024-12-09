@@ -5,6 +5,9 @@
 #include <QString>
 #include <QTabWidget>
 
+#include "../lib/data/error_model.h"
+#include "../lib/data/measurement_model.h"
+#include "../lib/data/titles_model.h"
 #include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
@@ -28,11 +31,16 @@ class DialogWindow : public QDialog {
                                          {"Heatmap", HeatmapType}};
   QList<QString> graph_types = {"One axis plot", "Two axes plot", "Histogram",
                                 "Heatmap"};
+  MeasurementModel* measure_model;
+  ErrorModel* err_model;
+  TitleModel* titles_model;
 
  public:
   Ui::DialogWindow* ui;
   QTabWidget* target_tab_widget;
-  DialogWindow(QWidget* parent, QTabWidget* target_tab_widget);
+  DialogWindow(QTabWidget* target_tab_widget, MeasurementModel* meas_model,
+               ErrorModel* err_model, TitleModel* titles_model,
+               QWidget* parent);
 
  private slots:
   void create_graph();
