@@ -302,13 +302,14 @@ class TwoAxesPlot : public AbstractPlot {
     switch (column) {
       case TwoAxesSettingsModel::Column::Axis_X:
       case TwoAxesSettingsModel::Column::Axis_Y: {
-        auto name_x = ui->settings->item(row, column)
-                          ->data(Qt::DisplayRole)
-                          .value<QString>();
-        auto name_y = ui->settings->item(row, column)
-                          ->data(Qt::DisplayRole)
-                          .value<QString>();
-
+        auto name_x =
+            ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_X)
+                ->data(Qt::DisplayRole)
+                .value<QString>();
+        auto name_y =
+            ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_Y)
+                ->data(Qt::DisplayRole)
+                .value<QString>();
         auto name = ui->settings->item(row, column)
                         ->data(Qt::DisplayRole)
                         .value<QString>();
@@ -320,23 +321,18 @@ class TwoAxesPlot : public AbstractPlot {
           ind_remove_y = elems.second.indexOf(row);
           if (ind_remove_x != -1) {
             elems.first.removeAt(ind_remove_x);
-            break;
           }
           if (ind_remove_y != -1) {
             elems.second.removeAt(ind_remove_y);
-            break;
           }
         }
-        if (column == TwoAxesSettingsModel::Column::Axis_X) {
-          var_to_graph_connection[name].first.append(row);
-        } else {
-          var_to_graph_connection[name].second.append(row);
-        }
+        var_to_graph_connection[name_x].first.append(row);
+        var_to_graph_connection[name_y].second.append(row);
 
         ColumnNameDelegate* delegate = static_cast<ColumnNameDelegate*>(
             ui->settings->itemDelegateForColumn(column));
         auto names = delegate->options;
-        int var_index = names.indexOf(name);
+        int var_index = names.indexOf(name) - 1;
         auto ind = ui->settings->model()->index(0, var_index);
         update_data(ind, ind, QList<int>({Qt::EditRole}));
         break;
@@ -388,8 +384,8 @@ class TwoAxesPlot : public AbstractPlot {
   virtual void update_data(const QModelIndex& topLeft,
                            const QModelIndex& bottomRight,
                            const QList<int>& roles = QList<int>()) {
-    int start = bottomRight.column() - 1;
-    int end = topLeft.column() - 1;
+    int start = bottomRight.column();
+    int end = topLeft.column();
     for (int i = start; i < end + 1; ++i) {
       QString name;
       if (i < 0) {

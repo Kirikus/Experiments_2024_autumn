@@ -29,6 +29,8 @@ void DialogWindow::create_graph() {
       auto* plot = new TwoAxesPlot();
       int index = target_tab_widget->addTab(plot, new_name);
       target_tab_widget->setCurrentIndex(index);
+      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+              &AbstractPlot::update_data);
       connect(titles_model, &QAbstractTableModel::dataChanged, plot,
               &TwoAxesPlot::update_var_names);
       break;
