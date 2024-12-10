@@ -21,8 +21,10 @@ void MainWindow::choose_file_open() {
 }
 
 void MainWindow::create_dialog() {
-  DialogWindow *d = new DialogWindow(nullptr, this->ui->graphics);
-  // d.ui->setupUi(d);
+  DialogWindow *d = new DialogWindow(
+      ui->graphics, dynamic_cast<MeasurementModel *>(ui->tableData->model()),
+      dynamic_cast<ErrorModel *>(ui->tableErrors->model()),
+      dynamic_cast<TitleModel *>(ui->tableTitles->model()), nullptr);
   d->show();
   d->exec();
 }
@@ -80,11 +82,11 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::choose_file_open);
   connect(model_err, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
-  connect(model_err, &QAbstractTableModel::dataChanged, plot,
-          &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot2,
+          &AbstractPlot::update_data);
+  connect(model_titles, &QAbstractTableModel::dataChanged, plot2,
           &TwoAxesPlot::update_var_names);
   connect(ui->graphics, &QTabWidget::tabCloseRequested, &QTabWidget::removeTab);
 }
