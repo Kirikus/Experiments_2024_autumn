@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow {
   Ui::MainWindow *ui;
   QPalette *dark_palette;
   bool theme_is_dark = false;
+  QString active_file;
 
  private slots:
   void add_row();

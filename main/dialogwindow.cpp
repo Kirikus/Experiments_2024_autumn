@@ -15,12 +15,24 @@ void DialogWindow::create_graph() {
   QString new_name =
       chosen_type + "_" + QString::number(target_tab_widget->count());
   switch (t) {
-    case LinePlotType: {
-      int index = target_tab_widget->addTab(new LinePlot(), new_name);
+    case OneAxisPlotType: {
+      auto* plot = new OneAxisPlot();
+      int index = target_tab_widget->addTab(plot, new_name);
       target_tab_widget->setCurrentIndex(index);
+      connect(err_model, &QAbstractTableModel::dataChanged, plot,
+              &AbstractPlot::update_data);
+      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+              &AbstractPlot::update_data);
       break;
     }
-    case ScatterPlotType: {
+    case TwoAxesPlotType: {
+      auto* plot = new TwoAxesPlot();
+      int index = target_tab_widget->addTab(plot, new_name);
+      target_tab_widget->setCurrentIndex(index);
+      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+              &AbstractPlot::update_data);
+      connect(titles_model, &QAbstractTableModel::dataChanged, plot,
+              &TwoAxesPlot::update_var_names);
       break;
     }
     case HistogramType:
@@ -31,11 +43,15 @@ void DialogWindow::create_graph() {
   close();
 }
 
-DialogWindow::DialogWindow(QWidget* parent = nullptr,
-                           QTabWidget* target_tab_widget = nullptr)
+DialogWindow::DialogWindow(QTabWidget* target_tab_widget,
+                           MeasurementModel* meas_model, ErrorModel* err_model,
+                           TitleModel* titles_model, QWidget* parent = nullptr)
     : QDialog(parent),
       ui(new Ui::DialogWindow),
-      target_tab_widget(target_tab_widget) {
+      target_tab_widget(target_tab_widget),
+      measure_model(meas_model),
+      err_model(err_model),
+      titles_model(titles_model) {
   ui->setupUi(this);
   ui->comboBox->addItems(graph_types);
 

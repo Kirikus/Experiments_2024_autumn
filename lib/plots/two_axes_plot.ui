@@ -1,51 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LinePlot</class>
- <widget class="QWidget" name="LinePlot">
+ <class>TwoAxesPlot</class>
+ <widget class="QWidget" name="TwoAxesPlot">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>432</width>
-    <height>369</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
-  </property>
-  <property name="palette">
-   <palette>
-    <active>
-     <colorrole role="Highlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>98</red>
-        <green>160</green>
-        <blue>234</blue>
-       </color>
-      </brush>
-     </colorrole>
-    </active>
-    <inactive>
-     <colorrole role="Highlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>98</red>
-        <green>160</green>
-        <blue>234</blue>
-       </color>
-      </brush>
-     </colorrole>
-    </inactive>
-    <disabled>
-     <colorrole role="Highlight">
-      <brush brushstyle="SolidPattern">
-       <color alpha="255">
-        <red>145</red>
-        <green>145</green>
-        <blue>145</blue>
-       </color>
-      </brush>
-     </colorrole>
-    </disabled>
-   </palette>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -66,7 +29,7 @@
          </sizepolicy>
         </property>
        </widget>
-       <widget class="SettingsModel" name="settings">
+       <widget class="TwoAxesSettingsModel" name="settings">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -88,9 +51,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>SettingsModel</class>
+   <class>TwoAxesSettingsModel</class>
    <extends>QTableWidget</extends>
-   <header>../../../../lib/plots/graph_settings_model.h</header>
+   <header>../../../../lib/plots/two_axes_settings_model.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

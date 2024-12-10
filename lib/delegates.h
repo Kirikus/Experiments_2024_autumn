@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QPainter>
 #include <QStyledItemDelegate>
+#include <QTableWidget>
 
 class ColorDelegate : public QStyledItemDelegate {
  public:
@@ -37,6 +38,10 @@ class ColorDelegate : public QStyledItemDelegate {
     painter->fillRect(option.rect, index.model()->data(index).value<QColor>());
   }
 };
+
+
+
+
 
 class CheckBoxDelegate : public QStyledItemDelegate {
  public:
@@ -114,6 +119,13 @@ class AbstractComboBoxDelegate : public QStyledItemDelegate {
                     const QModelIndex& index) const {
     QComboBox* set_editor = static_cast<QComboBox*>(editor);
     model->setData(index, set_editor->currentText(), Qt::EditRole);
+  }
+};
+
+class ColumnNameDelegate : public AbstractComboBoxDelegate {
+ public:
+  ColumnNameDelegate(QObject* parent = 0) : AbstractComboBoxDelegate(parent) {
+    options = {"None"};
   }
 };
 

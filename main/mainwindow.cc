@@ -60,7 +60,10 @@ void MainWindow::import_data() {
 }
 
 void MainWindow::create_dialog() {
-  DialogWindow *d = new DialogWindow(nullptr, this->ui->graphics);
+  DialogWindow *d = new DialogWindow(
+      ui->graphics, dynamic_cast<MeasurementModel *>(ui->tableData->model()),
+      dynamic_cast<ErrorModel *>(ui->tableErrors->model()),
+      dynamic_cast<TitleModel *>(ui->tableTitles->model()), nullptr);
   d->show();
   d->exec();
 }
@@ -153,12 +156,15 @@ MainWindow::MainWindow(QWidget *parent)
       err2, "Random", "rnd"));
 
   ui->setupUi(this);
-  LinePlot *plot = new LinePlot();
+  OneAxisPlot *plot = new OneAxisPlot();
+  TwoAxesPlot *plot2 = new TwoAxesPlot();
 
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
   ui->tableTitles->setModel(model_titles);
-  ui->graphics->addTab(plot, "Start plot");
+  ui->graphics->addTab(plot, "OneAxisPlot");
+  ui->graphics->addTab(plot2, "TwoAxesPlot");
+  ui->tableTitles->verticalHeader()->hide();
 
   connect(ui->button_Graph, &QPushButton::clicked, this,
           &MainWindow::create_dialog);
@@ -176,6 +182,10 @@ MainWindow::MainWindow(QWidget *parent)
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
+  connect(model_measurements, &QAbstractTableModel::dataChanged, plot2,
+          &AbstractPlot::update_data);
+  connect(model_titles, &QAbstractTableModel::dataChanged, plot2,
+          &TwoAxesPlot::update_var_names);
   connect(ui->graphics, &QTabWidget::tabCloseRequested, &QTabWidget::removeTab);
 }
 
