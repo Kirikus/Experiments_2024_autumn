@@ -391,8 +391,17 @@ class TwoAxesPlot : public AbstractPlot {
   virtual void update_data(const QModelIndex& topLeft,
                            const QModelIndex& bottomRight,
                            const QList<int>& roles = QList<int>()) {
-    int start = bottomRight.column();
-    int end = topLeft.column();
+    int start = std::min(bottomRight.column(), topLeft.column());
+    int end = std::max(bottomRight.column(), topLeft.column());
+
+    if (bottomRight.row() > none_var.size() - 1) {
+      int last = none_var.size();
+      for (int i = last; i < bottomRight.row() + 1; ++i) {
+        none_var.append(i + 1);
+      }
+      auto ind = ui->settings->model()->index(-2, -1);
+      update_data(ind, ind);
+    }
     for (int i = start; i < end + 1; ++i) {
       QString name;
       if (i < 0) {
