@@ -29,33 +29,35 @@ void MainWindow::import_data() {
     return;
   }
   QTextStream in(&file);
-  // ErrorAbsolute error(0.);
+  auto &man = Manager::get_manager();
+  auto last_var_num = man.variables.size();
   QStringList titles(in.readLine().split(","));
   for (auto title : titles) {
     VariableData var_data({}, new ErrorAbsolute(0.), title, title);
-    Manager::get_manager().add_variable(var_data);
+    man.add_variable(var_data);
   }
-  // QList<QList<double>> file_data(titles.size(), QList<double>());
 
-  auto &man = Manager::get_manager();
+  auto vert_size = man.variables[0].size();
   QList<double> temp_list;
+  QList<double> zero_list = QList<double>();
+  QStringList line;
 
-  while (!in.atEnd()) {
-    auto line = in.readLine().split(",");
-    // add_row();
+  for (int i = 0; i < vert_size; ++i) {
+    if (in.atEnd()) {
+      man.add_measurement_row(last_var_num, -1, zero_list);
+      continue;
+    }
+    line = in.readLine().split(",");
     temp_list.clear();
     for (auto elem : line) {
       temp_list.append(elem.toDouble());
     }
-    man.add_measurement_row(man.variables.size() - line.size(), -1, temp_list);
+    man.add_measurement_row(last_var_num, -1, temp_list);
   }
 
-  ui->tableData->model()->insertColumns(
-      Manager::get_manager().variables.size() - titles.size(), titles.size());
-  ui->tableErrors->model()->insertColumns(
-      Manager::get_manager().variables.size() - titles.size(), titles.size());
-  ui->tableTitles->model()->insertColumns(
-      Manager::get_manager().variables.size() - titles.size(), titles.size());
+  ui->tableData->model()->insertColumns(last_var_num, titles.size());
+  ui->tableErrors->model()->insertColumns(last_var_num, titles.size());
+  ui->tableTitles->model()->insertColumns(last_var_num, titles.size());
   file.close();
 }
 
