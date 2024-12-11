@@ -53,6 +53,39 @@ bool MeasurementModel::setData(const QModelIndex& index, const QVariant& value,
   return false;
 }
 
+bool MeasurementModel::insertRows(int row, int count, const QModelIndex&) {
+  if (count < 1 || row < 0 || row > Manager::get_manager().variables[0].size())
+    return false;
+
+  beginInsertRows(QModelIndex(), row, row + count - 1);
+  endInsertRows();
+
+  QModelIndex index_start = index(rowCount() - 1 - count, 0);
+  QModelIndex index_end = index(rowCount() - 1, columnCount() - 1);
+  emit dataChanged(
+      index_start, index_end,
+      QList<int>(Manager::get_manager().variables.size(), Qt::EditRole));
+  return true;
+}
+
+bool MeasurementModel::insertColumns(int column, int count,
+                                     const QModelIndex&) {
+  if (count < 1 || column < 0 ||
+      column > Manager::get_manager().variables.size())
+    return false;
+
+  beginInsertColumns(QModelIndex(), column, column + count - 1);
+  endInsertColumns();
+
+  QModelIndex index_start = index(0, columnCount() - 1 - count);
+  QModelIndex index_end = index(rowCount() - 1, columnCount() - 1);
+  emit dataChanged(
+      index_start, index_end,
+      QList<int>(Manager::get_manager().variables[0].measurements.size(),
+                 Qt::EditRole));
+  return true;
+}
+
 Qt::ItemFlags MeasurementModel::flags(const QModelIndex& index) const {
   return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
 }

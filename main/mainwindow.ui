@@ -49,6 +49,13 @@
      <widget class="QWidget" name="leftMenu" native="true">
       <layout class="QGridLayout" name="gridLayout">
        <item row="3" column="0">
+        <widget class="QPushButton" name="button_Add_row">
+         <property name="text">
+          <string>Add row</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -62,7 +69,7 @@
         </spacer>
        </item>
        <item row="2" column="0">
-        <widget class="QPushButton" name="buttonParameters">
+        <widget class="QPushButton" name="button_Parameters">
          <property name="toolTip">
           <string>Set graph parameters </string>
          </property>
@@ -72,7 +79,7 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QPushButton" name="buttonFormula">
+        <widget class="QPushButton" name="button_Formula">
          <property name="toolTip">
           <string>Add new formula</string>
          </property>
@@ -82,12 +89,19 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QPushButton" name="buttonGraph">
+        <widget class="QPushButton" name="button_Graph">
          <property name="toolTip">
           <string>Add new graph</string>
          </property>
          <property name="text">
           <string>📈</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QPushButton" name="button_Add_variable">
+         <property name="text">
+          <string>Add variable</string>
          </property>
         </widget>
        </item>
@@ -160,9 +174,10 @@
      <bool>true</bool>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionNew"/>
-    <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
+    <addaction name="action_New"/>
+    <addaction name="action_Open"/>
+    <addaction name="action_Save"/>
+    <addaction name="action_Import_data"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -170,6 +185,8 @@
     </property>
     <addaction name="action_Graph"/>
     <addaction name="action_New_formula"/>
+    <addaction name="separator"/>
+    <addaction name="action_Theme_button"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -182,7 +199,7 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
+  <action name="action_Open">
    <property name="text">
     <string>Open</string>
    </property>
@@ -193,7 +210,7 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionNew">
+  <action name="action_New">
    <property name="text">
     <string>New</string>
    </property>
@@ -201,7 +218,7 @@
     <string>Make new file</string>
    </property>
   </action>
-  <action name="actionSave">
+  <action name="action_Save">
    <property name="text">
     <string>Save</string>
    </property>
@@ -240,6 +257,16 @@
    </property>
    <property name="toolTip">
     <string>Add new formula</string>
+   </property>
+  </action>
+  <action name="action_Theme_button">
+   <property name="text">
+    <string>Dark theme</string>
+   </property>
+  </action>
+  <action name="action_Import_data">
+   <property name="text">
+    <string>Import data</string>
    </property>
   </action>
  </widget>

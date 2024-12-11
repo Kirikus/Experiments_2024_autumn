@@ -18,7 +18,7 @@ class OneAxisSettingsModel : public QTableWidget {
 
   OneAxisSettingsModel(QWidget* parent);
 
- private slots:
+ public slots:
   void fillDefaultValues(const QModelIndex& parent, int start, int end);
 };
 
