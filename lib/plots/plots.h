@@ -225,6 +225,7 @@ class TwoAxesPlot : public AbstractPlot {
 
     ui->plot->xAxis->setLabel("x");
     ui->plot->yAxis->setLabel("y");
+    ui->settings->setRowCount(graph_num);
     int rows_count = ui->settings->rowCount();
 
     for (int i = 0; i < Manager::get_manager().variables[0].measurements.size();
@@ -263,24 +264,24 @@ class TwoAxesPlot : public AbstractPlot {
     for (int i = 0; i < graph_num; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = ui->plot->addGraph();
-
-      update_data(ui->settings->model()->index(0, i),
-                  ui->settings->model()->index(0, i));
-
       if (is_active) {
         min_x = std::min(min_x, manager_line_x.getMinMeasurement());
         max_x = std::max(max_x, manager_line_x.getMaxMeasurement());
         min_y = std::min(min_y, manager_line_y.getMinMeasurement());
         max_y = std::max(max_y, manager_line_y.getMaxMeasurement());
 
-        for (int k : QList({TwoAxesSettingsModel::Column::Is_Active,
-                            TwoAxesSettingsModel::Column::Axis_X,
-                            TwoAxesSettingsModel::Column::Axis_Y,
-                            TwoAxesSettingsModel::Column::Style,
-                            TwoAxesSettingsModel::Column::Scatter_Size,
-                            TwoAxesSettingsModel::Column::Line_Size})) {
-          redraw_settings(i, k);
-        }
+      }
+    }
+
+    update_data(ui->settings->model()->index(-1, -1),
+                ui->settings->model()->index(-1, -1));
+    for (int i = 0; i < graph_num; ++i) {
+      for (int k : QList({TwoAxesSettingsModel::Column::Is_Active,
+                          TwoAxesSettingsModel::Column::Axis_X,
+                          TwoAxesSettingsModel::Column::Style,
+                          TwoAxesSettingsModel::Column::Scatter_Size,
+                          TwoAxesSettingsModel::Column::Line_Size})) {
+        redraw_settings(i, k);
       }
     }
     ui->plot->xAxis->setRange(min_x - (max_x - min_x) / 20.,

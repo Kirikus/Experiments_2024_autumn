@@ -16,7 +16,6 @@ TwoAxesSettingsModel::TwoAxesSettingsModel(QWidget* parent = nullptr)
           &TwoAxesSettingsModel::fillDefaultValues);
 
   setColumnCount(heading.size());
-  setRowCount(1);  //ПОМЕНЯТЬ HARDCODE!!!
 
   auto* check_box_delegate = new CheckBoxDelegate();
   auto* delegate_variable = new ColumnNameDelegate();

@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   ui->setupUi(this);
   OneAxisPlot *plot = new OneAxisPlot();
-  TwoAxesPlot *plot2 = new TwoAxesPlot();
+  TwoAxesPlot *plot2 = new TwoAxesPlot(3);
 
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
