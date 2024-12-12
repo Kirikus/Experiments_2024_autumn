@@ -33,7 +33,7 @@ void DialogWindow::create_graph() {
       auto* dialog_ask_rows = new DialogAmountRowsWindow(graphs_num, nullptr);
       dialog_ask_rows->show();
       dialog_ask_rows->exec();
-      if (graphs_num == -1) {
+      if (graphs_num <= 0) {
         break;
       }
 
@@ -41,6 +41,8 @@ void DialogWindow::create_graph() {
       int index = target_tab_widget->addTab(plot, new_name);
       target_tab_widget->setCurrentIndex(index);
       connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+              &AbstractPlot::update_data);
+      connect(err_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
       connect(titles_model, &QAbstractTableModel::dataChanged, plot,
               &TwoAxesPlot::update_var_names);
