@@ -11,11 +11,11 @@ QList<QString> TwoAxesSettingsModel::heading = {
 
 TwoAxesSettingsModel::TwoAxesSettingsModel(QWidget* parent = nullptr)
     : QTableWidget(parent) {
+  srand(time(NULL));
   connect(model(), &QAbstractItemModel::rowsInserted, this,
           &TwoAxesSettingsModel::fillDefaultValues);
 
   setColumnCount(heading.size());
-  setRowCount(1);  //ПОМЕНЯТЬ HARDCODE!!!
 
   auto* check_box_delegate = new CheckBoxDelegate();
   auto* delegate_variable = new ColumnNameDelegate();
@@ -33,7 +33,6 @@ TwoAxesSettingsModel::TwoAxesSettingsModel(QWidget* parent = nullptr)
 void TwoAxesSettingsModel::fillDefaultValues(const QModelIndex& parent,
                                              int start, int end) {
   for (int row = start; row <= end; row++) {
-    srand(time(NULL));
     setItem(row, Column::Is_Active, new QTableWidgetItem("1"));
     setItem(row, Column::Axis_X, new QTableWidgetItem("None"));
     setItem(row, Column::Axis_Y, new QTableWidgetItem("None"));

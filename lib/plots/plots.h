@@ -57,21 +57,19 @@ QT_BEGIN_NAMESPACE
 namespace Ui {
 class OneAxisPlot;
 class TwoAxesPlot;
-}  // namespace Ui
+}
 QT_END_NAMESPACE
 
 class OneAxisPlot : public AbstractPlot {
  private:
   Ui::OneAxisPlot* ui;
   QList<QCPErrorBars*> bars_list;
-  QList<bool> bars_visibility;
 
  public:
   OneAxisPlot(QWidget* parent = nullptr) : ui(new Ui::OneAxisPlot) {
     ui->setupUi(this);
 
     ui->plot->setBackground(Qt::transparent);
-
     ui->plot->xAxis->setLabel("Measurement number");
     ui->plot->yAxis->setLabel("Value");
     int rows_count = ui->settings->rowCount();
@@ -120,7 +118,6 @@ class OneAxisPlot : public AbstractPlot {
         new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
     errorBars->setDataPlottable(graph);
     bars_list.append(errorBars);
-    bars_visibility.append(true);
     return graph;
   }
 
@@ -130,21 +127,15 @@ class OneAxisPlot : public AbstractPlot {
     auto graph = ui->plot->graph(row);
 
     switch (column) {
+      case OneAxisSettingsModel::Column::Error_Scatter:
       case OneAxisSettingsModel::Column::Is_Active: {
-        graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
-        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
-                                   bars_visibility[row]);
+        graph->setVisible(ui->settings->item(row, OneAxisSettingsModel::Column::Is_Active)
+                        && ui->settings->item(row, OneAxisSettingsModel::Column::Error_Scatter));
         break;
       }
       case OneAxisSettingsModel::Column::Style: {
         auto cell_data = cell->data(Qt::DisplayRole).value<QString>();
         graph->setLineStyle(line_style_map[cell_data]);
-        break;
-      }
-      case OneAxisSettingsModel::Column::Error_Scatter: {
-        bars_visibility[row] = !bars_visibility[row];
-        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
-                                   bars_visibility[row]);
         break;
       }
       case OneAxisSettingsModel::Column::Line_Size:
@@ -237,7 +228,7 @@ struct XYErrorBars {
 class TwoAxesPlot : public AbstractPlot {
  private:
   Ui::TwoAxesPlot* ui;
-  QMap<QString, QPair<QList<int>, QList<int>>> var_to_graph_connection;
+  QMap<int, QPair<QList<int>, QList<int>>> var_to_graph_connection;
   QVector<double> none_var;
   QList<XYErrorBars*> bars_list;
   QList<bool> bars_visibility;
@@ -249,6 +240,7 @@ class TwoAxesPlot : public AbstractPlot {
 
     ui->plot->xAxis->setLabel("x");
     ui->plot->yAxis->setLabel("y");
+    ui->settings->setRowCount(graph_num);
     int rows_count = ui->settings->rowCount();
 
     for (int i = 0; i < Manager::get_manager().variables[0].measurements.size();
@@ -269,14 +261,14 @@ class TwoAxesPlot : public AbstractPlot {
     double min_y = manager_line_y.measurements[0];
     double max_y = manager_line_y.measurements[0];
 
-    var_to_graph_connection["None"] =
+    var_to_graph_connection[0] =
         QPair<QList<int>, QList<int>>(QList<int>(), QList<int>());
     for (int i = 0; i < graph_num; ++i) {
-      var_to_graph_connection["None"].first.append(i);
-      var_to_graph_connection["None"].second.append(i);
+      var_to_graph_connection[0].first.append(i);
+      var_to_graph_connection[0].second.append(i);
     }
     for (int i = 0; i < man_vars.size(); ++i) {
-      var_to_graph_connection[man_vars[i].short_name] =
+      var_to_graph_connection[i+1] =
           QPair<QList<int>, QList<int>>(QList<int>(), QList<int>());
       static_cast<ColumnNameDelegate*>(
           ui->settings->itemDelegateForColumn(
@@ -290,21 +282,24 @@ class TwoAxesPlot : public AbstractPlot {
 
       update_data(ui->settings->model()->index(0, i),
                   ui->settings->model()->index(0, i));
-
+      
       if (is_active) {
         min_x = std::min(min_x, manager_line_x.getMinMeasurement());
         max_x = std::max(max_x, manager_line_x.getMaxMeasurement());
         min_y = std::min(min_y, manager_line_y.getMinMeasurement());
         max_y = std::max(max_y, manager_line_y.getMaxMeasurement());
+      }
+    }
 
-        for (int k : QList({TwoAxesSettingsModel::Column::Is_Active,
-                            TwoAxesSettingsModel::Column::Axis_X,
-                            TwoAxesSettingsModel::Column::Axis_Y,
-                            TwoAxesSettingsModel::Column::Style,
-                            TwoAxesSettingsModel::Column::Scatter_Size,
-                            TwoAxesSettingsModel::Column::Line_Size})) {
-          redraw_settings(i, k);
-        }
+    update_data(ui->settings->model()->index(-1, -1),
+                ui->settings->model()->index(-1, -1));
+    for (int i = 0; i < graph_num; ++i) {
+      for (int k : QList({TwoAxesSettingsModel::Column::Is_Active,
+                          TwoAxesSettingsModel::Column::Axis_X,
+                          TwoAxesSettingsModel::Column::Style,
+                          TwoAxesSettingsModel::Column::Scatter_Size,
+                          TwoAxesSettingsModel::Column::Line_Size})) {
+        redraw_settings(i, k);
       }
     }
     ui->plot->xAxis->setRange(min_x - (max_x - min_x) / 20.,
@@ -327,8 +322,18 @@ class TwoAxesPlot : public AbstractPlot {
     errorBars_y->setDataPlottable(graph);
     errorBars_x->setDataPlottable(graph);
     bars_list.append(new XYErrorBars(errorBars_x, errorBars_y));
-    bars_visibility.append(true);
     return graph;
+    
+  int get_name_index(QString& name) {
+    if (name == "None") {
+      return -1;
+    }
+    for (int i = 0; i < Manager::get_manager().variables.size(); ++i) {
+      if (name == Manager::get_manager().variables[i].short_name) {
+        return i;
+      }
+    }
+    return -2;
   }
 
  public slots:
@@ -339,17 +344,21 @@ class TwoAxesPlot : public AbstractPlot {
     switch (column) {
       case TwoAxesSettingsModel::Column::Axis_X:
       case TwoAxesSettingsModel::Column::Axis_Y: {
-        auto name_x =
-            ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_X)
+        auto& man = Manager::get_manager();
+
+        auto name_x = ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_X)
                 ->data(Qt::DisplayRole)
                 .value<QString>();
-        auto name_y =
+        QString name_y =
             ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_Y)
                 ->data(Qt::DisplayRole)
                 .value<QString>();
         auto name = ui->settings->item(row, column)
                         ->data(Qt::DisplayRole)
                         .value<QString>();
+        int name_x_ind = get_name_index(name_x);
+        int name_y_ind = get_name_index(name_y);
+        int name_ind = get_name_index(name);
 
         int ind_remove_x;
         int ind_remove_y;
@@ -363,8 +372,10 @@ class TwoAxesPlot : public AbstractPlot {
             elems.second.removeAt(ind_remove_y);
           }
         }
-        var_to_graph_connection[name_x].first.append(row);
-        var_to_graph_connection[name_y].second.append(row);
+        int x = get_name_index(name_x) + 1;
+        int y = get_name_index(name_y) + 1;
+        var_to_graph_connection[x].first.append(row);
+        var_to_graph_connection[y].second.append(row);
 
         ColumnNameDelegate* delegate = static_cast<ColumnNameDelegate*>(
             ui->settings->itemDelegateForColumn(column));
@@ -443,17 +454,11 @@ class TwoAxesPlot : public AbstractPlot {
       update_data(ind, ind);
     }
     for (int i = start; i < end + 1; ++i) {
-      QString name;
-      if (i < 0) {
-        name = "None";
-      } else {
-        name = man.variables[i].short_name;
-      }
       QSet<int> indexes;
-      for (int ind_x : var_to_graph_connection[name].first) {
+      for (int ind_x : var_to_graph_connection[i+1].first) {
         indexes.insert(ind_x);
       }
-      for (int ind_y : var_to_graph_connection[name].second) {
+      for (int ind_y : var_to_graph_connection[i+1].second) {
         indexes.insert(ind_y);
       }
       for (int graph_ind : indexes) {
