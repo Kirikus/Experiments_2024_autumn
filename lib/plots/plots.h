@@ -64,7 +64,6 @@ class OneAxisPlot : public AbstractPlot {
  private:
   Ui::OneAxisPlot* ui;
   QList<QCPErrorBars*> bars_list;
-  QList<bool> bars_visibility;
 
  public:
   OneAxisPlot(QWidget* parent = nullptr) : ui(new Ui::OneAxisPlot) {
@@ -90,7 +89,6 @@ class OneAxisPlot : public AbstractPlot {
           new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
       errorBars->setDataPlottable(graph);
       bars_list.append(errorBars);
-      bars_visibility.append(true);
 
       update_data(ui->settings->model()->index(i, i),
                   ui->settings->model()->index(i, i));
@@ -123,21 +121,15 @@ class OneAxisPlot : public AbstractPlot {
     auto graph = ui->plot->graph(row);
 
     switch (column) {
+      case OneAxisSettingsModel::Column::Error_Scatter:
       case OneAxisSettingsModel::Column::Is_Active: {
-        graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
-        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
-                                   bars_visibility[row]);
+        graph->setVisible(ui->settings->item(row, OneAxisSettingsModel::Column::Is_Active)
+                        && ui->settings->item(row, OneAxisSettingsModel::Column::Error_Scatter));
         break;
       }
       case OneAxisSettingsModel::Column::Style: {
         auto cell_data = cell->data(Qt::DisplayRole).value<QString>();
         graph->setLineStyle(line_style_map[cell_data]);
-        break;
-      }
-      case OneAxisSettingsModel::Column::Error_Scatter: {
-        bars_visibility[row] = !bars_visibility[row];
-        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
-                                   bars_visibility[row]);
         break;
       }
       case OneAxisSettingsModel::Column::Line_Size:
