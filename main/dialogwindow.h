@@ -1,3 +1,6 @@
+#ifndef __DIALOGWINDOW_H__
+#define __DIALOGWINDOW_H__
+
 #include <QDialog>
 #include <QFile>
 #include <QFileDialog>
@@ -46,3 +49,5 @@ class DialogWindow : public QDialog {
   void create_graph();
   void close_dialog();
 };
+
+#endif
