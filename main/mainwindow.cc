@@ -54,10 +54,28 @@ void MainWindow::import_data() {
     }
     man.add_measurement_row(last_var_num, -1, temp_list);
   }
+  while (!in.atEnd()) {
+    man.add_measurement_row(0, -1, zero_list);
+    line = in.readLine().split(",");
+    for (int i = 0; i < last_var_num; ++i) {
+      man.variables[i].measurements[man.variables[0].size() - 1] = 0.;
+    }
+    for (int i = last_var_num; i < last_var_num + line.size(); ++i) {
+      man.variables[i].measurements[man.variables[0].size() - 1] =
+          line[i - last_var_num].toDouble();
+    }
+  }
 
   ui->tableData->model()->insertColumns(last_var_num, titles.size());
   ui->tableErrors->model()->insertColumns(last_var_num, titles.size());
   ui->tableTitles->model()->insertColumns(last_var_num, titles.size());
+
+  ui->tableData->model()->insertRows(vert_size,
+                                     man.variables[0].size() - vert_size);
+  ui->tableErrors->model()->insertRows(vert_size,
+                                       man.variables[0].size() - vert_size);
+  ui->tableTitles->model()->insertRows(vert_size,
+                                       man.variables[0].size() - vert_size);
   file.close();
 }
 
