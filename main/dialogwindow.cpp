@@ -44,7 +44,6 @@ void DialogWindow::create_graph() {
               &AbstractPlot::update_data);
       connect(titles_model, &QAbstractTableModel::dataChanged, plot,
               &TwoAxesPlot::update_var_names);
-
       break;
     }
     case HistogramType:

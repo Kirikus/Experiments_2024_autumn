@@ -17,7 +17,48 @@
 #include "qcustomplot.h"
 
 void MainWindow::choose_file_open() {
-  QFile file(QFileDialog::getOpenFileName(0, "Открыть", "", "*.csv"), this);
+  active_file = QFileDialog::getOpenFileName(0, "Открыть", "", "*.csv");
+  QFile file(active_file);
+  file.close();
+}
+
+void MainWindow::import_data() {
+  QFile file(QFileDialog::getOpenFileName(0, "Импортировать", "", "*.csv"));
+  if (!file.open(QIODevice::ReadOnly)) {
+    file.close();
+    return;
+  }
+  QTextStream in(&file);
+  auto &man = Manager::get_manager();
+  auto last_var_num = man.variables.size();
+  QStringList titles(in.readLine().split(","));
+  for (auto title : titles) {
+    VariableData var_data({}, new ErrorAbsolute(0.), title, title);
+    man.add_variable(var_data);
+  }
+
+  auto vert_size = man.variables[0].size();
+  QList<double> temp_list;
+  QList<double> zero_list = QList<double>();
+  QStringList line;
+
+  for (int i = 0; i < vert_size; ++i) {
+    if (in.atEnd()) {
+      man.add_measurement_row(last_var_num, -1, zero_list);
+      continue;
+    }
+    line = in.readLine().split(",");
+    temp_list.clear();
+    for (auto elem : line) {
+      temp_list.append(elem.toDouble());
+    }
+    man.add_measurement_row(last_var_num, -1, temp_list);
+  }
+
+  ui->tableData->model()->insertColumns(last_var_num, titles.size());
+  ui->tableErrors->model()->insertColumns(last_var_num, titles.size());
+  ui->tableTitles->model()->insertColumns(last_var_num, titles.size());
+  file.close();
 }
 
 void MainWindow::create_dialog() {
@@ -29,8 +70,59 @@ void MainWindow::create_dialog() {
   d->exec();
 }
 
+void MainWindow::changeTheme() {
+  theme_is_dark = !theme_is_dark;
+  if (theme_is_dark) {
+    qApp->setPalette(*dark_palette);
+    ui->action_Theme_button->setText("Light theme");
+    return;
+  }
+  qApp->setPalette(style()->standardPalette());
+  ui->action_Theme_button->setText("Dark theme");
+}
+
+void MainWindow::add_row() {
+  Manager::get_manager().add_measurement_row();
+  ui->tableData->model()->insertRows(
+      Manager::get_manager().variables[0].measurements.size() - 1, 1);
+  ui->tableErrors->model()->insertRows(
+      Manager::get_manager().variables[0].measurements.size() - 1, 1);
+}
+
+void MainWindow::add_variable() {
+  auto &man = Manager::get_manager();
+  int vars_num = Manager::get_manager().variables.size();
+  int size = Manager::get_manager().variables[0].size();
+  bool ok;
+  ErrorAbsolute *err = new ErrorAbsolute(0.);
+  QString name = QInputDialog::getText(
+      this, "Add column", "Variable name:", QLineEdit::Normal, "", &ok);
+  if (!ok) {
+    return;
+  }
+  man.add_variable(VariableData(QList<double>(size, 0.), err, name, name));
+  ui->tableData->model()->insertColumns(vars_num, 1);
+  ui->tableErrors->model()->insertColumns(vars_num, 1);
+  ui->tableTitles->model()->insertColumns(vars_num, 1);
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
+  dark_palette = new QPalette();
+  dark_palette->setColor(QPalette::Window, QColor(53, 53, 53));
+  dark_palette->setColor(QPalette::WindowText, Qt::white);
+  dark_palette->setColor(QPalette::Base, QColor(25, 25, 25));
+  dark_palette->setColor(QPalette::AlternateBase, QColor(53, 53, 53));
+  dark_palette->setColor(QPalette::ToolTipBase, Qt::white);
+  dark_palette->setColor(QPalette::ToolTipText, Qt::white);
+  dark_palette->setColor(QPalette::Text, Qt::white);
+  dark_palette->setColor(QPalette::Button, QColor(53, 53, 53));
+  dark_palette->setColor(QPalette::ButtonText, Qt::white);
+  dark_palette->setColor(QPalette::BrightText, Qt::red);
+  dark_palette->setColor(QPalette::Link, QColor(42, 130, 218));
+  dark_palette->setColor(QPalette::Highlight, QColor(255, 99, 71));
+  dark_palette->setColor(QPalette::HighlightedText, Qt::black);
+
   Manager &manager = Manager().get_manager();
   MeasurementModel *model_measurements = new MeasurementModel;
   ErrorModel *model_err = new ErrorModel;
@@ -76,10 +168,18 @@ MainWindow::MainWindow(QWidget *parent)
   ui->graphics->addTab(plot2, "TwoAxesPlot");
   ui->tableTitles->verticalHeader()->hide();
 
-  connect(ui->buttonGraph, &QPushButton::clicked, this,
+  connect(ui->button_Graph, &QPushButton::clicked, this,
           &MainWindow::create_dialog);
-  connect(ui->actionOpen, &QAction::triggered, this,
+  connect(ui->button_Add_row, &QPushButton::clicked, this,
+          &MainWindow::add_row);
+  connect(ui->button_Add_variable, &QPushButton::clicked, this,
+          &MainWindow::add_variable);
+  connect(ui->action_Open, &QAction::triggered, this,
           &MainWindow::choose_file_open);
+  connect(ui->action_Import_data, &QAction::triggered, this,
+          &MainWindow::import_data);
+  connect(ui->action_Theme_button, &QAction::triggered, this,
+          &MainWindow::changeTheme);
   connect(model_err, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,

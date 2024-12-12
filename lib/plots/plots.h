@@ -57,7 +57,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui {
 class OneAxisPlot;
 class TwoAxesPlot;
-}  // namespace Ui
+}
 QT_END_NAMESPACE
 
 class OneAxisPlot : public AbstractPlot {
@@ -69,6 +69,7 @@ class OneAxisPlot : public AbstractPlot {
   OneAxisPlot(QWidget* parent = nullptr) : ui(new Ui::OneAxisPlot) {
     ui->setupUi(this);
 
+    ui->plot->setBackground(Qt::transparent);
     ui->plot->xAxis->setLabel("Measurement number");
     ui->plot->yAxis->setLabel("Value");
     int rows_count = ui->settings->rowCount();
@@ -84,11 +85,7 @@ class OneAxisPlot : public AbstractPlot {
 
     for (int i = 0; i < rows_count; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
-      auto graph = ui->plot->addGraph();
-      QCPErrorBars* errorBars =
-          new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
-      errorBars->setDataPlottable(graph);
-      bars_list.append(errorBars);
+      auto graph = create_new_graph();
 
       update_data(ui->settings->model()->index(i, i),
                   ui->settings->model()->index(i, i));
@@ -114,6 +111,15 @@ class OneAxisPlot : public AbstractPlot {
     ui->plot->replot();
   }
   ~OneAxisPlot() { delete ui; }
+
+  QCPGraph* create_new_graph() {
+    auto graph = ui->plot->addGraph();
+    QCPErrorBars* errorBars =
+        new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
+    errorBars->setDataPlottable(graph);
+    bars_list.append(errorBars);
+    return graph;
+  }
 
  public slots:
   virtual void redraw_settings(int row, int column) {
@@ -171,25 +177,25 @@ class OneAxisPlot : public AbstractPlot {
   virtual void update_data(const QModelIndex& topLeft,
                            const QModelIndex& bottomRight,
                            const QList<int>& roles = QList<int>()) {
-    int row_width =
-        roles.size() / (topLeft.column() - bottomRight.column() + 1);
-    bool line_changed;
-    bool table_changed = false;
-    for (int row = bottomRight.column(); row < (topLeft.column() + 1); ++row) {
-      line_changed = false;
-      for (int k = row_width * (row - bottomRight.column());
-           k < row_width * (row - bottomRight.column() + 1); ++k) {
-        if (roles[k] == Qt::EditRole) {
-          line_changed = true;
-          break;
+    if (bottomRight.column() >= ui->plot->graphCount()) {
+      disconnect(ui->settings, &QTableWidget::cellChanged, this,
+                 &AbstractPlot::redraw_settings);
+      int last_ind = ui->settings->rowCount() - 1;
+      ui->settings->setRowCount(bottomRight.column() + 1);
+      for (int i = ui->plot->graphCount(); i < bottomRight.column() + 1; ++i) {
+        create_new_graph();
+        for (int k : QList({OneAxisSettingsModel::Column::Is_Active,
+                            OneAxisSettingsModel::Column::Style,
+                            OneAxisSettingsModel::Column::Line_Size,
+                            OneAxisSettingsModel::Column::Scatter_Size})) {
+          redraw_settings(i, k);
         }
       }
-      if (line_changed || (roles.size() == 0)) {
-        table_changed = true;
-      } else {
-        continue;
-      }
+      connect(ui->settings, &QTableWidget::cellChanged, this,
+              &AbstractPlot::redraw_settings);
+    }
 
+    for (int row = topLeft.column(); row < bottomRight.column() + 1; ++row) {
       auto manager_line = Manager::get_manager().variables[row];
       QVector<double> x(manager_line.size());
       QVector<double> y = QVector<double>::fromList(manager_line.measurements);
@@ -200,7 +206,7 @@ class OneAxisPlot : public AbstractPlot {
       QList<double> errors = Manager::get_manager().variables[row].getErrors();
       bars_list[row]->setData(errors, errors);
     }
-    if (table_changed) ui->plot->replot();
+    ui->plot->replot();
   }
 };
 
@@ -261,7 +267,6 @@ class TwoAxesPlot : public AbstractPlot {
         max_x = std::max(max_x, manager_line_x.getMaxMeasurement());
         min_y = std::min(min_y, manager_line_y.getMinMeasurement());
         max_y = std::max(max_y, manager_line_y.getMaxMeasurement());
-
       }
     }
 
@@ -395,8 +400,17 @@ class TwoAxesPlot : public AbstractPlot {
   virtual void update_data(const QModelIndex& topLeft,
                            const QModelIndex& bottomRight,
                            const QList<int>& roles = QList<int>()) {
-    int start = bottomRight.column();
-    int end = topLeft.column();
+    int start = std::min(bottomRight.column(), topLeft.column());
+    int end = std::max(bottomRight.column(), topLeft.column());
+
+    if (bottomRight.row() > none_var.size() - 1) {
+      int last = none_var.size();
+      for (int i = last; i < bottomRight.row() + 1; ++i) {
+        none_var.append(i + 1);
+      }
+      auto ind = ui->settings->model()->index(-2, -1);
+      update_data(ind, ind);
+    }
     for (int i = start; i < end + 1; ++i) {
       QSet<int> indexes;
       for (int ind_x : var_to_graph_connection[i+1].first) {
