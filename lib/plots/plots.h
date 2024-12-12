@@ -215,7 +215,7 @@ class OneAxisPlot : public AbstractPlot {
 class TwoAxesPlot : public AbstractPlot {
  private:
   Ui::TwoAxesPlot* ui;
-  QMap<QString, QPair<QList<int>, QList<int>>> var_to_graph_connection;
+  QMap<int, QPair<QList<int>, QList<int>>> var_to_graph_connection;
   QVector<double> none_var;
 
  public:
@@ -245,14 +245,14 @@ class TwoAxesPlot : public AbstractPlot {
     double min_y = manager_line_y.measurements[0];
     double max_y = manager_line_y.measurements[0];
 
-    var_to_graph_connection["None"] =
+    var_to_graph_connection[0] =
         QPair<QList<int>, QList<int>>(QList<int>(), QList<int>());
     for (int i = 0; i < graph_num; ++i) {
-      var_to_graph_connection["None"].first.append(i);
-      var_to_graph_connection["None"].second.append(i);
+      var_to_graph_connection[0].first.append(i);
+      var_to_graph_connection[0].second.append(i);
     }
     for (int i = 0; i < man_vars.size(); ++i) {
-      var_to_graph_connection[man_vars[i].short_name] =
+      var_to_graph_connection[i+1] =
           QPair<QList<int>, QList<int>>(QList<int>(), QList<int>());
       static_cast<ColumnNameDelegate*>(
           ui->settings->itemDelegateForColumn(
@@ -294,6 +294,18 @@ class TwoAxesPlot : public AbstractPlot {
   }
   ~TwoAxesPlot() { delete ui; }
 
+  int get_name_index(QString& name) {
+    if (name == "None") {
+      return -1;
+    }
+    for (int i = 0; i < Manager::get_manager().variables.size(); ++i) {
+      if (name == Manager::get_manager().variables[i].short_name) {
+        return i;
+      }
+    }
+    return -2;
+  }
+
  public slots:
   virtual void redraw_settings(int row, int column) {
     auto cell = ui->settings->item(row, column);
@@ -302,17 +314,21 @@ class TwoAxesPlot : public AbstractPlot {
     switch (column) {
       case TwoAxesSettingsModel::Column::Axis_X:
       case TwoAxesSettingsModel::Column::Axis_Y: {
-        auto name_x =
-            ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_X)
+        auto& man = Manager::get_manager();
+
+        auto name_x = ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_X)
                 ->data(Qt::DisplayRole)
                 .value<QString>();
-        auto name_y =
+        QString name_y =
             ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_Y)
                 ->data(Qt::DisplayRole)
                 .value<QString>();
         auto name = ui->settings->item(row, column)
                         ->data(Qt::DisplayRole)
                         .value<QString>();
+        int name_x_ind = get_name_index(name_x);
+        int name_y_ind = get_name_index(name_y);
+        int name_ind = get_name_index(name);
 
         int ind_remove_x;
         int ind_remove_y;
@@ -326,8 +342,10 @@ class TwoAxesPlot : public AbstractPlot {
             elems.second.removeAt(ind_remove_y);
           }
         }
-        var_to_graph_connection[name_x].first.append(row);
-        var_to_graph_connection[name_y].second.append(row);
+        int x = get_name_index(name_x) + 1;
+        int y = get_name_index(name_y) + 1;
+        var_to_graph_connection[x].first.append(row);
+        var_to_graph_connection[y].second.append(row);
 
         ColumnNameDelegate* delegate = static_cast<ColumnNameDelegate*>(
             ui->settings->itemDelegateForColumn(column));
@@ -387,17 +405,11 @@ class TwoAxesPlot : public AbstractPlot {
     int start = bottomRight.column();
     int end = topLeft.column();
     for (int i = start; i < end + 1; ++i) {
-      QString name;
-      if (i < 0) {
-        name = "None";
-      } else {
-        name = Manager::get_manager().variables[i].short_name;
-      }
       QSet<int> indexes;
-      for (int ind_x : var_to_graph_connection[name].first) {
+      for (int ind_x : var_to_graph_connection[i+1].first) {
         indexes.insert(ind_x);
       }
-      for (int ind_y : var_to_graph_connection[name].second) {
+      for (int ind_y : var_to_graph_connection[i+1].second) {
         indexes.insert(ind_y);
       }
       for (int graph_ind : indexes) {
