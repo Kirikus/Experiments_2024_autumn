@@ -6,8 +6,8 @@
 #include "../delegates.h"
 
 QList<QString> TwoAxesSettingsModel::heading = {
-    "Is Active", "Axis_X",  "Axis_Y",       "Style",
-    "Color",     "Scatter", "Scatter Size", "Line Size"};
+    "Is Active",     "Axis_X",  "Axis_Y",       "Style",    "Color",
+    "Error Scatter", "Scatter", "Scatter Size", "Line Size"};
 
 TwoAxesSettingsModel::TwoAxesSettingsModel(QWidget* parent = nullptr)
     : QTableWidget(parent) {
@@ -24,6 +24,7 @@ TwoAxesSettingsModel::TwoAxesSettingsModel(QWidget* parent = nullptr)
   setItemDelegateForColumn(Axis_Y, delegate_variable);
   setItemDelegateForColumn(Style, new LineStyleDelegate());
   setItemDelegateForColumn(Color, new ColorDelegate());
+  setItemDelegateForColumn(Error_Scatter, check_box_delegate);
   setItemDelegateForColumn(Scatter, new ScatterStyleDelegate());
 
   setHorizontalHeaderLabels(heading);
@@ -39,6 +40,7 @@ void TwoAxesSettingsModel::fillDefaultValues(const QModelIndex& parent,
     setItem(row, Column::Color, new QTableWidgetItem(""));
     QRgb rgb = qRgba(rand() % 255, rand() % 255, rand() % 255, 255);
     item(row, Column::Color)->setBackground(QBrush(QColor(rgb)));
+    setItem(row, Column::Error_Scatter, new QTableWidgetItem("1"));
     setItem(row, Column::Scatter, new QTableWidgetItem("None"));
     setItem(row, Column::Scatter_Size, new QTableWidgetItem("10"));
     setItem(row, Column::Line_Size, new QTableWidgetItem("1"));

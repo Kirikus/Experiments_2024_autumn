@@ -11,6 +11,7 @@ class TwoAxesSettingsModel : public QTableWidget {
     Axis_Y,         // Column for axis y values
     Style,          // Column for line type
     Color,          // Column for graph color
+    Error_Scatter,  // Column for switching ErrorBars
     Scatter,        // Column for scatters type at graph
     Scatter_Size,   // Column for size of scatters
     Line_Size       // Column for line size
