@@ -231,7 +231,6 @@ class TwoAxesPlot : public AbstractPlot {
   QMap<int, QPair<QList<int>, QList<int>>> var_to_graph_connection;
   QVector<double> none_var;
   QList<XYErrorBars*> bars_list;
-  QList<bool> bars_visibility;
 
  public:
   TwoAxesPlot(int graph_num = 1, QWidget* parent = nullptr)
@@ -279,9 +278,6 @@ class TwoAxesPlot : public AbstractPlot {
     for (int i = 0; i < graph_num; ++i) {
       is_active = ui->settings->item(i, 0)->data(Qt::DisplayRole).value<bool>();
       auto graph = create_new_graph();
-
-      update_data(ui->settings->model()->index(0, i),
-                  ui->settings->model()->index(0, i));
       
       if (is_active) {
         min_x = std::min(min_x, manager_line_x.getMinMeasurement());
@@ -323,6 +319,7 @@ class TwoAxesPlot : public AbstractPlot {
     errorBars_x->setDataPlottable(graph);
     bars_list.append(new XYErrorBars(errorBars_x, errorBars_y));
     return graph;
+  }
     
   int get_name_index(QString& name) {
     if (name == "None") {
@@ -346,7 +343,7 @@ class TwoAxesPlot : public AbstractPlot {
       case TwoAxesSettingsModel::Column::Axis_Y: {
         auto& man = Manager::get_manager();
 
-        auto name_x = ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_X)
+        QString name_x = ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_X)
                 ->data(Qt::DisplayRole)
                 .value<QString>();
         QString name_y =
@@ -385,21 +382,16 @@ class TwoAxesPlot : public AbstractPlot {
         update_data(ind, ind, QList<int>({Qt::EditRole}));
         break;
       }
+      case TwoAxesSettingsModel::Column::Error_Scatter:
       case TwoAxesSettingsModel::Column::Is_Active: {
-        graph->setVisible(cell->data(Qt::DisplayRole).value<bool>());
-        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
-                                   bars_visibility[row]);
+        graph->setVisible(ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)->data(Qt::DisplayRole).value<bool>());
+        bars_list[row]->setVisible(ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)->data(Qt::DisplayRole).value<bool>()
+          && ui->settings->item(row, TwoAxesSettingsModel::Column::Error_Scatter)->data(Qt::DisplayRole).value<bool>() );
         break;
       }
       case TwoAxesSettingsModel::Column::Style: {
         auto cell_data = cell->data(Qt::DisplayRole).value<QString>();
         graph->setLineStyle(line_style_map[cell_data]);
-        break;
-      }
-      case TwoAxesSettingsModel::Column::Error_Scatter: {
-        bars_visibility[row] = !bars_visibility[row];
-        bars_list[row]->setVisible(cell->data(Qt::DisplayRole).value<bool>() &&
-                                   bars_visibility[row]);
         break;
       }
       case TwoAxesSettingsModel::Column::Line_Size:
@@ -496,29 +488,6 @@ class TwoAxesPlot : public AbstractPlot {
           y = QVector<double>::fromList(
               man.variables[var_y_index - 1].measurements);
           x_err = man.variables[var_y_index - 1].getErrors();
-        }
-        if (var_y_index != 0 && var_x_index != 0) {
-          QList<QPair<double, double>> data_y_to_err;
-          QList<QPair<double, double>> data_x_to_err;
-
-          for (int i = 0; i < y.size(); ++i) {
-            data_y_to_err.append(QPair<double, double>(y[i], x_err[i]));
-            data_x_to_err.append(QPair<double, double>(x[i], y_err[i]));
-          }
-          std::sort(data_y_to_err.begin(), data_y_to_err.end(),
-                    [](QPair<double, double>& a1, QPair<double, double>& a2) {
-                      return a1.first < a2.first;
-                    });
-          std::sort(data_x_to_err.begin(), data_x_to_err.end(),
-                    [](QPair<double, double>& a1, QPair<double, double>& a2) {
-                      return a1.first < a2.first;
-                    });
-          for (int i = 0; i < y.size(); ++i) {
-            y[i] = data_y_to_err[i].first;
-            x[i] = data_x_to_err[i].first;
-            x_err[i] = data_y_to_err[i].second;
-            y_err[i] = data_x_to_err[i].second;
-          }
         }
         bars_list[graph_ind]->y->setData(y_err, y_err);
         bars_list[graph_ind]->x->setData(x_err, x_err);
