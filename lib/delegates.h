@@ -94,9 +94,7 @@ class AbstractComboBoxDelegate : public QStyledItemDelegate {
     QStyledItemDelegate::paint(painter, option, index);
   }
 
-  QList<QString>& get_options_list() {
-    return options;
-  }
+  QList<QString>& get_options_list() { return options; }
 
   QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&,
                         const QModelIndex& index) const {
