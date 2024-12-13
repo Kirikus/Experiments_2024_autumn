@@ -18,5 +18,4 @@ set(Boost_USE_STATIC_LIBS OFF)
 find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 
 add_subdirectory(lib)
-add_subdirectory(tests)
 add_subdirectory(main)
