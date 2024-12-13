@@ -8,9 +8,9 @@
 class VariableData {
  public:
   QList<double> measurements{};
-  ErrorData* error_global{};         // error for all measurements
-  QList<ErrorData*> errors_local{};  // field if we want to specify error for
-                                     // some of measurements
+  ErrorData* error_global{};  // error for all measurements
+  QList<ErrorData*>
+      errors_local{};  // specifying error for some of measurements
   QString full_name{};
   QString short_name{};
   // instrument
