@@ -92,9 +92,3 @@ bool MeasurementModel::insertColumns(int column, int count,
 Qt::ItemFlags MeasurementModel::flags(const QModelIndex& index) const {
   return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
 }
-
-// void MeasurementModel::keyPressEvent(QKeyEvent* event) {
-//   if (event->key() == Qt::Key_C && event->modifiers()==Qt::CTRL) {
-//     QModelIndexList = selectedIndexes();
-//   }
-// }

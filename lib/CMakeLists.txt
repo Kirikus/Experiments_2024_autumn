@@ -27,7 +27,6 @@ endif()
 endif()
 
 target_link_libraries(core PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-# target_link_libraries(core PRIVATE core)
 target_link_libraries(core PRIVATE qcustomplot) 
 
 set_target_properties(core PROPERTIES

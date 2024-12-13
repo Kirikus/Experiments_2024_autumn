@@ -3,8 +3,6 @@
 #include "../lib/plots/plots.h"
 #include "ui_dialogwindow.h"
 
-
-
 void DialogWindow::close_dialog() { close(); }
 
 void DialogWindow::create_graph() {
