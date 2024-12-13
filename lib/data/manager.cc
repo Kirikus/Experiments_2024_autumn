@@ -12,17 +12,14 @@ Manager& Manager::get_manager() { return *global_manager; }
 
 void Manager::add_variable(VariableData var) { variables.append(var); }
 
-// delete last added variable
 void Manager::delete_variable() { variables.pop_back(); }
 
-// clear calculated list
 void Manager::clear_calculated() { calculated = QList<VariableData>(); }
 
 void Manager::add_calculated(VariableData var) { calculated.append(var); }
 
 void Manager::add_measurement_row(int start, int end,
                                   QList<double>& measurements) {
-  // end == -1 means for last element
   if (end == -1) {
     end = variables.size();
   }

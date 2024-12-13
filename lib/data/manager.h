@@ -22,7 +22,13 @@ class Manager {
 
   void add_calculated(VariableData var);
 
+  /* 
+  append 0 or data from measurements list to every variable
+  end == -1 means for last element
+  */
   void add_measurement_row(int start, int end, QList<double>& measurements);
+  
+  //   append 0 to every variable
   void add_measurement_row();
   void remove_measurement_row();
 };
