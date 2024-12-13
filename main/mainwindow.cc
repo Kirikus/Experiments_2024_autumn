@@ -74,8 +74,6 @@ void MainWindow::import_data() {
                                      man.variables[0].size() - vert_size);
   ui->tableErrors->model()->insertRows(vert_size,
                                        man.variables[0].size() - vert_size);
-  ui->tableTitles->model()->insertRows(vert_size,
-                                       man.variables[0].size() - vert_size);
   file.close();
 }
 
