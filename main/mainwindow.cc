@@ -176,14 +176,14 @@ MainWindow::MainWindow(QWidget *parent)
       err2, "Random", "rnd"));
 
   ui->setupUi(this);
-  OneAxisPlot *plot = new OneAxisPlot();
-  TwoAxesPlot *plot2 = new TwoAxesPlot(3);
+  UnsortedLinePlot *plot = new UnsortedLinePlot(3);
+  SortedLinePlot *plot2 = new SortedLinePlot(3);
 
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
   ui->tableTitles->setModel(model_titles);
-  ui->graphics->addTab(plot, "OneAxisPlot");
-  ui->graphics->addTab(plot2, "TwoAxesPlot");
+  ui->graphics->addTab(plot, "UnsortedLinePlot");
+  ui->graphics->addTab(plot2, "SortedLinePlot");
   ui->tableTitles->verticalHeader()->hide();
 
   connect(ui->button_Graph, &QPushButton::clicked, this,
@@ -202,12 +202,14 @@ MainWindow::MainWindow(QWidget *parent)
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
           &AbstractPlot::update_data);
+  connect(model_titles, &QAbstractTableModel::dataChanged, plot,
+          &UnsortedLinePlot::update_var_names);
   connect(model_err, &QAbstractTableModel::dataChanged, plot2,
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged, plot2,
           &AbstractPlot::update_data);
   connect(model_titles, &QAbstractTableModel::dataChanged, plot2,
-          &TwoAxesPlot::update_var_names);
+          &SortedLinePlot::update_var_names);
   connect(ui->graphics, &QTabWidget::tabCloseRequested, &QTabWidget::removeTab);
 }
 

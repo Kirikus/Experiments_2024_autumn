@@ -15,17 +15,7 @@ void DialogWindow::create_graph() {
   QString new_name =
       chosen_type + "_" + QString::number(target_tab_widget->count());
   switch (t) {
-    case OneAxisPlotType: {
-      auto* plot = new OneAxisPlot();
-      int index = target_tab_widget->addTab(plot, new_name);
-      target_tab_widget->setCurrentIndex(index);
-      connect(err_model, &QAbstractTableModel::dataChanged, plot,
-              &AbstractPlot::update_data);
-      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
-              &AbstractPlot::update_data);
-      break;
-    }
-    case TwoAxesPlotType: {
+    case UnsortedLinePlotType: {
       hide();
       int graphs_num;
       auto* dialog_ask_rows = new DialogAmountRowsWindow(graphs_num, nullptr);
@@ -35,7 +25,7 @@ void DialogWindow::create_graph() {
         break;
       }
 
-      auto* plot = new TwoAxesPlot(graphs_num);
+      auto* plot = new UnsortedLinePlot(graphs_num);
       int index = target_tab_widget->addTab(plot, new_name);
       target_tab_widget->setCurrentIndex(index);
       connect(measure_model, &QAbstractTableModel::dataChanged, plot,
@@ -43,7 +33,28 @@ void DialogWindow::create_graph() {
       connect(err_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
       connect(titles_model, &QAbstractTableModel::dataChanged, plot,
-              &TwoAxesPlot::update_var_names);
+              &UnsortedLinePlot::update_var_names);
+      break;
+    }
+    case SortedLinePlotType: {
+      hide();
+      int graphs_num;
+      auto* dialog_ask_rows = new DialogAmountRowsWindow(graphs_num, nullptr);
+      dialog_ask_rows->show();
+      dialog_ask_rows->exec();
+      if (graphs_num <= 0) {
+        break;
+      }
+
+      auto* plot = new SortedLinePlot(graphs_num);
+      int index = target_tab_widget->addTab(plot, new_name);
+      target_tab_widget->setCurrentIndex(index);
+      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+              &AbstractPlot::update_data);
+      connect(err_model, &QAbstractTableModel::dataChanged, plot,
+              &AbstractPlot::update_data);
+      connect(titles_model, &QAbstractTableModel::dataChanged, plot,
+              &SortedLinePlot::update_var_names);
       break;
     }
     case HistogramType:

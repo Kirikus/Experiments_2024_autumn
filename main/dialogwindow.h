@@ -23,16 +23,16 @@ class DialogWindow : public QDialog {
   Q_OBJECT
  private:
   enum PlotTypes {
-    OneAxisPlotType = 0,
-    TwoAxesPlotType,
+    UnsortedLinePlotType = 0,
+    SortedLinePlotType,
     HistogramType,
     HeatmapType
   };
-  QMap<QString, PlotTypes> plot_type_map{{"One axis plot", OneAxisPlotType},
-                                         {"Two axes plot", TwoAxesPlotType},
+  QMap<QString, PlotTypes> plot_type_map{{"Unsorted line plot", UnsortedLinePlotType},
+                                         {"Sorted line plot", SortedLinePlotType},
                                          {"Histogram", HistogramType},
                                          {"Heatmap", HeatmapType}};
-  QList<QString> graph_types = {"One axis plot", "Two axes plot", "Histogram",
+  QList<QString> graph_types = {"Unsorted line plot", "Sorted line plot", "Histogram",
                                 "Heatmap"};
   MeasurementModel* measure_model;
   ErrorModel* err_model;
