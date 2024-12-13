@@ -237,8 +237,8 @@ class TwoAxesPlot : public AbstractPlot {
       : ui(new Ui::TwoAxesPlot) {
     ui->setupUi(this);
 
-    ui->plot->xAxis->setLabel("x");
-    ui->plot->yAxis->setLabel("y");
+    ui->plot->xAxis->setLabel("Axis X");
+    ui->plot->yAxis->setLabel("Axis Y");
     ui->settings->setRowCount(graph_num);
     int rows_count = ui->settings->rowCount();
 
