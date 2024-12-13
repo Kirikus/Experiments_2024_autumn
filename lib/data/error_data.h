@@ -19,7 +19,9 @@ class ErrorAbsolute : public ErrorData {
 class ErrorRelative : public ErrorData {
  public:
   using ErrorData::ErrorData;
-  virtual double getError(double measurement) { return fabs(measurement * data); }
+  virtual double getError(double measurement) {
+    return fabs(measurement * data);
+  }
   virtual operator QString() const { return QString::number(data * 100) + "%"; }
 };
 

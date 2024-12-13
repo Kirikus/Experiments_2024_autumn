@@ -28,12 +28,13 @@ class DialogWindow : public QDialog {
     HistogramType,
     HeatmapType
   };
-  QMap<QString, PlotTypes> plot_type_map{{"Unsorted line plot", UnsortedLinePlotType},
-                                         {"Sorted line plot", SortedLinePlotType},
-                                         {"Histogram", HistogramType},
-                                         {"Heatmap", HeatmapType}};
-  QList<QString> graph_types = {"Unsorted line plot", "Sorted line plot", "Histogram",
-                                "Heatmap"};
+  QMap<QString, PlotTypes> plot_type_map{
+      {"Unsorted line plot", UnsortedLinePlotType},
+      {"Sorted line plot", SortedLinePlotType},
+      {"Histogram", HistogramType},
+      {"Heatmap", HeatmapType}};
+  QList<QString> graph_types = {"Unsorted line plot", "Sorted line plot",
+                                "Histogram", "Heatmap"};
   MeasurementModel* measure_model;
   ErrorModel* err_model;
   TitleModel* titles_model;
