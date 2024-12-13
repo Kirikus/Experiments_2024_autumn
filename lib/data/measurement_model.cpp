@@ -41,11 +41,14 @@ QVariant MeasurementModel::data(const QModelIndex& index,
 bool MeasurementModel::setData(const QModelIndex& index, const QVariant& value,
                                int role = Qt::EditRole) {
   if (role == Qt::EditRole) {
-    if (!value.toBool() || !value.canConvert<double>()) {
+    bool success;
+    QString input = value.toString();
+    input.toDouble(&success);
+    if (!success || input.isEmpty()) {
       return false;
     }
     Manager::get_manager().variables[index.column()].measurements[index.row()] =
-        value.toDouble();
+        input.toDouble();
 
     emit dataChanged(index, index, QList({role}));
     return true;
