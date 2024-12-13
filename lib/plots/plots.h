@@ -230,6 +230,31 @@ class UnsortedLinePlot : public AbstractPlot {
         auto names = delegate->get_options_list();
         int var_index = names.indexOf(name) - 1;
         auto ind = ui->settings->model()->index(0, var_index);
+
+        if (name_x == "None") {
+          bars_list[row]->y->setVisible(false);
+        } else {
+          bars_list[row]->y->setVisible(
+              ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)
+                  ->data(Qt::DisplayRole)
+                  .value<bool>() &&
+              ui->settings
+                  ->item(row, TwoAxesSettingsModel::Column::Error_Scatter)
+                  ->data(Qt::DisplayRole)
+                  .value<bool>());
+        }
+        if (name_y == "None") {
+          bars_list[row]->x->setVisible(false);
+        } else {
+          bars_list[row]->x->setVisible(
+              ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)
+                  ->data(Qt::DisplayRole)
+                  .value<bool>() &&
+              ui->settings
+                  ->item(row, TwoAxesSettingsModel::Column::Error_Scatter)
+                  ->data(Qt::DisplayRole)
+                  .value<bool>());
+        }
         update_data(ind, ind, QList<int>({Qt::EditRole}));
         break;
       }
@@ -332,18 +357,14 @@ class UnsortedLinePlot : public AbstractPlot {
         QList<double> y_err;
         if (var_x_index == 0) {
           x = default_numbering_vector;
-          bars_list[graph_ind]->y->setVisible(false);
         } else {
-          bars_list[graph_ind]->y->setVisible(true);
           x = QVector<double>::fromList(
               manager.variables[var_x_index - 1].measurements);
           y_err = manager.variables[var_x_index - 1].getErrors();
         }
         if (var_y_index == 0) {
           y = default_numbering_vector;
-          bars_list[graph_ind]->x->setVisible(false);
         } else {
-          bars_list[graph_ind]->x->setVisible(true);
           y = QVector<double>::fromList(
               manager.variables[var_y_index - 1].measurements);
           x_err = manager.variables[var_y_index - 1].getErrors();
@@ -535,6 +556,32 @@ class SortedLinePlot : public AbstractPlot {
         auto names = delegate->get_options_list();
         int var_index = names.indexOf(name) - 1;
         auto ind = ui->settings->model()->index(0, var_index);
+
+        if (name_x == "None") {
+          bars_list[row]->y->setVisible(false);
+        } else {
+          bars_list[row]->y->setVisible(
+              ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)
+                  ->data(Qt::DisplayRole)
+                  .value<bool>() &&
+              ui->settings
+                  ->item(row, TwoAxesSettingsModel::Column::Error_Scatter)
+                  ->data(Qt::DisplayRole)
+                  .value<bool>());
+        }
+        if (name_y == "None") {
+          bars_list[row]->x->setVisible(false);
+        } else {
+          bars_list[row]->x->setVisible(
+              ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)
+                  ->data(Qt::DisplayRole)
+                  .value<bool>() &&
+              ui->settings
+                  ->item(row, TwoAxesSettingsModel::Column::Error_Scatter)
+                  ->data(Qt::DisplayRole)
+                  .value<bool>());
+        }
+
         update_data(ind, ind, QList<int>({Qt::EditRole}));
         break;
       }
@@ -637,18 +684,14 @@ class SortedLinePlot : public AbstractPlot {
         QList<double> y_err;
         if (var_x_index == 0) {
           x = default_numbering_vector;
-          bars_list[graph_ind]->y->setVisible(false);
         } else {
-          bars_list[graph_ind]->y->setVisible(true);
           x = QVector<double>::fromList(
               manager.variables[var_x_index - 1].measurements);
           y_err = manager.variables[var_x_index - 1].getErrors();
         }
         if (var_y_index == 0) {
           y = default_numbering_vector;
-          bars_list[graph_ind]->x->setVisible(false);
         } else {
-          bars_list[graph_ind]->x->setVisible(true);
           y = QVector<double>::fromList(
               manager.variables[var_y_index - 1].measurements);
           x_err = manager.variables[var_y_index - 1].getErrors();
