@@ -58,10 +58,19 @@ void DialogWindow::create_graph() {
               &SortedLinePlot::update_var_names);
       break;
     }
-    case HistogramType:
+    case HistogramType: {
       break;
-    case HeatmapType:
+    }
+    case Heatmap2dType: {
+      auto* plot = new Heatmap2d();
+      int index = target_tab_widget->addTab(plot, new_name);
+      target_tab_widget->setCurrentIndex(index);
+      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+              &AbstractPlot::update_data);
+      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+              &Heatmap2d::update_var_names);
       break;
+    }
   }
   close();
 }
