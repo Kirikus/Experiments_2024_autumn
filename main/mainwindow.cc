@@ -28,62 +28,65 @@ void MainWindow::import_data() {
     file.close();
     return;
   }
-  QTextStream in(&file);
-  auto &man = Manager::get_manager();
-  auto last_var_num = man.variables.size();
-  QStringList titles(in.readLine().split(","));
+  QTextStream text_stream(&file);
+  auto &manager = Manager::get_manager();
+  auto variables_size_before_import = manager.variables.size();
+  QStringList titles(text_stream.readLine().split(","));
   for (auto title : titles) {
-    VariableData var_data({}, new ErrorAbsolute(0.), title, title);
-    man.add_variable(var_data);
+    manager.add_variable(VariableData({}, new ErrorAbsolute(0.), title, title));
   }
 
-  auto vert_size = man.variables[0].size();
+  auto vertical_size = manager.variables[0].size();
   QList<double> temp_list;
   QList<double> zero_list = QList<double>();
   QStringList line;
 
-  for (int i = 0; i < vert_size; ++i) {
-    if (in.atEnd()) {
-      man.add_measurement_row(last_var_num, -1, zero_list);
+  for (int i = 0; i < vertical_size; ++i) {
+    if (text_stream.atEnd()) {
+      manager.add_measurement_row(variables_size_before_import, -1, zero_list);
       continue;
     }
-    line = in.readLine().split(",");
+    line = text_stream.readLine().split(",");
     temp_list.clear();
     for (auto elem : line) {
       temp_list.append(elem.toDouble());
     }
-    man.add_measurement_row(last_var_num, -1, temp_list);
+    manager.add_measurement_row(variables_size_before_import, -1, temp_list);
   }
-  while (!in.atEnd()) {
-    man.add_measurement_row(0, -1, zero_list);
-    line = in.readLine().split(",");
-    for (int i = 0; i < last_var_num; ++i) {
-      man.variables[i].measurements[man.variables[0].size() - 1] = 0.;
+  while (!text_stream.atEnd()) {
+    manager.add_measurement_row(0, -1, zero_list);
+    line = text_stream.readLine().split(",");
+    for (int i = 0; i < variables_size_before_import; ++i) {
+      manager.variables[i].measurements[manager.variables[0].size() - 1] = 0.;
     }
-    for (int i = last_var_num; i < last_var_num + line.size(); ++i) {
-      man.variables[i].measurements[man.variables[0].size() - 1] =
-          line[i - last_var_num].toDouble();
+    for (int i = variables_size_before_import;
+         i < variables_size_before_import + line.size(); ++i) {
+      manager.variables[i].measurements[manager.variables[0].size() - 1] =
+          line[i - variables_size_before_import].toDouble();
     }
   }
 
-  ui->tableData->model()->insertColumns(last_var_num, titles.size());
-  ui->tableErrors->model()->insertColumns(last_var_num, titles.size());
-  ui->tableTitles->model()->insertColumns(last_var_num, titles.size());
+  ui->tableData->model()->insertColumns(variables_size_before_import,
+                                        titles.size());
+  ui->tableErrors->model()->insertColumns(variables_size_before_import,
+                                          titles.size());
+  ui->tableTitles->model()->insertColumns(variables_size_before_import,
+                                          titles.size());
 
-  ui->tableData->model()->insertRows(vert_size,
-                                     man.variables[0].size() - vert_size);
-  ui->tableErrors->model()->insertRows(vert_size,
-                                       man.variables[0].size() - vert_size);
+  ui->tableData->model()->insertRows(
+      vertical_size, manager.variables[0].size() - vertical_size);
+  ui->tableErrors->model()->insertRows(
+      vertical_size, manager.variables[0].size() - vertical_size);
   file.close();
 }
 
 void MainWindow::create_dialog() {
-  DialogWindow *d = new DialogWindow(
+  DialogWindow *dialog_new_tab = new DialogWindow(
       ui->graphics, dynamic_cast<MeasurementModel *>(ui->tableData->model()),
       dynamic_cast<ErrorModel *>(ui->tableErrors->model()),
       dynamic_cast<TitleModel *>(ui->tableTitles->model()), nullptr);
-  d->show();
-  d->exec();
+  dialog_new_tab->show();
+  dialog_new_tab->exec();
 }
 
 void MainWindow::changeTheme() {
@@ -106,20 +109,23 @@ void MainWindow::add_row() {
 }
 
 void MainWindow::add_variable() {
-  auto &man = Manager::get_manager();
-  int vars_num = Manager::get_manager().variables.size();
-  int size = Manager::get_manager().variables[0].size();
-  bool ok;
-  ErrorAbsolute *err = new ErrorAbsolute(0.);
-  QString name = QInputDialog::getText(
-      this, "Add column", "Variable name:", QLineEdit::Normal, "", &ok);
-  if (!ok) {
+  auto &manager = Manager::get_manager();
+  int variables_number = Manager::get_manager().variables.size();
+  int measurements_number = Manager::get_manager().variables[0].size();
+  bool success_exiting;
+  ErrorAbsolute *absolute_error = new ErrorAbsolute(0.);
+  QString new_variable_name = QInputDialog::getText(
+      this, "Add column", "Variable name:", QLineEdit::Normal, "",
+      &success_exiting);
+  if (!success_exiting) {
     return;
   }
-  man.add_variable(VariableData(QList<double>(size, 0.), err, name, name));
-  ui->tableData->model()->insertColumns(vars_num, 1);
-  ui->tableErrors->model()->insertColumns(vars_num, 1);
-  ui->tableTitles->model()->insertColumns(vars_num, 1);
+  manager.add_variable(VariableData(QList<double>(measurements_number, 0.),
+                                    absolute_error, new_variable_name,
+                                    new_variable_name));
+  ui->tableData->model()->insertColumns(variables_number, 1);
+  ui->tableErrors->model()->insertColumns(variables_number, 1);
+  ui->tableTitles->model()->insertColumns(variables_number, 1);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -141,10 +147,10 @@ MainWindow::MainWindow(QWidget *parent)
 
   Manager &manager = Manager().get_manager();
   MeasurementModel *model_measurements = new MeasurementModel;
-  ErrorModel *model_err = new ErrorModel;
-  TitleModel *model_titles = new TitleModel;
-  ErrorData *err = new ErrorAbsolute(0.);
-  ErrorData *err2 = new ErrorRelative(0.12);
+  ErrorModel *error_model = new ErrorModel;
+  TitleModel *titles_model = new TitleModel;
+  ErrorData *absolute_error = new ErrorAbsolute(0.);
+  ErrorData *relative_error = new ErrorRelative(0.12);
 
   manager.add_variable(VariableData(
       {2.69935,  2.9243,   3.162774, 3.41445,  3.6815,   3.961895, 4.2562,
@@ -162,7 +168,7 @@ MainWindow::MainWindow(QWidget *parent)
        7.5509,   7.1307,   6.72374,  6.3292,   5.94845,  5.58196,  5.2297,
        4.8903,   4.56649,  4.2567,   3.96155,  3.681234, 3.4445,   3.16248,
        2.924323, 2.6993},
-      err, "Gauss", "Gs"));
+      absolute_error, "Gauss", "Gs"));
   manager.add_variable(VariableData(
       {-20, -27, -26, 21, 1,   -5,  10,  18,  -9,  -6,  5,   -12, 11,  -24, -2,
        22,  29,  26,  10, 21,  -15, 25,  -8,  -26, -21, 18,  4,   9,   24,  8,
@@ -171,7 +177,7 @@ MainWindow::MainWindow(QWidget *parent)
        22,  -29, 24,  14, 4,   -10, 8,   15,  16,  -23, 22,  23,  -12, -15, 17,
        -19, -19, -11, 5,  16,  12,  -4,  -20, 29,  -28, 5,   26,  16,  -28, -25,
        10,  30,  -5,  25, 4,   -28, -20, -30, -2,  -21},
-      err2, "Random", "rnd"));
+      relative_error, "Random", "rnd"));
   manager.add_variable(VariableData(
       {0.324855,  0.568848,  0.930837,  1.437063,  2.109153,  2.961049,
        3.996548,  5.207791,  6.574879,  8.06665,   9.64248,   11.254887,
@@ -190,7 +196,7 @@ MainWindow::MainWindow(QWidget *parent)
        0.000125,  9.4e-05,   7e-05,     5.2e-05,   3.9e-05,   2.9e-05,
        2.2e-05,   1.6e-05,   1.2e-05,   9e-06,     6e-06,     5e-06,
        3e-06,     3e-06,     2e-06,     1e-06},
-      err2, "Gamma", "gamma"));
+      relative_error, "Gamma", "gamma"));
 
   ui->setupUi(this);
   Heatmap2d *heatmap2d = new Heatmap2d();
@@ -199,8 +205,8 @@ MainWindow::MainWindow(QWidget *parent)
   changeTheme();
 
   ui->tableData->setModel(model_measurements);
-  ui->tableErrors->setModel(model_err);
-  ui->tableTitles->setModel(model_titles);
+  ui->tableErrors->setModel(error_model);
+  ui->tableTitles->setModel(titles_model);
   ui->graphics->addTab(heatmap2d, "Heatmap2d");
   ui->graphics->addTab(unsorted_line_plot, "UnsortedLinePlot");
   ui->graphics->addTab(sorted_line_plot, "SortedLinePlot");
@@ -218,24 +224,24 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::import_data);
   connect(ui->action_Theme_button, &QAction::triggered, this,
           &MainWindow::changeTheme);
-          
+
   connect(model_measurements, &QAbstractTableModel::dataChanged, heatmap2d,
           &AbstractPlot::update_data);
-  connect(model_titles, &QAbstractTableModel::dataChanged, heatmap2d,
+  connect(titles_model, &QAbstractTableModel::dataChanged, heatmap2d,
           &Heatmap2d::update_var_names);
 
-  connect(model_err, &QAbstractTableModel::dataChanged, unsorted_line_plot,
+  connect(error_model, &QAbstractTableModel::dataChanged, unsorted_line_plot,
           &AbstractPlot::update_data);
-  connect(model_measurements, &QAbstractTableModel::dataChanged, unsorted_line_plot,
-          &AbstractPlot::update_data);
-  connect(model_titles, &QAbstractTableModel::dataChanged, unsorted_line_plot,
+  connect(model_measurements, &QAbstractTableModel::dataChanged,
+          unsorted_line_plot, &AbstractPlot::update_data);
+  connect(titles_model, &QAbstractTableModel::dataChanged, unsorted_line_plot,
           &UnsortedLinePlot::update_var_names);
 
-  connect(model_err, &QAbstractTableModel::dataChanged, sorted_line_plot,
+  connect(error_model, &QAbstractTableModel::dataChanged, sorted_line_plot,
           &AbstractPlot::update_data);
-  connect(model_measurements, &QAbstractTableModel::dataChanged, sorted_line_plot,
-          &AbstractPlot::update_data);
-  connect(model_titles, &QAbstractTableModel::dataChanged, sorted_line_plot,
+  connect(model_measurements, &QAbstractTableModel::dataChanged,
+          sorted_line_plot, &AbstractPlot::update_data);
+  connect(titles_model, &QAbstractTableModel::dataChanged, sorted_line_plot,
           &SortedLinePlot::update_var_names);
   connect(ui->graphics, &QTabWidget::tabCloseRequested, &QTabWidget::removeTab);
 }
