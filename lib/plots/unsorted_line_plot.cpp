@@ -13,7 +13,7 @@ UnsortedLinePlot::UnsortedLinePlot(int graph_num, QWidget* parent)
   ui->plot->xAxis->setLabel("Axis X");
   ui->plot->yAxis->setLabel("Axis Y");
   ui->settings->setRowCount(graph_num);
-  ui->plot->setBackground(Qt::transparent);
+  ui->plot->setBackground(Qt::transparent);  // for Dark theme
   int rows_count = ui->settings->rowCount();
 
   for (int i = 0; i < Manager::get_manager().variables[0].measurements.size();
@@ -39,6 +39,7 @@ UnsortedLinePlot::UnsortedLinePlot(int graph_num, QWidget* parent)
     variable_to_graph_connection[0].first.append(i);
     variable_to_graph_connection[0].second.append(i);
   }
+  // update variables' names in variable choice delegate
   for (int i = 0; i < manager_variables.size(); ++i) {
     variable_to_graph_connection[i + 1] =
         QPair<QList<int>, QList<int>>(QList<int>(), QList<int>());
@@ -61,8 +62,9 @@ UnsortedLinePlot::UnsortedLinePlot(int graph_num, QWidget* parent)
     }
   }
 
-  update_data(ui->settings->model()->index(-1, -1),
-              ui->settings->model()->index(-1, -1));
+  update_data(
+      ui->settings->model()->index(-1, -1),   // default axes choice is None ->
+      ui->settings->model()->index(-1, -1));  // -> updating 'None' data
   for (int i = 0; i < graph_num; ++i) {
     for (int k : QList({UnsortedLinePlotSettingsModel::Column::Is_Active,
                         UnsortedLinePlotSettingsModel::Column::Axis_X,
@@ -72,11 +74,14 @@ UnsortedLinePlot::UnsortedLinePlot(int graph_num, QWidget* parent)
       redraw_settings(i, k);
     }
   }
+
+  // setting actual view with data boundaries
   ui->plot->xAxis->setRange(min_x - (max_x - min_x) / 20.,
                             max_x + (max_x - min_x) / 20.);
   ui->plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
                             max_y + (max_y - min_y) / 20.);
 
+  // activate scaling and Drag'n'Drop
   ui->plot->setInteraction(QCP::iRangeZoom, true);
   ui->plot->setInteraction(QCP::iRangeDrag, true);
   ui->plot->replot();
@@ -132,6 +137,7 @@ void UnsortedLinePlot::redraw_settings(int row, int column) {
       int name_y_ind = get_name_index(name_y);
       int name_ind = get_name_index(name);
 
+      // block for updating map with variable to graph dependencies
       int ind_remove_x;
       int ind_remove_y;
       for (auto& elems : variable_to_graph_connection) {
@@ -152,11 +158,13 @@ void UnsortedLinePlot::redraw_settings(int row, int column) {
       ColumnNameDelegate* delegate = static_cast<ColumnNameDelegate*>(
           ui->settings->itemDelegateForColumn(column));
       auto names = delegate->get_options_list();
-      int var_index = names.indexOf(name) - 1;
+      int var_index = names.indexOf(name) -
+                      1;  // offset because in delegate name 'None' is the first
       auto ind = ui->settings->model()->index(0, var_index);
 
       if (name_x == "None") {
-        bars_list[row]->y->setVisible(false);
+        bars_list[row]->y->setVisible(
+            false);  // switching off ErrorBars for None
       } else {
         bars_list[row]->y->setVisible(
             ui->settings
@@ -170,7 +178,8 @@ void UnsortedLinePlot::redraw_settings(int row, int column) {
                 .value<bool>());
       }
       if (name_y == "None") {
-        bars_list[row]->x->setVisible(false);
+        bars_list[row]->x->setVisible(
+            false);  // switching off ErrorBars for None
       } else {
         bars_list[row]->x->setVisible(
             ui->settings
@@ -229,7 +238,7 @@ void UnsortedLinePlot::redraw_settings(int row, int column) {
       graph->setPen(pen);
       bars_list[row]->setPen(pen);
       if (column == UnsortedLinePlotSettingsModel::Column::Line_Size) {
-        break;
+        break;  // going to next case if column == Color
       }
     }
     case UnsortedLinePlotSettingsModel::Column::Scatter_Size:
@@ -262,6 +271,7 @@ void UnsortedLinePlot::update_data(const QModelIndex& topLeft,
   int end = std::max(bottomRight.column(), topLeft.column());
   auto& manager = Manager::get_manager();
 
+  // block for processing insert rows events
   if (bottomRight.row() > default_numbering_vector.size() - 1) {
     int last = default_numbering_vector.size();
     for (int i = last; i < bottomRight.row() + 1; ++i) {
@@ -292,12 +302,15 @@ void UnsortedLinePlot::update_data(const QModelIndex& topLeft,
       ColumnNameDelegate* delegate =
           static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
               UnsortedLinePlotSettingsModel::Column::Axis_X));
-      int var_x_index = delegate->get_options_list().indexOf(name_x);
-      int var_y_index = delegate->get_options_list().indexOf(name_y);
+      int var_x_index = delegate->get_options_list().indexOf(
+          name_x);  // 'None' and variables'names
+      int var_y_index = delegate->get_options_list().indexOf(
+          name_y);  // 'None' and variables'names
       QVector<double> x;
       QVector<double> y;
       QList<double> x_err;
       QList<double> y_err;
+      // if x == 'None'
       if (var_x_index == 0) {
         x = default_numbering_vector;
       } else {
@@ -305,6 +318,7 @@ void UnsortedLinePlot::update_data(const QModelIndex& topLeft,
             manager.variables[var_x_index - 1].measurements);
         y_err = manager.variables[var_x_index - 1].getErrors();
       }
+      // if y == 'None'
       if (var_y_index == 0) {
         y = default_numbering_vector;
       } else {

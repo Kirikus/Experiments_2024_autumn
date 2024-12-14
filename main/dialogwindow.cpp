@@ -23,7 +23,7 @@ void DialogWindow::create_graph() {
       hide();
       int graphs_num;
       auto* dialog_ask_rows = new DialogAmountRowsWindow(graphs_num, nullptr);
-      dialog_ask_rows->show();
+      dialog_ask_rows->show();  // asking for rows number
       dialog_ask_rows->exec();
       if (graphs_num <= 0) {
         break;
@@ -43,7 +43,7 @@ void DialogWindow::create_graph() {
       hide();
       int graphs_num;
       auto* dialog_ask_rows = new DialogAmountRowsWindow(graphs_num, nullptr);
-      dialog_ask_rows->show();
+      dialog_ask_rows->show();  // asking for rows number
       dialog_ask_rows->exec();
       if (graphs_num <= 0) {
         break;

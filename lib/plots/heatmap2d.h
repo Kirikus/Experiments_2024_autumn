@@ -40,6 +40,8 @@ class Heatmap2d : public AbstractPlot {
   Heatmap2d(int graph_num = 1, QWidget* parent = nullptr);
   ~Heatmap2d() { delete ui; }
 
+  // return name's index in global Manager
+  // -1 if 'None' and -2 if not found
   int get_name_index(QString name);
 
  public slots:
@@ -50,8 +52,8 @@ class Heatmap2d : public AbstractPlot {
                            const QList<int>& roles = QList<int>());
 
   virtual void update_var_names(const QModelIndex& topLeft,
-                        const QModelIndex& bottomRight,
-                        const QList<int>& roles = QList<int>());
+                                const QModelIndex& bottomRight,
+                                const QList<int>& roles = QList<int>());
 };
 
 #endif

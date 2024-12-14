@@ -35,7 +35,9 @@ void MainWindow::import_data() {
   auto variables_size_before_import = manager.variables.size();
   QStringList titles(text_stream.readLine().split(","));
   for (auto title : titles) {
-    manager.add_variable(VariableData({}, new ErrorAbsolute(0.), title, title));
+    manager.add_variable(
+        VariableData({}, new ErrorAbsolute(0.), title,
+                     title));  // add blank variables to fill it later
   }
 
   auto vertical_size = manager.variables[0].size();
@@ -44,10 +46,12 @@ void MainWindow::import_data() {
   QStringList line;
 
   for (int i = 0; i < vertical_size; ++i) {
+    // if file's data has run out
     if (text_stream.atEnd()) {
       manager.add_measurement_row(variables_size_before_import, -1, zero_list);
       continue;
     }
+
     line = text_stream.readLine().split(",");
     temp_list.clear();
     for (auto elem : line) {
@@ -55,6 +59,8 @@ void MainWindow::import_data() {
     }
     manager.add_measurement_row(variables_size_before_import, -1, temp_list);
   }
+
+  // if table's vertical size is smaller than file's
   while (!text_stream.atEnd()) {
     manager.add_measurement_row(0, -1, zero_list);
     line = text_stream.readLine().split(",");
@@ -118,7 +124,7 @@ void MainWindow::add_variable() {
   ErrorAbsolute *absolute_error = new ErrorAbsolute(0.);
   QString new_variable_name = QInputDialog::getText(
       this, "Add column", "Variable name:", QLineEdit::Normal, "",
-      &success_exiting);
+      &success_exiting);  // asking for variable's name
   if (!success_exiting) {
     return;
   }
@@ -132,6 +138,7 @@ void MainWindow::add_variable() {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
+  // setting Dark theme palette
   dark_palette = new QPalette();
   dark_palette->setColor(QPalette::Window, QColor(53, 53, 53));
   dark_palette->setColor(QPalette::WindowText, Qt::white);
@@ -154,6 +161,7 @@ MainWindow::MainWindow(QWidget *parent)
   ErrorData *absolute_error = new ErrorAbsolute(0.);
   ErrorData *relative_error = new ErrorRelative(0.12);
 
+  // start data
   manager.add_variable(VariableData(
       {2.69935,  2.9243,   3.162774, 3.41445,  3.6815,   3.961895, 4.2562,
        4.5663,   4.89055,  5.2293,   5.5812,   5.94897,  6.3296,   6.72345,
@@ -204,11 +212,16 @@ MainWindow::MainWindow(QWidget *parent)
   Heatmap2d *heatmap2d = new Heatmap2d();
   UnsortedLinePlot *unsorted_line_plot = new UnsortedLinePlot(3);
   SortedLinePlot *sorted_line_plot = new SortedLinePlot(3);
+
+  // set start theme dark
   changeTheme();
 
+  // connecting tables with data from Manager
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(error_model);
   ui->tableTitles->setModel(titles_model);
+
+  // set start tabs
   ui->graphics->addTab(heatmap2d, "Heatmap2d");
   ui->graphics->addTab(unsorted_line_plot, "UnsortedLinePlot");
   ui->graphics->addTab(sorted_line_plot, "SortedLinePlot");

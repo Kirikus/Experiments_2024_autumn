@@ -10,6 +10,7 @@
 #include <QStyledItemDelegate>
 #include <QTableWidget>
 
+// color menu
 class ColorDelegate : public QStyledItemDelegate {
  public:
   ColorDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {}
@@ -83,6 +84,7 @@ class CheckBoxDelegate : public QStyledItemDelegate {
   }
 };
 
+// choice ComboBox with empty options list
 class AbstractComboBoxDelegate : public QStyledItemDelegate {
  public:
   QList<QString> options;

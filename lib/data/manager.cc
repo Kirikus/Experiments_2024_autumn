@@ -29,14 +29,16 @@ void Manager::add_measurement_row(int start, int end,
     } else {
       variables[i].measurements.push_back(0.);
     }
-    variables[i].errors_local.push_back(nullptr);
+    variables[i].errors_local.push_back(
+        nullptr);  // for nullptr will be used general error
   }
 }
 
 void Manager::add_measurement_row() {
   for (int i = 0; i < variables.size(); ++i) {
     variables[i].measurements.push_back(.0);
-    variables[i].errors_local.push_back(nullptr);
+    variables[i].errors_local.push_back(
+        nullptr);  // for nullptr will be used general error
   }
 }
 void Manager::remove_measurement_row() {
