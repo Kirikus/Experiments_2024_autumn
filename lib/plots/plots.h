@@ -12,6 +12,10 @@ class AbstractPlot : public QWidget {
                            const QModelIndex& bottomRight,
                            const QList<int>& roles = QList<int>()) = 0;
   virtual void redraw_settings(int row, int column) = 0;
+
+  virtual void update_var_names(const QModelIndex& topLeft,
+                                const QModelIndex& bottomRight,
+                                const QList<int>& roles) = 0;
 };
 
 struct XYErrorBars {

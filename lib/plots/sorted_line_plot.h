@@ -63,7 +63,7 @@ class SortedLinePlot : public AbstractPlot {
                            const QModelIndex& bottomRight,
                            const QList<int>& roles = QList<int>());
 
-  void update_var_names(const QModelIndex& topLeft,
+  virtual void update_var_names(const QModelIndex& topLeft,
                         const QModelIndex& bottomRight,
                         const QList<int>& roles = QList<int>());
 };
