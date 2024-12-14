@@ -24,6 +24,8 @@ UnsortedLinePlotSettingsModel::UnsortedLinePlotSettingsModel(
   setItemDelegateForColumn(Color, new ColorDelegate());
   setItemDelegateForColumn(Error_Scatter, check_box_delegate);
   setItemDelegateForColumn(Scatter, new ScatterStyleDelegate());
+  setItemDelegateForColumn(Scatter_Size, new MinMaxSpinBox(1, 200));
+  setItemDelegateForColumn(Line_Size, new MinMaxSpinBox(1, 20));
 
   setHorizontalHeaderLabels(heading);
 }

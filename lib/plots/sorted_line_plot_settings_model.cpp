@@ -9,7 +9,8 @@ QList<QString> SortedLinePlotSettingsModel::heading = {
     "Is Active",     "Axis_X",  "Axis_Y",       "Style",    "Color",
     "Error Scatter", "Scatter", "Scatter Size", "Line Size"};
 
-SortedLinePlotSettingsModel::SortedLinePlotSettingsModel(QWidget* parent = nullptr)
+SortedLinePlotSettingsModel::SortedLinePlotSettingsModel(
+    QWidget* parent = nullptr)
     : QTableWidget(parent) {
   srand(time(NULL));
   connect(model(), &QAbstractItemModel::rowsInserted, this,
@@ -26,12 +27,14 @@ SortedLinePlotSettingsModel::SortedLinePlotSettingsModel(QWidget* parent = nullp
   setItemDelegateForColumn(Color, new ColorDelegate());
   setItemDelegateForColumn(Error_Scatter, check_box_delegate);
   setItemDelegateForColumn(Scatter, new ScatterStyleDelegate());
+  setItemDelegateForColumn(Scatter_Size, new MinMaxSpinBox(1, 200));
+  setItemDelegateForColumn(Line_Size, new MinMaxSpinBox(1, 20));
 
   setHorizontalHeaderLabels(heading);
 }
 
 void SortedLinePlotSettingsModel::fillDefaultValues(const QModelIndex& parent,
-                                             int start, int end) {
+                                                    int start, int end) {
   for (int row = start; row <= end; row++) {
     setItem(row, Column::Is_Active, new QTableWidgetItem("1"));
     setItem(row, Column::Axis_X, new QTableWidgetItem("None"));
