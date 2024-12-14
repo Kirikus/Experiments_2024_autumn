@@ -1,19 +1,19 @@
-#include "two_axes_settings_model.h"
+#include "sorted_line_plot_settings_model.h"
 
 #include <QCheckBox>
 
 #include "../data/manager.h"
 #include "../delegates.h"
 
-QList<QString> TwoAxesSettingsModel::heading = {
+QList<QString> SortedLinePlotSettingsModel::heading = {
     "Is Active",     "Axis_X",  "Axis_Y",       "Style",    "Color",
     "Error Scatter", "Scatter", "Scatter Size", "Line Size"};
 
-TwoAxesSettingsModel::TwoAxesSettingsModel(QWidget* parent = nullptr)
+SortedLinePlotSettingsModel::SortedLinePlotSettingsModel(QWidget* parent = nullptr)
     : QTableWidget(parent) {
   srand(time(NULL));
   connect(model(), &QAbstractItemModel::rowsInserted, this,
-          &TwoAxesSettingsModel::fillDefaultValues);
+          &SortedLinePlotSettingsModel::fillDefaultValues);
 
   setColumnCount(heading.size());
 
@@ -30,7 +30,7 @@ TwoAxesSettingsModel::TwoAxesSettingsModel(QWidget* parent = nullptr)
   setHorizontalHeaderLabels(heading);
 }
 
-void TwoAxesSettingsModel::fillDefaultValues(const QModelIndex& parent,
+void SortedLinePlotSettingsModel::fillDefaultValues(const QModelIndex& parent,
                                              int start, int end) {
   for (int row = start; row <= end; row++) {
     setItem(row, Column::Is_Active, new QTableWidgetItem("1"));

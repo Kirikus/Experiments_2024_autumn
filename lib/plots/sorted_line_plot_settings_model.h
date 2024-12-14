@@ -1,9 +1,9 @@
-#ifndef __TWO_AXES_GRAPH_SETTINGS_MODEL_H__
-#define __TWO_AXES_GRAPH_SETTINGS_MODEL_H__
+#ifndef __SORTED_LINE_PLOT_SETTINGS_MODEL_H__
+#define __SORTED_LINE_PLOT_SETTINGS_MODEL_H__
 
 #include <QTableWidget>
 
-class TwoAxesSettingsModel : public QTableWidget {
+class SortedLinePlotSettingsModel : public QTableWidget {
  public:
   enum Column {
     Is_Active = 0,  // Column for switching graph on/off
@@ -18,7 +18,7 @@ class TwoAxesSettingsModel : public QTableWidget {
   };
   static QList<QString> heading;
 
-  TwoAxesSettingsModel(QWidget* parent);
+  SortedLinePlotSettingsModel(QWidget* parent);
 
  private slots:
   void fillDefaultValues(const QModelIndex& parent, int start, int end);

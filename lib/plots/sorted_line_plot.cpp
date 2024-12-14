@@ -4,7 +4,7 @@
 
 #include "../data/manager.h"
 #include "../delegates.h"
-#include "two_axes_settings_model.h"
+#include "sorted_line_plot_settings_model.h"
 
 SortedLinePlot::SortedLinePlot(int graph_num, QWidget* parent)
     : ui(new Ui::SortedLinePlot) {
@@ -44,7 +44,7 @@ SortedLinePlot::SortedLinePlot(int graph_num, QWidget* parent)
     variable_to_graph_connection[i + 1] =
         QPair<QList<int>, QList<int>>(QList<int>(), QList<int>());
     static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
-                                         TwoAxesSettingsModel::Column::Axis_X))
+                                         SortedLinePlotSettingsModel::Column::Axis_X))
         ->get_options_list()
         .append(manager_variables[i].short_name);
   }
@@ -64,11 +64,11 @@ SortedLinePlot::SortedLinePlot(int graph_num, QWidget* parent)
   update_data(ui->settings->model()->index(-1, -1),
               ui->settings->model()->index(-1, -1));
   for (int i = 0; i < graph_num; ++i) {
-    for (int k : QList({TwoAxesSettingsModel::Column::Is_Active,
-                        TwoAxesSettingsModel::Column::Axis_X,
-                        TwoAxesSettingsModel::Column::Style,
-                        TwoAxesSettingsModel::Column::Scatter_Size,
-                        TwoAxesSettingsModel::Column::Line_Size})) {
+    for (int k : QList({SortedLinePlotSettingsModel::Column::Is_Active,
+                        SortedLinePlotSettingsModel::Column::Axis_X,
+                        SortedLinePlotSettingsModel::Column::Style,
+                        SortedLinePlotSettingsModel::Column::Scatter_Size,
+                        SortedLinePlotSettingsModel::Column::Line_Size})) {
       redraw_settings(i, k);
     }
   }
@@ -116,16 +116,16 @@ void SortedLinePlot::redraw_settings(int row, int column) {
   auto graph = ui->plot->graph(row);
 
   switch (column) {
-    case TwoAxesSettingsModel::Column::Axis_X:
-    case TwoAxesSettingsModel::Column::Axis_Y: {
+    case SortedLinePlotSettingsModel::Column::Axis_X:
+    case SortedLinePlotSettingsModel::Column::Axis_Y: {
       auto& man = Manager::get_manager();
 
       QString name_x =
-          ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_X)
+          ui->settings->item(row, SortedLinePlotSettingsModel::Column::Axis_X)
               ->data(Qt::DisplayRole)
               .value<QString>();
       QString name_y =
-          ui->settings->item(row, TwoAxesSettingsModel::Column::Axis_Y)
+          ui->settings->item(row, SortedLinePlotSettingsModel::Column::Axis_Y)
               ->data(Qt::DisplayRole)
               .value<QString>();
       auto name = ui->settings->item(row, column)
@@ -162,10 +162,10 @@ void SortedLinePlot::redraw_settings(int row, int column) {
         bars_list[row]->y->setVisible(false);
       } else {
         bars_list[row]->y->setVisible(
-            ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)
+            ui->settings->item(row, SortedLinePlotSettingsModel::Column::Is_Active)
                 ->data(Qt::DisplayRole)
                 .value<bool>() &&
-            ui->settings->item(row, TwoAxesSettingsModel::Column::Error_Scatter)
+            ui->settings->item(row, SortedLinePlotSettingsModel::Column::Error_Scatter)
                 ->data(Qt::DisplayRole)
                 .value<bool>());
       }
@@ -173,63 +173,63 @@ void SortedLinePlot::redraw_settings(int row, int column) {
         bars_list[row]->x->setVisible(false);
       } else {
         bars_list[row]->x->setVisible(
-            ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)
+            ui->settings->item(row, SortedLinePlotSettingsModel::Column::Is_Active)
                 ->data(Qt::DisplayRole)
                 .value<bool>() &&
-            ui->settings->item(row, TwoAxesSettingsModel::Column::Error_Scatter)
+            ui->settings->item(row, SortedLinePlotSettingsModel::Column::Error_Scatter)
                 ->data(Qt::DisplayRole)
                 .value<bool>());
       }
       update_data(ind, ind, QList<int>({Qt::EditRole}));
       break;
     }
-    case TwoAxesSettingsModel::Column::Error_Scatter:
-    case TwoAxesSettingsModel::Column::Is_Active: {
+    case SortedLinePlotSettingsModel::Column::Error_Scatter:
+    case SortedLinePlotSettingsModel::Column::Is_Active: {
       graph->setVisible(
-          ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)
+          ui->settings->item(row, SortedLinePlotSettingsModel::Column::Is_Active)
               ->data(Qt::DisplayRole)
               .value<bool>());
       bars_list[row]->setVisible(
-          ui->settings->item(row, TwoAxesSettingsModel::Column::Is_Active)
+          ui->settings->item(row, SortedLinePlotSettingsModel::Column::Is_Active)
               ->data(Qt::DisplayRole)
               .value<bool>() &&
-          ui->settings->item(row, TwoAxesSettingsModel::Column::Error_Scatter)
+          ui->settings->item(row, SortedLinePlotSettingsModel::Column::Error_Scatter)
               ->data(Qt::DisplayRole)
               .value<bool>());
       break;
     }
-    case TwoAxesSettingsModel::Column::Style: {
+    case SortedLinePlotSettingsModel::Column::Style: {
       auto cell_data = cell->data(Qt::DisplayRole).value<QString>();
       graph->setLineStyle(line_style_map[cell_data]);
       break;
     }
-    case TwoAxesSettingsModel::Column::Line_Size:
-    case TwoAxesSettingsModel::Column::Color: {
+    case SortedLinePlotSettingsModel::Column::Line_Size:
+    case SortedLinePlotSettingsModel::Column::Color: {
       QPen pen =
-          QPen(ui->settings->item(row, TwoAxesSettingsModel::Column::Color)
+          QPen(ui->settings->item(row, SortedLinePlotSettingsModel::Column::Color)
                    ->background(),
-               ui->settings->item(row, TwoAxesSettingsModel::Column::Line_Size)
+               ui->settings->item(row, SortedLinePlotSettingsModel::Column::Line_Size)
                    ->data(Qt::DisplayRole)
                    .value<double>());
 
       graph->setPen(pen);
       bars_list[row]->setPen(pen);
-      if (column == TwoAxesSettingsModel::Column::Line_Size) {
+      if (column == SortedLinePlotSettingsModel::Column::Line_Size) {
         break;
       }
     }
-    case TwoAxesSettingsModel::Column::Scatter_Size:
-    case TwoAxesSettingsModel::Column::Scatter: {
+    case SortedLinePlotSettingsModel::Column::Scatter_Size:
+    case SortedLinePlotSettingsModel::Column::Scatter: {
       auto shape =
-          ui->settings->item(row, TwoAxesSettingsModel::Column::Scatter)
+          ui->settings->item(row, SortedLinePlotSettingsModel::Column::Scatter)
               ->data(Qt::DisplayRole);
       auto size =
-          ui->settings->item(row, TwoAxesSettingsModel::Column::Scatter_Size)
+          ui->settings->item(row, SortedLinePlotSettingsModel::Column::Scatter_Size)
               ->data(Qt::DisplayRole);
 
       graph->setScatterStyle(QCPScatterStyle(
           scatter_style_map[shape.value<QString>()],
-          ui->settings->item(row, TwoAxesSettingsModel::Column::Color)
+          ui->settings->item(row, SortedLinePlotSettingsModel::Column::Color)
               ->background()
               .color(),
           size.value<double>()));
@@ -264,16 +264,16 @@ void SortedLinePlot::update_data(const QModelIndex& topLeft,
     }
     for (int graph_ind : indexes) {
       QString name_x =
-          ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_X)
+          ui->settings->item(graph_ind, SortedLinePlotSettingsModel::Column::Axis_X)
               ->data(Qt::DisplayRole)
               .value<QString>();
       QString name_y =
-          ui->settings->item(graph_ind, TwoAxesSettingsModel::Column::Axis_Y)
+          ui->settings->item(graph_ind, SortedLinePlotSettingsModel::Column::Axis_Y)
               ->data(Qt::DisplayRole)
               .value<QString>();
       ColumnNameDelegate* delegate =
           static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
-              TwoAxesSettingsModel::Column::Axis_X));
+              SortedLinePlotSettingsModel::Column::Axis_X));
       int var_x_index = delegate->get_options_list().indexOf(name_x);
       int var_y_index = delegate->get_options_list().indexOf(name_y);
       QVector<double> x;
@@ -316,7 +316,7 @@ void SortedLinePlot::update_var_names(const QModelIndex& topLeft,
   auto manager_variables = Manager::get_manager().variables;
   auto delegate =
       static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
-          TwoAxesSettingsModel::Column::Axis_X));
+          SortedLinePlotSettingsModel::Column::Axis_X));
   for (int i = 1; i < manager_variables.size() + 1; ++i) {
     if (i < delegate->get_options_list().size()) {
       delegate->get_options_list()[i] = manager_variables[i - 1].short_name;

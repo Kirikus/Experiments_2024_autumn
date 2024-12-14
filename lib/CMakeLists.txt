@@ -35,7 +35,8 @@ MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
 MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
-target_sources(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/plots/two_axes_settings_model.h)
+target_sources(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/plots/sorted_line_plot_settings_model.h)
+target_sources(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/plots/unsorted_line_plot_settings_model.h)
 target_include_directories(core INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/core_autogen/include)
 
 if(QT_VERSION_MAJOR EQUAL 6)
