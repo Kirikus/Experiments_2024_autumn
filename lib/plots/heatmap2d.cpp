@@ -86,8 +86,8 @@ void Heatmap2d::redraw_settings(int row, int column) {
                       ->data(Qt::DisplayRole)
                       .value<QString>();
 
-      int x = get_name_index(name_x) + 1;
-      int y = get_name_index(name_y) + 1;
+      ui->plot->xAxis->setLabel(name_x);
+      ui->plot->yAxis->setLabel(name_y);
 
       ColumnNameDelegate* delegate =
           static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
