@@ -68,6 +68,27 @@ class VariableData {
     return QString("%1±%2").arg(QString::number(measurement),
                                 QString::number(error));
   }
+
+  double get_segment_fraction(double start, double end) {
+    double count = 0.;
+    for (double elem : measurements) {
+      if (start <= elem && elem < end) {
+        ++count;
+      }
+    }
+    return count / measurements.size();
+  }
+
+  QVector<double> get_distribution(int partition) {
+    double min_measurement = getMinMeasurement();
+    double step = (getMaxMeasurement() - min_measurement) / partition;
+    QVector<double> result = QVector<double>(partition);
+    for (int i = 0; i < partition - 1; ++i) {
+      result[i] = get_segment_fraction(min_measurement + step * i,
+                                       min_measurement + step * (i + 1));
+    }
+    return result;
+  }
 };
 
 #endif
