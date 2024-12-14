@@ -28,7 +28,6 @@ UnsortedLinePlot::UnsortedLinePlot(int graph_num, QWidget* parent)
   auto manager_line_x = manager_variables[0];
   auto manager_line_y = manager_variables[0];
   bool is_active;
-  auto style = QCPGraph::lsLine;
   double min_x = manager_line_x.measurements[0];
   double max_x = manager_line_x.measurements[0];
   double min_y = manager_line_y.measurements[0];
