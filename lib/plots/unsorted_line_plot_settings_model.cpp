@@ -40,7 +40,7 @@ void UnsortedLinePlotSettingsModel::fillDefaultValues(const QModelIndex& parent,
     item(row, Column::Color)->setBackground(QBrush(QColor(rgb)));
     setItem(row, Column::Error_Scatter, new QTableWidgetItem("1"));
     setItem(row, Column::Scatter, new QTableWidgetItem("None"));
-    setItem(row, Column::Scatter_Size, new QTableWidgetItem("10"));
+    setItem(row, Column::Scatter_Size, new QTableWidgetItem("4"));
     setItem(row, Column::Line_Size, new QTableWidgetItem("1"));
   }
 }
