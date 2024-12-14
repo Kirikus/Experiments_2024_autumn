@@ -28,7 +28,11 @@ class MainWindow : public QMainWindow {
   void add_row();
   void add_variable();
   void changeTheme();
-  void create_dialog();
+
+  // ask for plot type and create new tab with it
+  void create_tab_with_plot_choice();
+
+  // replace actual data with chosen file
   void choose_file_open();
   void import_data();
 };
