@@ -153,7 +153,6 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
       ui->settings->item(0, Heatmap2dSettingsModel::Column::Distribution)
           ->data(Qt::DisplayRole)
           .value<int>();
-  color_map->data()->setSize(distribution, distribution);
 
   if (x_index == -1) {
     start_x_range = 0.;
@@ -183,8 +182,28 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
     y_distributions = manager.variables[y_index].get_distribution(distribution);
   }
 
-  for (int i = 0; i < distribution; ++i) {
-    for (int j = 0; j < distribution; ++j) {
+  // block for processing degenerate distribution
+  int x_distribution, y_distribution;
+  if (end_x_range - start_x_range == 0) {
+    x_distributions = QVector<double>({0., 1., 0.});
+    x_distribution = 3;
+    start_x_range -= .5;
+    end_x_range += .5;
+  } else {
+    x_distribution = distribution;
+  }
+  if (end_y_range - start_y_range == 0) {
+    y_distributions = QVector<double>({0., 1., 0.});
+    y_distribution = 3;
+    start_y_range -= .5;
+    end_y_range += .5;
+  } else {
+    y_distribution = distribution;
+  }
+
+  color_map->data()->setSize(x_distribution, y_distribution);
+  for (int i = 0; i < x_distribution; ++i) {
+    for (int j = 0; j < y_distribution; ++j) {
       color_map->data()->setCell(i, j, x_distributions[i] * y_distributions[j]);
     }
   }
