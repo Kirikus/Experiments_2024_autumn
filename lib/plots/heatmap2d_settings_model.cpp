@@ -24,7 +24,7 @@ Heatmap2dSettingsModel::Heatmap2dSettingsModel(QWidget* parent = nullptr)
 
   setItem(0, Column::Axis_X, new QTableWidgetItem("None"));
   setItem(0, Column::Axis_Y, new QTableWidgetItem("None"));
-  setItem(0, Column::Distribution, new QTableWidgetItem("1"));
+  setItem(0, Column::Distribution, new QTableWidgetItem("2"));
   setItem(0, Column::Gradient, new QTableWidgetItem("Polar"));
   setItem(0, Column::Interpolate, new QTableWidgetItem("1"));
 }
