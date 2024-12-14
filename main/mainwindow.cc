@@ -230,21 +230,21 @@ MainWindow::MainWindow(QWidget *parent)
   connect(model_measurements, &QAbstractTableModel::dataChanged, heatmap2d,
           &AbstractPlot::update_data);
   connect(titles_model, &QAbstractTableModel::dataChanged, heatmap2d,
-          &Heatmap2d::update_var_names);
+          &AbstractPlot::update_var_names);
 
   connect(error_model, &QAbstractTableModel::dataChanged, unsorted_line_plot,
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged,
           unsorted_line_plot, &AbstractPlot::update_data);
   connect(titles_model, &QAbstractTableModel::dataChanged, unsorted_line_plot,
-          &UnsortedLinePlot::update_var_names);
+          &AbstractPlot::update_var_names);
 
   connect(error_model, &QAbstractTableModel::dataChanged, sorted_line_plot,
           &AbstractPlot::update_data);
   connect(model_measurements, &QAbstractTableModel::dataChanged,
           sorted_line_plot, &AbstractPlot::update_data);
   connect(titles_model, &QAbstractTableModel::dataChanged, sorted_line_plot,
-          &SortedLinePlot::update_var_names);
+          &AbstractPlot::update_var_names);
   connect(ui->graphics, &QTabWidget::tabCloseRequested, &QTabWidget::removeTab);
 }
 
