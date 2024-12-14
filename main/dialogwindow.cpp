@@ -15,6 +15,7 @@ void DialogWindow::create_graph() {
   int t = plot_type_map[chosen_type];
   QString new_name =
       chosen_type + "_" + QString::number(target_tab_widget->count());
+  int index;
   switch (t) {
     case UnsortedLinePlotType: {
       hide();
@@ -27,8 +28,7 @@ void DialogWindow::create_graph() {
       }
 
       auto* plot = new UnsortedLinePlot(graphs_num);
-      int index = target_tab_widget->addTab(plot, new_name);
-      target_tab_widget->setCurrentIndex(index);
+      index = target_tab_widget->addTab(plot, new_name);
       connect(measure_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
       connect(err_model, &QAbstractTableModel::dataChanged, plot,
@@ -48,8 +48,7 @@ void DialogWindow::create_graph() {
       }
 
       auto* plot = new SortedLinePlot(graphs_num);
-      int index = target_tab_widget->addTab(plot, new_name);
-      target_tab_widget->setCurrentIndex(index);
+      index = target_tab_widget->addTab(plot, new_name);
       connect(measure_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
       connect(err_model, &QAbstractTableModel::dataChanged, plot,
@@ -63,8 +62,7 @@ void DialogWindow::create_graph() {
     }
     case Heatmap2dType: {
       auto* plot = new Heatmap2d();
-      int index = target_tab_widget->addTab(plot, new_name);
-      target_tab_widget->setCurrentIndex(index);
+      index = target_tab_widget->addTab(plot, new_name);
       connect(measure_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
       connect(measure_model, &QAbstractTableModel::dataChanged, plot,
@@ -72,6 +70,8 @@ void DialogWindow::create_graph() {
       break;
     }
   }
+  target_tab_widget->setCurrentIndex(index);
+
   close();
 }
 
