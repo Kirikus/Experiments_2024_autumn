@@ -89,6 +89,7 @@ class UnsortedLinePlot : public AbstractPlot {
     ui->plot->xAxis->setLabel("Axis X");
     ui->plot->yAxis->setLabel("Axis Y");
     ui->settings->setRowCount(graph_num);
+    ui->plot->setBackground(Qt::transparent);
     int rows_count = ui->settings->rowCount();
 
     for (int i = 0; i < Manager::get_manager().variables[0].measurements.size();
@@ -413,6 +414,7 @@ class SortedLinePlot : public AbstractPlot {
     ui->plot->xAxis->setLabel("Axis X");
     ui->plot->yAxis->setLabel("Axis Y");
     ui->settings->setRowCount(graph_num);
+    ui->plot->setBackground(Qt::transparent);
     int rows_count = ui->settings->rowCount();
 
     for (int i = 0; i < Manager::get_manager().variables[0].measurements.size();
