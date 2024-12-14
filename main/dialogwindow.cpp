@@ -1,6 +1,8 @@
 #include "dialogwindow.h"
 
-#include "../lib/plots/plots.h"
+#include "../lib/plots/heatmap2d.h"
+#include "../lib/plots/sorted_line_plot.h"
+#include "../lib/plots/unsorted_line_plot.h"
 #include "dialogamountrowswindow.h"
 #include "ui_dialogwindow.h"
 
