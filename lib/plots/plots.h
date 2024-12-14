@@ -908,7 +908,6 @@ class Heatmap2d : public AbstractPlot {
 
     int start = std::min(bottomRight.column(), topLeft.column());
     int end = std::max(bottomRight.column(), topLeft.column());
-    qDebug() << start << " " << end << " " << x_index << " " << y_index;
     if (!((start <= x_index && x_index <= end) ||
           (start <= y_index && y_index <= end) || (x_index == -1) ||
           (y_index == -1))) {
