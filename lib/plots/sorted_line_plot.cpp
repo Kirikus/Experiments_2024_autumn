@@ -84,12 +84,17 @@ SortedLinePlot::SortedLinePlot(int graph_num, QWidget* parent)
 
 QCPGraph* SortedLinePlot::create_new_graph() {
   auto graph = ui->plot->addGraph();
+  QCPCurve* bar_ordering = new QCPCurve(ui->plot->xAxis, ui->plot->yAxis);
   QCPErrorBars* errorBars_x =
       new QCPErrorBars(ui->plot->xAxis, ui->plot->yAxis);
   QCPErrorBars* errorBars_y =
       new QCPErrorBars(ui->plot->yAxis, ui->plot->xAxis);
-  errorBars_y->setDataPlottable(graph);
-  errorBars_x->setDataPlottable(graph);
+
+  bar_ordering->setLineStyle(QCPCurve::lsNone);
+  bars_ordering.append(bar_ordering);
+
+  errorBars_y->setDataPlottable(bar_ordering);
+  errorBars_x->setDataPlottable(bar_ordering);
   bars_list.append(new XYErrorBars(errorBars_x, errorBars_y));
   return graph;
 }
@@ -289,8 +294,15 @@ void SortedLinePlot::update_data(const QModelIndex& topLeft,
             manager.variables[var_y_index - 1].measurements);
         x_err = manager.variables[var_y_index - 1].getErrors();
       }
+
+      QVector<QCPCurveData> bars_ordering_data;
+      for (int k = 0; k < x.size(); ++k) {
+        bars_ordering_data.append(QCPCurveData(k, x[k], y[k]));
+      }
+
       bars_list[graph_ind]->y->setData(y_err, y_err);
       bars_list[graph_ind]->x->setData(x_err, x_err);
+      bars_ordering[graph_ind]->data()->set(bars_ordering_data, true);
       ui->plot->graph(graph_ind)->setData(x, y);
     }
   }

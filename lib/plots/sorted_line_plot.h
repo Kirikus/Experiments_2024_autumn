@@ -46,6 +46,7 @@ class SortedLinePlot : public AbstractPlot {
   QMap<int, QPair<QList<int>, QList<int>>> variable_to_graph_connection;
   QVector<double> default_numbering_vector;
   QList<XYErrorBars*> bars_list;
+  QList<QCPCurve*> bars_ordering;
 
  public:
   SortedLinePlot(int graph_num = 1, QWidget* parent = nullptr);
