@@ -212,7 +212,6 @@ MainWindow::MainWindow(QWidget *parent)
   ui->graphics->addTab(heatmap2d, "Heatmap2d");
   ui->graphics->addTab(unsorted_line_plot, "UnsortedLinePlot");
   ui->graphics->addTab(sorted_line_plot, "SortedLinePlot");
-  ui->tableTitles->verticalHeader()->hide();
 
   connect(ui->button_Graph, &QPushButton::clicked, this,
           &MainWindow::create_dialog);
