@@ -156,6 +156,8 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
   double start_y_range;
   double end_x_range;
   double end_y_range;
+  double lowest_x_distribution, lowest_y_distribution;
+  double highest_x_distribution, highest_y_distribution;
   int distribution =
       ui->settings->item(0, Heatmap2dSettingsModel::Column::Distribution)
           ->data(Qt::DisplayRole)
@@ -209,6 +211,8 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
     y_distribution = distribution;
   }
 
+  color_map->data()->setRange(QCPRange(start_x_range, end_x_range),
+                              QCPRange(start_y_range, end_y_range));
   color_map->data()->setSize(x_distribution, y_distribution);
   for (int i = 0; i < x_distribution; ++i) {
     for (int j = 0; j < y_distribution; ++j) {
@@ -216,9 +220,22 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
     }
   }
 
-  color_map->data()->setRange(QCPRange(start_x_range, end_x_range),
-                              QCPRange(start_y_range, end_y_range));
-  color_map->rescaleDataRange();
+  lowest_x_distribution = x_distributions[0];
+  lowest_y_distribution = y_distributions[0];
+  highest_x_distribution = x_distributions[0];
+  highest_y_distribution = y_distributions[0];
+  for (auto x_distr : x_distributions) {
+    lowest_x_distribution = std::min(lowest_x_distribution, x_distr);
+    highest_x_distribution = std::max(highest_x_distribution, x_distr);
+  }
+  for (auto y_distr : y_distributions) {
+    lowest_y_distribution = std::min(lowest_y_distribution, y_distr);
+    highest_y_distribution = std::max(highest_y_distribution, y_distr);
+  }
+
+  color_map->setDataRange(
+      QCPRange(lowest_x_distribution * lowest_y_distribution,
+               highest_x_distribution * highest_y_distribution));
   ui->plot->rescaleAxes();
   ui->plot->replot();
 }
