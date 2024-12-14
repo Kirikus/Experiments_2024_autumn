@@ -23,8 +23,8 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class SortedLinePlot;
 class UnsortedLinePlot;
+class SortedLinePlot;
 class Heatmap2d;
 }  // namespace Ui
 QT_END_NAMESPACE
@@ -52,7 +52,7 @@ struct XYErrorBars {
   }
 };
 
-class UnsortedLinePlot : public AbstractPlot {
+class SortedLinePlot : public AbstractPlot {
  private:
   QMap<QString, QCPGraph::LineStyle> line_style_map{
       {"None", QCPGraph::lsNone},
@@ -78,14 +78,14 @@ class UnsortedLinePlot : public AbstractPlot {
       {"PlusCircle", QCPScatterStyle::ssPlusCircle},
       {"Peace", QCPScatterStyle::ssPeace}};
 
-  Ui::UnsortedLinePlot* ui;
+  Ui::SortedLinePlot* ui;
   QMap<int, QPair<QList<int>, QList<int>>> variable_to_graph_connection;
   QVector<double> default_numbering_vector;
   QList<XYErrorBars*> bars_list;
 
  public:
-  UnsortedLinePlot(int graph_num = 1, QWidget* parent = nullptr)
-      : ui(new Ui::UnsortedLinePlot) {
+  SortedLinePlot(int graph_num = 1, QWidget* parent = nullptr)
+      : ui(new Ui::SortedLinePlot) {
     ui->setupUi(this);
 
     ui->plot->xAxis->setLabel("Axis X");
@@ -160,7 +160,7 @@ class UnsortedLinePlot : public AbstractPlot {
     ui->plot->setInteraction(QCP::iRangeDrag, true);
     ui->plot->replot();
   }
-  ~UnsortedLinePlot() { delete ui; }
+  ~SortedLinePlot() { delete ui; }
 
   QCPGraph* create_new_graph() {
     auto graph = ui->plot->addGraph();
@@ -398,9 +398,9 @@ class UnsortedLinePlot : public AbstractPlot {
   }
 };
 
-class SortedLinePlot : public AbstractPlot {
+class UnsortedLinePlot : public AbstractPlot {
  private:
-  Ui::SortedLinePlot* ui;
+  Ui::UnsortedLinePlot* ui;
   QMap<int, QPair<QList<int>, QList<int>>> variable_to_graph_connection;
   QVector<double> default_numbering_vector;
   QList<XYErrorBars*> bars_list;
@@ -425,8 +425,8 @@ class SortedLinePlot : public AbstractPlot {
       {"Peace", QCPScatterStyle::ssPeace}};
 
  public:
-  SortedLinePlot(int graph_num = 1, QWidget* parent = nullptr)
-      : ui(new Ui::SortedLinePlot) {
+  UnsortedLinePlot(int graph_num = 1, QWidget* parent = nullptr)
+      : ui(new Ui::UnsortedLinePlot) {
     ui->setupUi(this);
 
     ui->plot->xAxis->setLabel("Axis X");
@@ -501,7 +501,7 @@ class SortedLinePlot : public AbstractPlot {
     ui->plot->setInteraction(QCP::iRangeDrag, true);
     ui->plot->replot();
   }
-  ~SortedLinePlot() { delete ui; }
+  ~UnsortedLinePlot() { delete ui; }
 
   QCPGraph* create_new_graph() {
     auto graph = ui->plot->addGraph();
