@@ -27,31 +27,6 @@ class UnsortedLinePlot;
 QT_END_NAMESPACE
 
 class AbstractPlot : public QWidget {
- public:
-  QMap<QString, QCPGraph::LineStyle> line_style_map{
-      {"None", QCPGraph::lsNone},
-      {"Line", QCPGraph::lsLine},
-      {"StepLeft", QCPGraph::lsStepLeft},
-      {"StepRight", QCPGraph::lsStepRight},
-      {"StepCenter", QCPGraph::lsStepCenter},
-      {"Impulse", QCPGraph::lsImpulse}};
-  QMap<QString, QCPScatterStyle::ScatterShape> scatter_style_map{
-      {"None", QCPScatterStyle::ssNone},
-      {"Cross", QCPScatterStyle::ssCross},
-      {"Plus", QCPScatterStyle::ssPlus},
-      {"Circle", QCPScatterStyle::ssCircle},
-      {"Disc", QCPScatterStyle::ssDisc},
-      {"Square", QCPScatterStyle::ssSquare},
-      {"Diamond", QCPScatterStyle::ssDiamond},
-      {"Star", QCPScatterStyle::ssStar},
-      {"Triangle", QCPScatterStyle::ssTriangle},
-      {"TriangleInverted", QCPScatterStyle::ssTriangleInverted},
-      {"CrossSquare", QCPScatterStyle::ssCrossSquare},
-      {"PlusSquare", QCPScatterStyle::ssPlusSquare},
-      {"CrossCircle", QCPScatterStyle::ssCrossCircle},
-      {"PlusCircle", QCPScatterStyle::ssPlusCircle},
-      {"Peace", QCPScatterStyle::ssPeace}};
-
  public slots:
   virtual void update_data(const QModelIndex& topLeft,
                            const QModelIndex& bottomRight,
@@ -76,6 +51,30 @@ struct XYErrorBars {
 
 class UnsortedLinePlot : public AbstractPlot {
  private:
+  QMap<QString, QCPGraph::LineStyle> line_style_map{
+      {"None", QCPGraph::lsNone},
+      {"Line", QCPGraph::lsLine},
+      {"StepLeft", QCPGraph::lsStepLeft},
+      {"StepRight", QCPGraph::lsStepRight},
+      {"StepCenter", QCPGraph::lsStepCenter},
+      {"Impulse", QCPGraph::lsImpulse}};
+  QMap<QString, QCPScatterStyle::ScatterShape> scatter_style_map{
+      {"None", QCPScatterStyle::ssNone},
+      {"Cross", QCPScatterStyle::ssCross},
+      {"Plus", QCPScatterStyle::ssPlus},
+      {"Circle", QCPScatterStyle::ssCircle},
+      {"Disc", QCPScatterStyle::ssDisc},
+      {"Square", QCPScatterStyle::ssSquare},
+      {"Diamond", QCPScatterStyle::ssDiamond},
+      {"Star", QCPScatterStyle::ssStar},
+      {"Triangle", QCPScatterStyle::ssTriangle},
+      {"TriangleInverted", QCPScatterStyle::ssTriangleInverted},
+      {"CrossSquare", QCPScatterStyle::ssCrossSquare},
+      {"PlusSquare", QCPScatterStyle::ssPlusSquare},
+      {"CrossCircle", QCPScatterStyle::ssCrossCircle},
+      {"PlusCircle", QCPScatterStyle::ssPlusCircle},
+      {"Peace", QCPScatterStyle::ssPeace}};
+
   Ui::UnsortedLinePlot* ui;
   QMap<int, QPair<QList<int>, QList<int>>> variable_to_graph_connection;
   QVector<double> default_numbering_vector;
@@ -405,6 +404,22 @@ class SortedLinePlot : public AbstractPlot {
   QList<QCPCurve*> curves;
   QMap<QString, QCPCurve::LineStyle> line_style_map{{"None", QCPCurve::lsNone},
                                                     {"Line", QCPCurve::lsLine}};
+  QMap<QString, QCPScatterStyle::ScatterShape> scatter_style_map{
+      {"None", QCPScatterStyle::ssNone},
+      {"Cross", QCPScatterStyle::ssCross},
+      {"Plus", QCPScatterStyle::ssPlus},
+      {"Circle", QCPScatterStyle::ssCircle},
+      {"Disc", QCPScatterStyle::ssDisc},
+      {"Square", QCPScatterStyle::ssSquare},
+      {"Diamond", QCPScatterStyle::ssDiamond},
+      {"Star", QCPScatterStyle::ssStar},
+      {"Triangle", QCPScatterStyle::ssTriangle},
+      {"TriangleInverted", QCPScatterStyle::ssTriangleInverted},
+      {"CrossSquare", QCPScatterStyle::ssCrossSquare},
+      {"PlusSquare", QCPScatterStyle::ssPlusSquare},
+      {"CrossCircle", QCPScatterStyle::ssCrossCircle},
+      {"PlusCircle", QCPScatterStyle::ssPlusCircle},
+      {"Peace", QCPScatterStyle::ssPeace}};
 
  public:
   SortedLinePlot(int graph_num = 1, QWidget* parent = nullptr)
