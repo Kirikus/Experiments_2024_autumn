@@ -298,10 +298,7 @@ void UnsortedLinePlot::update_data(const QModelIndex& topLeft,
       }
       bars_list[graph_ind]->y->setData(y_err, y_err);
       bars_list[graph_ind]->x->setData(x_err, x_err);
-      // QCPCurve* curve = new QCPCurve(ui->plot->xAxis, ui->plot->yAxis);
       curves[graph_ind]->data()->set(curve_dat, true);
-      // ui->plot->plottable->data()->set
-      // ui->plot->graph(graph_ind)->setData(x, y);
     }
   }
   ui->plot->replot();
