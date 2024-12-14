@@ -149,4 +149,14 @@ class ScatterStyleDelegate : public AbstractComboBoxDelegate {
   }
 };
 
+class GradientStyleDelegate : public AbstractComboBoxDelegate {
+ public:
+  GradientStyleDelegate(QObject* parent = 0)
+      : AbstractComboBoxDelegate(parent) {
+    options = {"Grayscale", "Hot",       "Cold", "Night",
+               "Candy",     "Geography", "Ion",  "Thermal",
+               "Polar",     "Spectrum",  "Jet",  "Hues"};
+  }
+};
+
 #endif
