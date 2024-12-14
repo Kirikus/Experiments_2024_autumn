@@ -7,6 +7,7 @@
 #include <QComboBox>
 #include <QObject>
 #include <QPainter>
+#include <QSpinBox>
 #include <QStyledItemDelegate>
 #include <QTableWidget>
 
@@ -81,6 +82,60 @@ class CheckBoxDelegate : public QStyledItemDelegate {
                     const QModelIndex& index) const {
     QCheckBox* checker = static_cast<QCheckBox*>(editor);
     model->setData(index, checker->isChecked(), Qt::BackgroundRole);
+  }
+};
+
+class MinMaxSpinBox : public QStyledItemDelegate {
+ public:
+  int minimum;
+  int maximum;
+
+  MinMaxSpinBox(int minimum, int maximum, QObject* parent = 0)
+      : QStyledItemDelegate(parent), minimum{minimum}, maximum{maximum} {}
+
+  virtual void paint(QPainter* painter, const QStyleOptionViewItem& option,
+                     const QModelIndex& index) const {
+    QStyledItemDelegate::paint(painter, option, index);
+  }
+
+  QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&,
+                        const QModelIndex& index) const {
+    auto editor = new QSpinBox(parent);
+    editor->setFrame(false);
+    editor->setMinimum(minimum);
+    editor->setMaximum(maximum);
+
+    // updating data with every change, not only after 'Enter' key
+    QObject::connect(
+        editor, &QSpinBox::valueChanged, parent,
+        [this, editor, parent, index]() {
+          setModelData(editor,
+                       static_cast<QTableWidget*>(parent->parent())->model(),
+                       index);
+        });
+
+    return editor;
+  }
+
+  void setEditorData(QWidget* editor, const QModelIndex& index) const {
+    int value = index.model()->data(index, Qt::EditRole).toInt();
+
+    QSpinBox* spinBox = static_cast<QSpinBox*>(editor);
+    spinBox->setValue(value);
+  }
+
+  void setModelData(QWidget* editor, QAbstractItemModel* model,
+                    const QModelIndex& index) const {
+    QSpinBox* spinBox = static_cast<QSpinBox*>(editor);
+    spinBox->interpretText();
+    int value = spinBox->value();
+
+    model->setData(index, value, Qt::EditRole);
+  }
+
+  void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option,
+                            const QModelIndex& /* index */) const {
+    editor->setGeometry(option.rect);
   }
 };
 
