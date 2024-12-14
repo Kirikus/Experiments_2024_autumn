@@ -82,7 +82,7 @@ void MainWindow::import_data() {
   file.close();
 }
 
-void MainWindow::create_dialog() {
+void MainWindow::create_tab_with_plot_choice() {
   DialogWindow *dialog_new_tab = new DialogWindow(
       ui->graphics, dynamic_cast<MeasurementModel *>(ui->tableData->model()),
       dynamic_cast<ErrorModel *>(ui->tableErrors->model()),
@@ -214,7 +214,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->graphics->addTab(sorted_line_plot, "SortedLinePlot");
 
   connect(ui->button_Graph, &QPushButton::clicked, this,
-          &MainWindow::create_dialog);
+          &MainWindow::create_tab_with_plot_choice);
   connect(ui->button_Add_row, &QPushButton::clicked, this,
           &MainWindow::add_row);
   connect(ui->button_Add_variable, &QPushButton::clicked, this,
