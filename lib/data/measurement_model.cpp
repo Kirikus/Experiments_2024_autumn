@@ -7,7 +7,7 @@ QVariant MeasurementModel::headerData(int section, Qt::Orientation orientation,
     if (orientation == Qt::Horizontal) {
       return Manager::get_manager().variables[section].short_name;
     } else if (orientation == Qt::Vertical) {
-      return QString::number(section + 1);
+      return QString::number(section + 1);  // numbering rows
     }
   }
   return QVariant();
@@ -31,7 +31,7 @@ QVariant MeasurementModel::data(const QModelIndex& index,
                                 int role = Qt::DisplayRole) const {
   VariableData row = Manager::get_manager().variables[index.column()];
   if (role == Qt::DisplayRole) {
-    return row.getElemPresentation(index.row());
+    return row.getElemPresentation(index.row());  // drawing 'measurement±error'
   } else if (role == Qt::EditRole) {
     return row.measurements[index.row()];
   }

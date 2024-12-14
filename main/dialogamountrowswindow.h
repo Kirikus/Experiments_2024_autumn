@@ -11,6 +11,7 @@ class DialogAmountRowsWindow;
 }
 QT_END_NAMESPACE
 
+// additional dialog for setting rows number
 class DialogAmountRowsWindow : public QDialog {
   Q_OBJECT
  public:

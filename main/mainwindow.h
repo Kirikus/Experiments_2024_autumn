@@ -25,8 +25,13 @@ class MainWindow : public QMainWindow {
   QString active_file;
 
  private slots:
+
+  // add row to Manager and update all linked tables
   void add_row();
+
+  // add variable to Manager and update all linked tables
   void add_variable();
+
   void changeTheme();
 
   // ask for plot type and create new tab with it
@@ -34,6 +39,8 @@ class MainWindow : public QMainWindow {
 
   // replace actual data with chosen file
   void choose_file_open();
+
+  // add data from chosen file
   void import_data();
 };
 #endif  // MAINWINDOW_H

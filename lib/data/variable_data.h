@@ -8,7 +8,7 @@
 class VariableData {
  public:
   QList<double> measurements{};
-  ErrorData* error_global{};  // error for all measurements
+  ErrorData* error_global{};  // general error for all measurements
   QList<ErrorData*>
       errors_local{};  // specifying error for some of measurements
   QString full_name{};
@@ -41,6 +41,7 @@ class VariableData {
     return *std::max_element(measurements.begin(), measurements.end());
   }
 
+  // return list with calculated error values
   QList<double> getErrors() {
     QList<double> errors(measurements.size());
     for (int i = 0; i < measurements.size(); ++i) {
@@ -59,6 +60,7 @@ class VariableData {
     return error;
   }
 
+  // purified element view: 'measurement±error'
   QString getElemPresentation(int index) {
     double measurement = measurements[index];
     double error = getElemError(index)->getError(measurement);
@@ -69,6 +71,8 @@ class VariableData {
                                 QString::number(error));
   }
 
+  // return fraction of measurements in a given interval
+  // 0 <= get_segment_fraction() <= 1
   double get_segment_fraction(double start, double end) {
     double count = 0.;
     for (double elem : measurements) {
@@ -79,6 +83,9 @@ class VariableData {
     return count / measurements.size();
   }
 
+  // [min_measurement, max_measurement] is divided into 'int partition' segments
+  // returns list of proportions of measurements in every segment
+  // result.size() = partition
   QVector<double> get_distribution(int partition) {
     double min_measurement = getMinMeasurement();
     double step = (getMaxMeasurement() - min_measurement) / partition;

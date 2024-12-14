@@ -52,8 +52,12 @@ class SortedLinePlot : public AbstractPlot {
   SortedLinePlot(int graph_num = 1, QWidget* parent = nullptr);
   ~SortedLinePlot() { delete ui; }
 
+  // return graph, connect it with ErrorBars and bars_ordering, set all graph's
+  // dependencies
   QCPGraph* create_new_graph();
 
+  // return name's index in global Manager
+  // -1 if 'None' and -2 if not found
   int get_name_index(QString& name);
 
  public slots:
@@ -64,8 +68,8 @@ class SortedLinePlot : public AbstractPlot {
                            const QList<int>& roles = QList<int>());
 
   virtual void update_var_names(const QModelIndex& topLeft,
-                        const QModelIndex& bottomRight,
-                        const QList<int>& roles = QList<int>());
+                                const QModelIndex& bottomRight,
+                                const QList<int>& roles = QList<int>());
 };
 
 #endif

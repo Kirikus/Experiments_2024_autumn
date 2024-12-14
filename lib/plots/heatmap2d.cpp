@@ -22,8 +22,9 @@ Heatmap2d::Heatmap2d(int graph_num, QWidget* parent) : ui(new Ui::Heatmap2d) {
   ui->plot->rescaleAxes();
 
   for (int i = 0; i < Manager::get_manager().variables.size(); ++i) {
-    static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
-                                         Heatmap2dSettingsModel::Column::Axis_X))
+    static_cast<ColumnNameDelegate*>(
+        ui->settings->itemDelegateForColumn(
+            Heatmap2dSettingsModel::Column::Axis_X))
         ->get_options_list()
         .append(Manager::get_manager().variables[i].short_name);
   }
@@ -68,6 +69,8 @@ int Heatmap2d::get_name_index(QString name) {
 }
 
 void Heatmap2d::redraw_settings(int row, int column) {
+  // int row: for QT connect compability, we know it is always 0
+
   auto cell = ui->settings->item(0, column);
 
   switch (column) {
@@ -93,7 +96,8 @@ void Heatmap2d::redraw_settings(int row, int column) {
           static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
               Heatmap2dSettingsModel::Column::Axis_X));
       auto names = delegate->get_options_list();
-      int var_index = names.indexOf(name) - 1;
+      int var_index = names.indexOf(name) -
+                      1;  // offset because in delegate name 'None' is the first
       auto ind = ui->settings->model()->index(0, var_index);
       update_data(ind, ind, QList<int>({Qt::EditRole}));
       break;
@@ -128,6 +132,7 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
           ->data(Qt::DisplayRole)
           .value<QString>());
 
+  // block for processing insert rows events
   if (bottomRight.row() > default_distribution_vector.size() - 1) {
     for (int i = default_distribution_vector.size() - 1; i < bottomRight.row();
          ++i) {
@@ -139,6 +144,8 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
 
   int start = std::min(bottomRight.column(), topLeft.column());
   int end = std::max(bottomRight.column(), topLeft.column());
+
+  // check that changed variables are linked with our data
   if (!((start <= x_index && x_index <= end) ||
         (start <= y_index && y_index <= end) || (x_index == -1) ||
         (y_index == -1))) {
@@ -154,6 +161,7 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
           ->data(Qt::DisplayRole)
           .value<int>();
 
+  // getting data boundaries
   if (x_index == -1) {
     start_x_range = 0.;
     end_x_range = default_distribution_vector.size() - 1;

@@ -46,8 +46,11 @@ class UnsortedLinePlot : public AbstractPlot {
   UnsortedLinePlot(int graph_num = 1, QWidget* parent = nullptr);
   ~UnsortedLinePlot() { delete ui; }
 
+  // return graph, connect it with ErrorBars, set all graph's dependencies
   QCPGraph* create_new_graph();
 
+  // return name's index in global Manager
+  // -1 if 'None' and -2 if not found
   int get_name_index(QString& name);
 
  public slots:
@@ -58,8 +61,8 @@ class UnsortedLinePlot : public AbstractPlot {
                            const QList<int>& roles = QList<int>());
 
   virtual void update_var_names(const QModelIndex& topLeft,
-                        const QModelIndex& bottomRight,
-                        const QList<int>& roles = QList<int>());
+                                const QModelIndex& bottomRight,
+                                const QList<int>& roles = QList<int>());
 };
 
 #endif
