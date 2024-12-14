@@ -193,14 +193,17 @@ MainWindow::MainWindow(QWidget *parent)
       err2, "Gamma", "gamma"));
 
   ui->setupUi(this);
-  UnsortedLinePlot *plot = new UnsortedLinePlot(3);
-  SortedLinePlot *plot2 = new SortedLinePlot(3);
+  Heatmap2d *heatmap2d = new Heatmap2d();
+  UnsortedLinePlot *unsorted_line_plot = new UnsortedLinePlot(3);
+  SortedLinePlot *sorted_line_plot = new SortedLinePlot(3);
+  changeTheme();
 
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(model_err);
   ui->tableTitles->setModel(model_titles);
-  ui->graphics->addTab(plot, "UnsortedLinePlot");
-  ui->graphics->addTab(plot2, "SortedLinePlot");
+  ui->graphics->addTab(heatmap2d, "Heatmap2d");
+  ui->graphics->addTab(unsorted_line_plot, "UnsortedLinePlot");
+  ui->graphics->addTab(sorted_line_plot, "SortedLinePlot");
   ui->tableTitles->verticalHeader()->hide();
 
   connect(ui->button_Graph, &QPushButton::clicked, this,
@@ -215,17 +218,24 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::import_data);
   connect(ui->action_Theme_button, &QAction::triggered, this,
           &MainWindow::changeTheme);
-  connect(model_err, &QAbstractTableModel::dataChanged, plot,
+          
+  connect(model_measurements, &QAbstractTableModel::dataChanged, heatmap2d,
           &AbstractPlot::update_data);
-  connect(model_measurements, &QAbstractTableModel::dataChanged, plot,
+  connect(model_titles, &QAbstractTableModel::dataChanged, heatmap2d,
+          &Heatmap2d::update_var_names);
+
+  connect(model_err, &QAbstractTableModel::dataChanged, unsorted_line_plot,
           &AbstractPlot::update_data);
-  connect(model_titles, &QAbstractTableModel::dataChanged, plot,
+  connect(model_measurements, &QAbstractTableModel::dataChanged, unsorted_line_plot,
+          &AbstractPlot::update_data);
+  connect(model_titles, &QAbstractTableModel::dataChanged, unsorted_line_plot,
           &UnsortedLinePlot::update_var_names);
-  connect(model_err, &QAbstractTableModel::dataChanged, plot2,
+
+  connect(model_err, &QAbstractTableModel::dataChanged, sorted_line_plot,
           &AbstractPlot::update_data);
-  connect(model_measurements, &QAbstractTableModel::dataChanged, plot2,
+  connect(model_measurements, &QAbstractTableModel::dataChanged, sorted_line_plot,
           &AbstractPlot::update_data);
-  connect(model_titles, &QAbstractTableModel::dataChanged, plot2,
+  connect(model_titles, &QAbstractTableModel::dataChanged, sorted_line_plot,
           &SortedLinePlot::update_var_names);
   connect(ui->graphics, &QTabWidget::tabCloseRequested, &QTabWidget::removeTab);
 }
