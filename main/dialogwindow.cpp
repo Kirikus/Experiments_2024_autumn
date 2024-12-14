@@ -29,9 +29,9 @@ void DialogWindow::create_graph() {
 
       auto* plot = new UnsortedLinePlot(graphs_num);
       index = target_tab_widget->addTab(plot, new_name);
-      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+      connect(measurement_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
-      connect(err_model, &QAbstractTableModel::dataChanged, plot,
+      connect(error_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
       connect(titles_model, &QAbstractTableModel::dataChanged, plot,
               &UnsortedLinePlot::update_var_names);
@@ -49,9 +49,9 @@ void DialogWindow::create_graph() {
 
       auto* plot = new SortedLinePlot(graphs_num);
       index = target_tab_widget->addTab(plot, new_name);
-      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+      connect(measurement_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
-      connect(err_model, &QAbstractTableModel::dataChanged, plot,
+      connect(error_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
       connect(titles_model, &QAbstractTableModel::dataChanged, plot,
               &SortedLinePlot::update_var_names);
@@ -63,9 +63,9 @@ void DialogWindow::create_graph() {
     case Heatmap2dType: {
       auto* plot = new Heatmap2d();
       index = target_tab_widget->addTab(plot, new_name);
-      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+      connect(measurement_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
-      connect(measure_model, &QAbstractTableModel::dataChanged, plot,
+      connect(measurement_model, &QAbstractTableModel::dataChanged, plot,
               &Heatmap2d::update_var_names);
       break;
     }
@@ -76,13 +76,13 @@ void DialogWindow::create_graph() {
 }
 
 DialogWindow::DialogWindow(QTabWidget* target_tab_widget,
-                           MeasurementModel* meas_model, ErrorModel* err_model,
+                           MeasurementModel* measurement_model, ErrorModel* error_model,
                            TitleModel* titles_model, QWidget* parent = nullptr)
     : QDialog(parent),
       ui(new Ui::DialogWindow),
       target_tab_widget(target_tab_widget),
-      measure_model(meas_model),
-      err_model(err_model),
+      measurement_model(measurement_model),
+      error_model(error_model),
       titles_model(titles_model) {
   ui->setupUi(this);
   ui->comboBox->addItems(graph_types);
