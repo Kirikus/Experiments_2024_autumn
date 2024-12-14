@@ -78,8 +78,9 @@ void DialogWindow::create_graph() {
 }
 
 DialogWindow::DialogWindow(QTabWidget* target_tab_widget,
-                           MeasurementModel* measurement_model, ErrorModel* error_model,
-                           TitleModel* titles_model, QWidget* parent = nullptr)
+                           MeasurementModel* measurement_model,
+                           ErrorModel* error_model, TitleModel* titles_model,
+                           QWidget* parent = nullptr)
     : QDialog(parent),
       ui(new Ui::DialogWindow),
       target_tab_widget(target_tab_widget),
