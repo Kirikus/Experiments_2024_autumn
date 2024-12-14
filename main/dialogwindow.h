@@ -35,15 +35,15 @@ class DialogWindow : public QDialog {
       {"Heatmap2d", Heatmap2dType}};
   QList<QString> graph_types = {"Unsorted line plot", "Sorted line plot",
                                 "Histogram", "Heatmap2d"};
-  MeasurementModel* measure_model;
-  ErrorModel* err_model;
+  MeasurementModel* measurement_model;
+  ErrorModel* error_model;
   TitleModel* titles_model;
 
  public:
   Ui::DialogWindow* ui;
   QTabWidget* target_tab_widget;
-  DialogWindow(QTabWidget* target_tab_widget, MeasurementModel* meas_model,
-               ErrorModel* err_model, TitleModel* titles_model,
+  DialogWindow(QTabWidget* target_tab_widget, MeasurementModel* measurement_model,
+               ErrorModel* error_model, TitleModel* titles_model,
                QWidget* parent);
 
  private slots:
