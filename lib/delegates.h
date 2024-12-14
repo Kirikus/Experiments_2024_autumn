@@ -104,6 +104,8 @@ class AbstractComboBoxDelegate : public QStyledItemDelegate {
     for (auto& option_string : options) {
       editor->addItem(option_string);
     }
+
+    // updating data with every change, not only after 'Enter' key
     QObject::connect(
         editor, &QComboBox::currentTextChanged, parent,
         [this, editor, parent, index]() {
