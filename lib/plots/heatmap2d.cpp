@@ -256,7 +256,6 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
 void Heatmap2d::update_var_names(const QModelIndex& topLeft,
                                  const QModelIndex& bottomRight,
                                  const QList<int>& roles) {
-  QList<QString> new_names;
   auto manager_variables = Manager::get_manager().variables;
   auto delegate =
       static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
