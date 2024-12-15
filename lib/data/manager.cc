@@ -12,7 +12,7 @@ Manager& Manager::get_manager() { return *global_manager; }
 
 void Manager::add_variable(VariableData var) { variables.append(var); }
 
-void Manager::delete_variable() { variables.pop_back(); }
+void Manager::delete_variable(int index) { variables.removeAt(index); }
 
 void Manager::clear_calculated() { calculated = QList<VariableData>(); }
 
@@ -41,9 +41,9 @@ void Manager::add_measurement_row() {
         nullptr);  // for nullptr will be used general error
   }
 }
-void Manager::remove_measurement_row() {
+void Manager::remove_measurement_row(int index) {
   for (int i = 0; i < variables.size(); ++i) {
-    variables[i].measurements.pop_back();
-    variables[i].errors_local.pop_back();
+    variables[i].measurements.removeAt(index);
+    variables[i].errors_local.removeAt(index);
   }
 }

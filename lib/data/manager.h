@@ -15,7 +15,7 @@ class Manager {
   void add_variable(VariableData var);
 
   // delete last added variable
-  void delete_variable();
+  void delete_variable(int index);
 
   // clear calculated list
   void clear_calculated();
@@ -30,7 +30,7 @@ class Manager {
 
   //   append 0 to every variable
   void add_measurement_row();
-  void remove_measurement_row();
+  void remove_measurement_row(int index);
 };
 
 #endif  // __MANAGER_H__
