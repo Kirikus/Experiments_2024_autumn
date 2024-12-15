@@ -67,7 +67,7 @@ void DialogWindow::create_graph() {
       index = target_tab_widget->addTab(plot, new_name);
       connect(measurement_model, &QAbstractTableModel::dataChanged, plot,
               &AbstractPlot::update_data);
-      connect(measurement_model, &QAbstractTableModel::dataChanged, plot,
+      connect(titles_model, &QAbstractTableModel::dataChanged, plot,
               &Heatmap2d::update_var_names);
       break;
     }
