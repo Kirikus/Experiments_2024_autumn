@@ -346,12 +346,55 @@ void SortedLinePlot::update_var_names(const QModelIndex& topLeft,
   auto manager_variables = Manager::get_manager().variables;
   auto delegate =
       static_cast<ColumnNameDelegate*>(ui->settings->itemDelegateForColumn(
-          SortedLinePlotSettingsModel::Column::Axis_X));
+          SortedLinePlotSettingsModel::Column::
+              Axis_X));  // delegate is the same for Axis X and Axis Y
+  // update delegate's options
   for (int i = 1; i < manager_variables.size() + 1; ++i) {
     if (i < delegate->get_options_list().size()) {
       delegate->get_options_list()[i] = manager_variables[i - 1].short_name;
       continue;
     }
     delegate->get_options_list().append(manager_variables[i - 1].short_name);
+  }
+
+  QList<QPair<int, int>> items_to_change;
+  for (int row = 0; row < ui->plot->graphCount(); ++row) {
+    for (int column : QList<SortedLinePlotSettingsModel::Column>(
+             {SortedLinePlotSettingsModel::Column::Axis_X,
+              SortedLinePlotSettingsModel::Column::Axis_Y})) {
+      if (delegate->get_options_list().indexOf(ui->settings->item(row, column)
+                                                   ->data(Qt::DisplayRole)
+                                                   .value<QString>()) == -1) {
+        items_to_change.append(QPair<int, int>(row, column));
+      }
+    }
+  }
+
+  if (items_to_change.size() > 0) {
+    ui->settings->blockSignals(
+        true);  // not changed items won't be found with update_data call
+  }
+  for (int i = 0; i < items_to_change.size(); ++i) {
+    if (delegate->get_options_list().indexOf(
+            ui->settings
+                ->item(items_to_change[i].first, items_to_change[i].second)
+                ->data(Qt::DisplayRole)
+                .value<QString>()) == -1) {
+      if (ui->settings->cellWidget(items_to_change[i].first,
+                                   items_to_change[i].second)) {
+        ui->settings
+            ->cellWidget(items_to_change[i].first, items_to_change[i].second)
+            ->clearFocus();
+      }
+      if (i == items_to_change.size() - 1) {
+        ui->settings->blockSignals(
+            false);  // last change have to update all previous changes
+      }
+      ui->settings->setItem(
+          items_to_change[i].first, items_to_change[i].second,
+          new QTableWidgetItem(
+              manager_variables[topLeft.column()]
+                  .short_name));  // still doesn't work for range of changes
+    }
   }
 }
