@@ -1,5 +1,5 @@
-#ifndef __PLOTS_H__
-#define __PLOTS_H__
+#ifndef __ABSTRACT_PLOT_H__
+#define __ABSTRACT_PLOT_H__
 
 #include <QPen>
 #include <QWidget>
