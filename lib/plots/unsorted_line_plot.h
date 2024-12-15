@@ -23,8 +23,6 @@ class UnsortedLinePlot : public AbstractPlot {
   QVector<double> default_numbering_vector;
   QList<XYErrorBars*> bars_list;
   QList<QCPCurve*> curves;
-  QMap<QString, QCPCurve::LineStyle> line_style_map{{"None", QCPCurve::lsNone},
-                                                    {"Line", QCPCurve::lsLine}};
   QMap<QString, QCPScatterStyle::ScatterShape> scatter_style_map{
       {"None", QCPScatterStyle::ssNone},
       {"Cross", QCPScatterStyle::ssCross},
