@@ -7,7 +7,7 @@
 #include <QString>
 
 #include "./ui_unsorted_lines_plot.h"
-#include "plots.h"
+#include "abstract_plot.h"
 #include "qcustomplot.h"
 
 QT_BEGIN_NAMESPACE

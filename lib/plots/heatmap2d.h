@@ -7,7 +7,7 @@
 #include <QString>
 
 #include "./ui_heatmap2d.h"
-#include "plots.h"
+#include "abstract_plot.h"
 #include "qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
