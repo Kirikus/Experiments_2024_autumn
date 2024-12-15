@@ -213,9 +213,6 @@ MainWindow::MainWindow(QWidget *parent)
   UnsortedLinePlot *unsorted_line_plot = new UnsortedLinePlot(3);
   SortedLinePlot *sorted_line_plot = new SortedLinePlot(3);
 
-  // set start theme dark
-  changeTheme();
-
   // connecting tables with data from Manager
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(error_model);
