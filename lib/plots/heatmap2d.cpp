@@ -21,6 +21,13 @@ Heatmap2d::Heatmap2d(int graph_num, QWidget* parent) : ui(new Ui::Heatmap2d) {
   ui->plot->axisRect()->setupFullAxesBox(true);
   ui->plot->rescaleAxes();
 
+  dynamic_cast<MinMaxSpinBox*>(
+      ui->settings->itemDelegateForColumn(
+          Heatmap2dSettingsModel::Column::Distribution))
+      ->maximum = Manager::get_manager()
+                      .variables[0]
+                      .size();  // bigger distribution is not possible
+
   for (int i = 0; i < Manager::get_manager().variables.size(); ++i) {
     static_cast<ColumnNameDelegate*>(
         ui->settings->itemDelegateForColumn(
@@ -139,6 +146,12 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
       default_distribution_vector.push_back(1.);
     }
     auto index = ui->settings->model()->index(-1, -1);
+    dynamic_cast<MinMaxSpinBox*>(
+        ui->settings->itemDelegateForColumn(
+            Heatmap2dSettingsModel::Column::Distribution))
+        ->maximum = Manager::get_manager()
+                        .variables[0]
+                        .size();  // update maximum distribution
     update_data(index, index);
   }
 

@@ -17,7 +17,8 @@ Heatmap2dSettingsModel::Heatmap2dSettingsModel(QWidget* parent = nullptr)
   auto* delegate_variable = new ColumnNameDelegate();
   setItemDelegateForColumn(Axis_X, delegate_variable);
   setItemDelegateForColumn(Axis_Y, delegate_variable);
-  setItemDelegateForColumn(Distribution, new MinMaxSpinBox(2, 1000));
+  setItemDelegateForColumn(
+      Distribution, new MinMaxSpinBox(2, 2));  // we will update maximum later
   setItemDelegateForColumn(Gradient, new GradientStyleDelegate());
   setItemDelegateForColumn(Interpolate, check_box_delegate);
 
