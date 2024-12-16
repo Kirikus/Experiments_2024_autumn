@@ -235,6 +235,8 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::import_data);
   connect(ui->action_Theme_button, &QAction::triggered, this,
           &MainWindow::changeTheme);
+  connect(ui->action_Graph, &QAction::triggered, this,
+          &MainWindow::create_tab_with_plot_choice);
 
   connect(model_measurements, &QAbstractTableModel::dataChanged, heatmap2d,
           &AbstractPlot::update_data);
