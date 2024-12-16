@@ -3,7 +3,7 @@
 #include "../lib/plots/heatmap2d.h"
 #include "../lib/plots/sorted_line_plot.h"
 #include "../lib/plots/unsorted_line_plot.h"
-#include "dialogamountrowswindow.h"
+#include "dialog_ask_number.h"
 #include "ui_dialogwindow.h"
 
 void DialogWindow::close_dialog() { close(); }
@@ -22,10 +22,13 @@ void DialogWindow::create_graph() {
     case UnsortedLinePlotType: {
       hide();
       int graphs_num;
-      auto* dialog_ask_rows = new DialogAmountRowsWindow(graphs_num, nullptr);
+      auto* dialog_ask_rows = new DialogAskNumber(
+          "How many charts do you want in this tab?", graphs_num, nullptr);
+      dialog_ask_rows->setMinimum(0);
+      dialog_ask_rows->setMaximum(1000);
       dialog_ask_rows->show();  // asking for rows number
       dialog_ask_rows->exec();
-      if (graphs_num <= 0) {
+      if (graphs_num == 0) {
         break;
       }
 
@@ -42,7 +45,10 @@ void DialogWindow::create_graph() {
     case SortedLinePlotType: {
       hide();
       int graphs_num;
-      auto* dialog_ask_rows = new DialogAmountRowsWindow(graphs_num, nullptr);
+      auto* dialog_ask_rows = new DialogAskNumber(
+          "How many charts do you want in this tab?", graphs_num, nullptr);
+      dialog_ask_rows->setMinimum(0);
+      dialog_ask_rows->setMaximum(1000);
       dialog_ask_rows->show();  // asking for rows number
       dialog_ask_rows->exec();
       if (graphs_num <= 0) {
@@ -57,9 +63,6 @@ void DialogWindow::create_graph() {
               &AbstractPlot::update_data);
       connect(titles_model, &QAbstractTableModel::dataChanged, plot,
               &SortedLinePlot::update_var_names);
-      break;
-    }
-    case HistogramType: {
       break;
     }
     case Heatmap2dType: {

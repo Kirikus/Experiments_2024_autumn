@@ -76,10 +76,8 @@ UnsortedLinePlot::UnsortedLinePlot(int graph_num, QWidget* parent)
   }
 
   // setting actual view with data boundaries
-  ui->plot->xAxis->setRange(min_x - (max_x - min_x) / 20.,
-                            max_x + (max_x - min_x) / 20.);
-  ui->plot->yAxis->setRange(min_y - (max_y - min_y) / 20.,
-                            max_y + (max_y - min_y) / 20.);
+  ui->plot->xAxis->setRange(-1, default_numbering_vector.size());
+  ui->plot->yAxis->setRange(-1, default_numbering_vector.size());
 
   // activate scaling and Drag'n'Drop
   ui->plot->setInteraction(QCP::iRangeZoom, true);

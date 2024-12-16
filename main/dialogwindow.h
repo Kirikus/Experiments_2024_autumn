@@ -25,16 +25,14 @@ class DialogWindow : public QDialog {
   enum PlotTypes {
     UnsortedLinePlotType = 0,
     SortedLinePlotType,
-    HistogramType,
     Heatmap2dType
   };
   QMap<QString, PlotTypes> plot_type_map{
       {"Unsorted line plot", UnsortedLinePlotType},
       {"Sorted line plot", SortedLinePlotType},
-      {"Histogram", HistogramType},
       {"Heatmap2d", Heatmap2dType}};
   QList<QString> graph_types = {"Unsorted line plot", "Sorted line plot",
-                                "Histogram", "Heatmap2d"};
+                                "Heatmap2d"};
   MeasurementModel* measurement_model;
   ErrorModel* error_model;
   TitleModel* titles_model;
@@ -42,9 +40,9 @@ class DialogWindow : public QDialog {
  public:
   Ui::DialogWindow* ui;
   QTabWidget* target_tab_widget;
-  DialogWindow(QTabWidget* target_tab_widget, MeasurementModel* measurement_model,
-               ErrorModel* error_model, TitleModel* titles_model,
-               QWidget* parent);
+  DialogWindow(QTabWidget* target_tab_widget,
+               MeasurementModel* measurement_model, ErrorModel* error_model,
+               TitleModel* titles_model, QWidget* parent);
 
  private slots:
   void create_graph();

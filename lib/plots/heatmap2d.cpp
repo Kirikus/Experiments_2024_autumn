@@ -12,6 +12,7 @@ Heatmap2d::Heatmap2d(int graph_num, QWidget* parent) : ui(new Ui::Heatmap2d) {
   color_map->setGradient(QCPColorGradient::gpPolar);
   color_map->rescaleDataRange(true);
   color_map->setDataRange(QCPRange(0, 1));
+  color_map->setTightBoundary(false);
 
   QCPColorScale* color_scale = new QCPColorScale(ui->plot);
   color_scale->setType(QCPAxis::atBottom);
@@ -19,7 +20,6 @@ Heatmap2d::Heatmap2d(int graph_num, QWidget* parent) : ui(new Ui::Heatmap2d) {
   color_map->setColorScale(color_scale);
   color_scale->axis()->setLabel("Data density");
   ui->plot->axisRect()->setupFullAxesBox(true);
-  ui->plot->rescaleAxes();
 
   dynamic_cast<MinMaxSpinBox*>(
       ui->settings->itemDelegateForColumn(
@@ -224,8 +224,11 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
     y_distribution = distribution;
   }
 
-  color_map->data()->setRange(QCPRange(start_x_range, end_x_range),
-                              QCPRange(start_y_range, end_y_range));
+  double dx = (end_x_range - start_x_range) / distribution;
+  double dy = (end_y_range - start_y_range) / distribution;
+  color_map->data()->setRange(
+      QCPRange(start_x_range + dx / 2, end_x_range - dx / 2),
+      QCPRange(start_y_range + dy / 2, end_y_range - dy / 2));
   color_map->data()->setSize(x_distribution, y_distribution);
   for (int i = 0; i < x_distribution; ++i) {
     for (int j = 0; j < y_distribution; ++j) {
@@ -249,7 +252,8 @@ void Heatmap2d::update_data(const QModelIndex& topLeft,
   color_map->setDataRange(
       QCPRange(lowest_x_distribution * lowest_y_distribution,
                highest_x_distribution * highest_y_distribution));
-  ui->plot->rescaleAxes();
+  ui->plot->xAxis->setRange(start_x_range, end_x_range);
+  ui->plot->yAxis->setRange(start_y_range, end_y_range);
   ui->plot->replot();
 }
 

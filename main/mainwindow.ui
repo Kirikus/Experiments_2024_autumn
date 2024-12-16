@@ -49,13 +49,6 @@
      <widget class="QWidget" name="leftMenu" native="true">
       <layout class="QGridLayout" name="gridLayout">
        <item row="3" column="0">
-        <widget class="QPushButton" name="button_Add_row">
-         <property name="text">
-          <string>Add row</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -69,26 +62,13 @@
         </spacer>
        </item>
        <item row="2" column="0">
-        <widget class="QPushButton" name="button_Parameters">
-         <property name="toolTip">
-          <string>Set graph parameters </string>
-         </property>
+        <widget class="QPushButton" name="button_Add_variable">
          <property name="text">
-          <string>Parameters</string>
+          <string>Add variable</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QPushButton" name="button_Formula">
-         <property name="toolTip">
-          <string>Add new formula</string>
-         </property>
-         <property name="text">
-          <string>f(x)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
         <widget class="QPushButton" name="button_Graph">
          <property name="toolTip">
           <string>Add new graph</string>
@@ -98,10 +78,10 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QPushButton" name="button_Add_variable">
+       <item row="1" column="0">
+        <widget class="QPushButton" name="button_Add_row">
          <property name="text">
-          <string>Add variable</string>
+          <string>Add row</string>
          </property>
         </widget>
        </item>

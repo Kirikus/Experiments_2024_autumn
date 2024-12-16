@@ -87,13 +87,16 @@ class VariableData {
   // returns list of proportions of measurements in every segment
   // result.size() = partition
   QVector<double> get_distribution(int partition) {
-    double min_measurement = getMinMeasurement();
+    double min_measurement = getMinMeasurement() - 0.000001;
     double step = (getMaxMeasurement() - min_measurement) / partition;
     QVector<double> result = QVector<double>(partition);
-    for (int i = 0; i < partition - 1; ++i) {
-      result[i] = get_segment_fraction(min_measurement + step * i,
-                                       min_measurement + step * (i + 1));
+    for (int i = 0; i < partition; ++i) {
+      result[i] = get_segment_fraction(
+          min_measurement + step * i,
+          min_measurement + step * (i + 1) + 0.000001 * (i == partition - 1));
     }
+    // get a bit wider range for max
+    // boundary because of [min, max) != [min, max]
     return result;
   }
 };

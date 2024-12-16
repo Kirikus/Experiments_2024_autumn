@@ -213,9 +213,6 @@ MainWindow::MainWindow(QWidget *parent)
   UnsortedLinePlot *unsorted_line_plot = new UnsortedLinePlot(3);
   SortedLinePlot *sorted_line_plot = new SortedLinePlot(3);
 
-  // set start theme dark
-  changeTheme();
-
   // connecting tables with data from Manager
   ui->tableData->setModel(model_measurements);
   ui->tableErrors->setModel(error_model);
@@ -238,6 +235,8 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::import_data);
   connect(ui->action_Theme_button, &QAction::triggered, this,
           &MainWindow::changeTheme);
+  connect(ui->action_Graph, &QAction::triggered, this,
+          &MainWindow::create_tab_with_plot_choice);
 
   connect(model_measurements, &QAbstractTableModel::dataChanged, heatmap2d,
           &AbstractPlot::update_data);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogAmountRowsWindow</class>
- <widget class="QDialog" name="DialogAmountRowsWindow">
+ <class>DialogAskNumber</class>
+ <widget class="QDialog" name="DialogAskNumber">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -22,11 +22,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>How many charts do you want in this tab?</string>
-     </property>
-    </widget>
+    <widget class="QLabel" name="label"/>
    </item>
    <item row="1" column="0">
     <widget class="QSpinBox" name="spinBox"/>
@@ -48,7 +44,7 @@
   <connection>
    <sender>buttonBoxApplyDiscard</sender>
    <signal>accepted()</signal>
-   <receiver>DialogAmountRowsWindow</receiver>
+   <receiver>DialogAskNumber</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -64,7 +60,7 @@
   <connection>
    <sender>buttonBoxApplyDiscard</sender>
    <signal>rejected()</signal>
-   <receiver>DialogAmountRowsWindow</receiver>
+   <receiver>DialogAskNumber</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
