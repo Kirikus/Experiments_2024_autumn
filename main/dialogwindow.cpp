@@ -21,14 +21,14 @@ void DialogWindow::create_graph() {
   switch (t) {
     case UnsortedLinePlotType: {
       hide();
-      int graphs_num;
+      int graphs_num = -1;
       auto* dialog_ask_rows = new DialogAskNumber(
           "How many charts do you want in this tab?", graphs_num, nullptr);
       dialog_ask_rows->setMinimum(0);
       dialog_ask_rows->setMaximum(1000);
       dialog_ask_rows->show();  // asking for rows number
       dialog_ask_rows->exec();
-      if (graphs_num == 0) {
+      if (graphs_num <= 0) {
         break;
       }
 
@@ -44,7 +44,7 @@ void DialogWindow::create_graph() {
     }
     case SortedLinePlotType: {
       hide();
-      int graphs_num;
+      int graphs_num = -1;
       auto* dialog_ask_rows = new DialogAskNumber(
           "How many charts do you want in this tab?", graphs_num, nullptr);
       dialog_ask_rows->setMinimum(0);
