@@ -65,9 +65,6 @@ void DialogWindow::create_graph() {
               &SortedLinePlot::update_var_names);
       break;
     }
-    case HistogramType: {
-      break;
-    }
     case Heatmap2dType: {
       auto* plot = new Heatmap2d();
       index = target_tab_widget->addTab(plot, new_name);
